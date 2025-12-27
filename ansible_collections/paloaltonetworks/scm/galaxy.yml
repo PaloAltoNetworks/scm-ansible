@@ -1,0 +1,18 @@
+namespace: paloaltonetworks
+name: scm
+version: 1.0.0
+readme: README.md
+authors:
+  - Palo Alto Networks
+description: Ansible Collection for Strata Cloud Manager
+license:
+  - MIT
+tags:
+  - networking
+  - security
+dependencies: {}
+repository: http://github.com/paloaltonetworks/scm-ansible
+documentation: http://github.com/paloaltonetworks/scm-ansible
+homepage: http://github.com/paloaltonetworks/scm-ansible
+issues: http://github.com/paloaltonetworks/scm-ansible/issues
+build_ignore: []
