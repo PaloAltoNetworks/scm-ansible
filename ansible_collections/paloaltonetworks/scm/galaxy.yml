@@ -6,7 +6,7 @@ authors:
   - Palo Alto Networks
 description: Ansible Collection for Strata Cloud Manager
 license:
-  - MIT
+  - Apache-2.0
 tags:
   - networking
   - security
