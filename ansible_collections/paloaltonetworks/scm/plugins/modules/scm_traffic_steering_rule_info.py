@@ -145,7 +145,7 @@ def main():
     )
 
     if not HAS_SCM:
-        module.fail_json(msg='The scm Python SDK is required. Install it with: pip install pan-scm-sdk')
+        module.fail_json(msg='The scm Python SDK is required. Install it with: pip install scm-python')
 
     result = dict(
         traffic_steering_rules=[],

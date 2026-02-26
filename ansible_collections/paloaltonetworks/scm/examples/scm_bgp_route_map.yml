@@ -2,7 +2,7 @@
 # Example playbook for paloaltonetworks.scm.scm_bgp_route_map
 #
 # Prerequisites:
-#   pip install pan-scm-sdk ansible-core
+#   pip install scm-python ansible-core
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"

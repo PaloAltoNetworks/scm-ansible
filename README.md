@@ -9,10 +9,10 @@ security policies, network objects, and cloud-managed firewall configurations.
 ## Requirements
 
 - Python 3.8+
-- The `pan-scm-sdk` Python package (the SCM Python SDK)
+- The `scm-python` Python package (the SCM Python SDK)
 
 ```bash
-pip install pan-scm-sdk
+pip install scm-python
 ```
 
 Ansible is **not required** for the modules to function (they can run standalone),
@@ -633,7 +633,7 @@ ansible-doc paloaltonetworks.scm.scm_tag
 Install the SDK:
 
 ```bash
-pip install pan-scm-sdk
+pip install scm-python
 ```
 
 ### Authentication errors
