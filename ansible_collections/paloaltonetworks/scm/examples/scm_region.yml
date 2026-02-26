@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_region
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_region.yml
+
+- name: Manage regions in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a region object
+      paloaltonetworks.scm.scm_region:
+        state: present
+        name: "example-region"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created region
+      ansible.builtin.debug:
+        var: create_result.region
+
+    - name: Gather information about a region object
+      paloaltonetworks.scm.scm_region:
+        state: gathered
+        name: "example-region"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered region
+      ansible.builtin.debug:
+        var: gather_result.region
+
+    - name: List all regions in a folder
+      paloaltonetworks.scm.scm_region_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display regions list
+      ansible.builtin.debug:
+        var: list_result.regions
+
+
+    - name: Delete the region object
+      paloaltonetworks.scm.scm_region:
+        state: absent
+        name: "example-region"
+        folder: "Shared"
+

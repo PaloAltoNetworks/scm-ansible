@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_tunnel_interface
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_tunnel_interface.yml
+
+- name: Manage tunnel_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a tunnel_interface object
+      paloaltonetworks.scm.scm_tunnel_interface:
+        state: present
+        name: "example-tunnel_interface"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created tunnel_interface
+      ansible.builtin.debug:
+        var: create_result.tunnel_interface
+
+    - name: Gather information about a tunnel_interface object
+      paloaltonetworks.scm.scm_tunnel_interface:
+        state: gathered
+        name: "example-tunnel_interface"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered tunnel_interface
+      ansible.builtin.debug:
+        var: gather_result.tunnel_interface
+
+    - name: List all tunnel_interfaces in a folder
+      paloaltonetworks.scm.scm_tunnel_interface_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display tunnel_interfaces list
+      ansible.builtin.debug:
+        var: list_result.tunnel_interfaces
+
+
+    - name: Delete the tunnel_interface object
+      paloaltonetworks.scm.scm_tunnel_interface:
+        state: absent
+        name: "example-tunnel_interface"
+        folder: "Shared"
+

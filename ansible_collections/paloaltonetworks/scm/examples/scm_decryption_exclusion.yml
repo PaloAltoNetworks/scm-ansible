@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_decryption_exclusion
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_decryption_exclusion.yml
+
+- name: Manage decryption_exclusions in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a decryption_exclusion object
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: present
+        name: "example-decryption_exclusion"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created decryption_exclusion
+      ansible.builtin.debug:
+        var: create_result.decryption_exclusion
+
+    - name: Gather information about a decryption_exclusion object
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: gathered
+        name: "example-decryption_exclusion"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered decryption_exclusion
+      ansible.builtin.debug:
+        var: gather_result.decryption_exclusion
+
+    - name: List all decryption_exclusions in a folder
+      paloaltonetworks.scm.scm_decryption_exclusion_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display decryption_exclusions list
+      ansible.builtin.debug:
+        var: list_result.decryption_exclusions
+
+
+    - name: Delete the decryption_exclusion object
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: absent
+        name: "example-decryption_exclusion"
+        folder: "Shared"
+

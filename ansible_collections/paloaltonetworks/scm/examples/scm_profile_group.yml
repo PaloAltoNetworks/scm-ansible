@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_profile_group
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_profile_group.yml
+
+- name: Manage profile_groups in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a profile_group object
+      paloaltonetworks.scm.scm_profile_group:
+        state: present
+        name: "example-profile_group"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created profile_group
+      ansible.builtin.debug:
+        var: create_result.profile_group
+
+    - name: Gather information about a profile_group object
+      paloaltonetworks.scm.scm_profile_group:
+        state: gathered
+        name: "example-profile_group"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered profile_group
+      ansible.builtin.debug:
+        var: gather_result.profile_group
+
+    - name: List all profile_groups in a folder
+      paloaltonetworks.scm.scm_profile_group_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display profile_groups list
+      ansible.builtin.debug:
+        var: list_result.profile_groups
+
+
+    - name: Delete the profile_group object
+      paloaltonetworks.scm.scm_profile_group:
+        state: absent
+        name: "example-profile_group"
+        folder: "Shared"
+

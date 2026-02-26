@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_auto_vpn_cluster
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_auto_vpn_cluster.yml
+
+- name: Manage auto_vpn_clusters in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a auto_vpn_cluster object
+      paloaltonetworks.scm.scm_auto_vpn_cluster:
+        state: present
+        name: "example-auto_vpn_cluster"
+      register: create_result
+
+    - name: Display created auto_vpn_cluster
+      ansible.builtin.debug:
+        var: create_result.auto_vpn_cluster
+
+    - name: Gather information about a auto_vpn_cluster object
+      paloaltonetworks.scm.scm_auto_vpn_cluster:
+        state: gathered
+        name: "example-auto_vpn_cluster"
+      register: gather_result
+
+    - name: Display gathered auto_vpn_cluster
+      ansible.builtin.debug:
+        var: gather_result.auto_vpn_cluster
+
+    - name: List all auto_vpn_clusters in a folder
+      paloaltonetworks.scm.scm_auto_vpn_cluster_info:
+      register: list_result
+
+    - name: Display auto_vpn_clusters list
+      ansible.builtin.debug:
+        var: list_result.auto_vpn_clusters
+
+
+    - name: Delete the auto_vpn_cluster object
+      paloaltonetworks.scm.scm_auto_vpn_cluster:
+        state: absent
+        name: "example-auto_vpn_cluster"
+

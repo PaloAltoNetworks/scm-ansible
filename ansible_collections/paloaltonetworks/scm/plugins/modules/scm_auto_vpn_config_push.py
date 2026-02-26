@@ -15,30 +15,13 @@ description:
     - This module uses the SCM Python SDK for API communication.
 version_added: "1.0.0"
 author: "Palo Alto Networks"
+extends_documentation_fragment:
+    - paloaltonetworks.scm.scm
 options:
     state:
         description: The desired state of the resource.
         default: present
         choices: ['present', 'absent', 'gathered']
-        type: str
-    client_id:
-        description:
-            - OAuth2 Client ID for SCM authentication.
-            - Can also be set via the C(SCM_CLIENT_ID) environment variable.
-        required: False
-        type: str
-    client_secret:
-        description:
-            - OAuth2 Client Secret for SCM authentication.
-            - Can also be set via the C(SCM_CLIENT_SECRET) environment variable.
-        required: False
-        type: str
-        no_log: True
-    tsg_id:
-        description:
-            - Tenant Service Group ID for SCM authentication.
-            - Can also be set via the C(SCM_TSG_ID) environment variable.
-        required: False
         type: str
     id:
         description:
@@ -70,8 +53,8 @@ EXAMPLES = r'''
 '''
 
 RETURN = r'''
-data:
-    description: The resource data returned from the API.
+auto_vpn_config_push:
+    description: The auto_vpn_config_push resource data returned from the API.
     type: dict
     returned: success
     sample: {}
@@ -127,7 +110,7 @@ def main():
 
     result = dict(
         changed=False,
-        data={},
+        auto_vpn_config_push={},
         msg='',
     )
 
@@ -163,7 +146,7 @@ def main():
     # Handle gathered state
     if state == 'gathered':
         if existing_obj:
-            result['data'] = to_result_data(existing_obj)
+            result['auto_vpn_config_push'] = to_result_data(existing_obj)
             result['msg'] = 'auto_vpn_config_push found'
         else:
             result['msg'] = 'auto_vpn_config_push not found'
@@ -187,7 +170,7 @@ def main():
                 from scm.network_services.models.auto_vpn_push_config import AutoVpnPushConfig
                 model = AutoVpnPushConfig(id='', **payload, **container)
                 resp = api.create_auto_vpn_push_configs(auto_vpn_push_config=model)
-                result['data'] = to_result_data(resp)
+                result['auto_vpn_config_push'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'auto_vpn_config_push created successfully'
             except NameNotUniqueError:
@@ -201,7 +184,7 @@ def main():
             # Update - check for differences first
             if not fields_differ(existing_obj, payload):
                 result['changed'] = False
-                result['data'] = to_result_data(existing_obj)
+                result['auto_vpn_config_push'] = to_result_data(existing_obj)
                 result['msg'] = 'auto_vpn_config_push already up to date'
                 module.log('scm: auto_vpn_config_push already up to date')
                 module.exit_json(**result)

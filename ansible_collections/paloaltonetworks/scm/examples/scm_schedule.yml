@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_schedule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_schedule.yml
+
+- name: Manage schedules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a schedule object
+      paloaltonetworks.scm.scm_schedule:
+        state: present
+        name: "example-schedule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created schedule
+      ansible.builtin.debug:
+        var: create_result.schedule
+
+    - name: Gather information about a schedule object
+      paloaltonetworks.scm.scm_schedule:
+        state: gathered
+        name: "example-schedule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered schedule
+      ansible.builtin.debug:
+        var: gather_result.schedule
+
+    - name: List all schedules in a folder
+      paloaltonetworks.scm.scm_schedule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display schedules list
+      ansible.builtin.debug:
+        var: list_result.schedules
+
+
+    - name: Delete the schedule object
+      paloaltonetworks.scm.scm_schedule:
+        state: absent
+        name: "example-schedule"
+        folder: "Shared"
+

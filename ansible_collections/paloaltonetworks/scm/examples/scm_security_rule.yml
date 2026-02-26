@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_security_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_security_rule.yml
+
+- name: Manage security_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a security_rule object
+      paloaltonetworks.scm.scm_security_rule:
+        state: present
+        name: "example-security_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created security_rule
+      ansible.builtin.debug:
+        var: create_result.security_rule
+
+    - name: Gather information about a security_rule object
+      paloaltonetworks.scm.scm_security_rule:
+        state: gathered
+        name: "example-security_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered security_rule
+      ansible.builtin.debug:
+        var: gather_result.security_rule
+
+    - name: List all security_rules in a folder
+      paloaltonetworks.scm.scm_security_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display security_rules list
+      ansible.builtin.debug:
+        var: list_result.security_rules
+
+
+    - name: Delete the security_rule object
+      paloaltonetworks.scm.scm_security_rule:
+        state: absent
+        name: "example-security_rule"
+        folder: "Shared"
+

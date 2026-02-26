@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_dns_proxy
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_dns_proxy.yml
+
+- name: Manage dns_proxies in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a dns_proxy object
+      paloaltonetworks.scm.scm_dns_proxy:
+        state: present
+        name: "example-dns_proxy"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created dns_proxy
+      ansible.builtin.debug:
+        var: create_result.dns_proxy
+
+    - name: Gather information about a dns_proxy object
+      paloaltonetworks.scm.scm_dns_proxy:
+        state: gathered
+        name: "example-dns_proxy"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered dns_proxy
+      ansible.builtin.debug:
+        var: gather_result.dns_proxy
+
+    - name: List all dns_proxies in a folder
+      paloaltonetworks.scm.scm_dns_proxy_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display dns_proxies list
+      ansible.builtin.debug:
+        var: list_result.dns_proxies
+
+
+    - name: Delete the dns_proxy object
+      paloaltonetworks.scm.scm_dns_proxy:
+        state: absent
+        name: "example-dns_proxy"
+        folder: "Shared"
+

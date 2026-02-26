@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_variable
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_variable.yml
+
+- name: Manage variables in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a variable object
+      paloaltonetworks.scm.scm_variable:
+        state: present
+        name: "example-variable"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created variable
+      ansible.builtin.debug:
+        var: create_result.variable
+
+    - name: Gather information about a variable object
+      paloaltonetworks.scm.scm_variable:
+        state: gathered
+        name: "example-variable"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered variable
+      ansible.builtin.debug:
+        var: gather_result.variable
+
+    - name: List all variables in a folder
+      paloaltonetworks.scm.scm_variable_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display variables list
+      ansible.builtin.debug:
+        var: list_result.variables
+
+
+    - name: Delete the variable object
+      paloaltonetworks.scm.scm_variable:
+        state: absent
+        name: "example-variable"
+        folder: "Shared"
+

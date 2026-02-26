@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_kerberos_server_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_kerberos_server_profile.yml
+
+- name: Manage kerberos_server_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a kerberos_server_profile object
+      paloaltonetworks.scm.scm_kerberos_server_profile:
+        state: present
+        name: "example-kerberos_server_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created kerberos_server_profile
+      ansible.builtin.debug:
+        var: create_result.kerberos_server_profile
+
+    - name: Gather information about a kerberos_server_profile object
+      paloaltonetworks.scm.scm_kerberos_server_profile:
+        state: gathered
+        name: "example-kerberos_server_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered kerberos_server_profile
+      ansible.builtin.debug:
+        var: gather_result.kerberos_server_profile
+
+    - name: List all kerberos_server_profiles in a folder
+      paloaltonetworks.scm.scm_kerberos_server_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display kerberos_server_profiles list
+      ansible.builtin.debug:
+        var: list_result.kerberos_server_profiles
+
+
+    - name: Delete the kerberos_server_profile object
+      paloaltonetworks.scm.scm_kerberos_server_profile:
+        state: absent
+        name: "example-kerberos_server_profile"
+        folder: "Shared"
+

@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_qos_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_qos_rule.yml
+
+- name: Manage qos_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a qos_rule object
+      paloaltonetworks.scm.scm_qos_rule:
+        state: present
+        name: "example-qos_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created qos_rule
+      ansible.builtin.debug:
+        var: create_result.qos_rule
+
+    - name: Gather information about a qos_rule object
+      paloaltonetworks.scm.scm_qos_rule:
+        state: gathered
+        name: "example-qos_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered qos_rule
+      ansible.builtin.debug:
+        var: gather_result.qos_rule
+
+    - name: List all qos_rules in a folder
+      paloaltonetworks.scm.scm_qos_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display qos_rules list
+      ansible.builtin.debug:
+        var: list_result.qos_rules
+
+
+    - name: Delete the qos_rule object
+      paloaltonetworks.scm.scm_qos_rule:
+        state: absent
+        name: "example-qos_rule"
+        folder: "Shared"
+

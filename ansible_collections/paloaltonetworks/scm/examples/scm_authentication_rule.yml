@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_authentication_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_authentication_rule.yml
+
+- name: Manage authentication_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a authentication_rule object
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: present
+        name: "example-authentication_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created authentication_rule
+      ansible.builtin.debug:
+        var: create_result.authentication_rule
+
+    - name: Gather information about a authentication_rule object
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: gathered
+        name: "example-authentication_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered authentication_rule
+      ansible.builtin.debug:
+        var: gather_result.authentication_rule
+
+    - name: List all authentication_rules in a folder
+      paloaltonetworks.scm.scm_authentication_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display authentication_rules list
+      ansible.builtin.debug:
+        var: list_result.authentication_rules
+
+
+    - name: Delete the authentication_rule object
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: absent
+        name: "example-authentication_rule"
+        folder: "Shared"
+

@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_local_user_group
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_local_user_group.yml
+
+- name: Manage local_user_groups in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a local_user_group object
+      paloaltonetworks.scm.scm_local_user_group:
+        state: present
+        name: "example-local_user_group"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created local_user_group
+      ansible.builtin.debug:
+        var: create_result.local_user_group
+
+    - name: Gather information about a local_user_group object
+      paloaltonetworks.scm.scm_local_user_group:
+        state: gathered
+        name: "example-local_user_group"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered local_user_group
+      ansible.builtin.debug:
+        var: gather_result.local_user_group
+
+    - name: List all local_user_groups in a folder
+      paloaltonetworks.scm.scm_local_user_group_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display local_user_groups list
+      ansible.builtin.debug:
+        var: list_result.local_user_groups
+
+
+    - name: Delete the local_user_group object
+      paloaltonetworks.scm.scm_local_user_group:
+        state: absent
+        name: "example-local_user_group"
+        folder: "Shared"
+

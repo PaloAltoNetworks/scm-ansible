@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_address
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_address.yml
+
+- name: Manage addresses in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a address object
+      paloaltonetworks.scm.scm_address:
+        state: present
+        name: "example-address"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created address
+      ansible.builtin.debug:
+        var: create_result.address
+
+    - name: Gather information about a address object
+      paloaltonetworks.scm.scm_address:
+        state: gathered
+        name: "example-address"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered address
+      ansible.builtin.debug:
+        var: gather_result.address
+
+    - name: List all addresses in a folder
+      paloaltonetworks.scm.scm_address_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display addresses list
+      ansible.builtin.debug:
+        var: list_result.addresses
+
+
+    - name: Delete the address object
+      paloaltonetworks.scm.scm_address:
+        state: absent
+        name: "example-address"
+        folder: "Shared"
+

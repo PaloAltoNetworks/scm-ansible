@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_anti_spyware_signature
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_anti_spyware_signature.yml
+
+- name: Manage anti_spyware_signatures in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a anti_spyware_signature object
+      paloaltonetworks.scm.scm_anti_spyware_signature:
+        state: present
+        name: "example-anti_spyware_signature"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created anti_spyware_signature
+      ansible.builtin.debug:
+        var: create_result.anti_spyware_signature
+
+    - name: Gather information about a anti_spyware_signature object
+      paloaltonetworks.scm.scm_anti_spyware_signature:
+        state: gathered
+        name: "example-anti_spyware_signature"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered anti_spyware_signature
+      ansible.builtin.debug:
+        var: gather_result.anti_spyware_signature
+
+    - name: List all anti_spyware_signatures in a folder
+      paloaltonetworks.scm.scm_anti_spyware_signature_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display anti_spyware_signatures list
+      ansible.builtin.debug:
+        var: list_result.anti_spyware_signatures
+
+
+    - name: Delete the anti_spyware_signature object
+      paloaltonetworks.scm.scm_anti_spyware_signature:
+        state: absent
+        name: "example-anti_spyware_signature"
+        folder: "Shared"
+

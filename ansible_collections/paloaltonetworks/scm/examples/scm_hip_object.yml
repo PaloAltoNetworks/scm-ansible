@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_hip_object
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_hip_object.yml
+
+- name: Manage hip_objects in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a hip_object object
+      paloaltonetworks.scm.scm_hip_object:
+        state: present
+        name: "example-hip_object"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created hip_object
+      ansible.builtin.debug:
+        var: create_result.hip_object
+
+    - name: Gather information about a hip_object object
+      paloaltonetworks.scm.scm_hip_object:
+        state: gathered
+        name: "example-hip_object"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered hip_object
+      ansible.builtin.debug:
+        var: gather_result.hip_object
+
+    - name: List all hip_objects in a folder
+      paloaltonetworks.scm.scm_hip_object_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display hip_objects list
+      ansible.builtin.debug:
+        var: list_result.hip_objects
+
+
+    - name: Delete the hip_object object
+      paloaltonetworks.scm.scm_hip_object:
+        state: absent
+        name: "example-hip_object"
+        folder: "Shared"
+

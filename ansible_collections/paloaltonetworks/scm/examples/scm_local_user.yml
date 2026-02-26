@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_local_user
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_local_user.yml
+
+- name: Manage local_users in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a local_user object
+      paloaltonetworks.scm.scm_local_user:
+        state: present
+        name: "example-local_user"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created local_user
+      ansible.builtin.debug:
+        var: create_result.local_user
+
+    - name: Gather information about a local_user object
+      paloaltonetworks.scm.scm_local_user:
+        state: gathered
+        name: "example-local_user"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered local_user
+      ansible.builtin.debug:
+        var: gather_result.local_user
+
+    - name: List all local_users in a folder
+      paloaltonetworks.scm.scm_local_user_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display local_users list
+      ansible.builtin.debug:
+        var: list_result.local_users
+
+
+    - name: Delete the local_user object
+      paloaltonetworks.scm.scm_local_user:
+        state: absent
+        name: "example-local_user"
+        folder: "Shared"
+

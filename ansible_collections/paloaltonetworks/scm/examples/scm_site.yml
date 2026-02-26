@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_site
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_site.yml
+
+- name: Manage sites in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a site object
+      paloaltonetworks.scm.scm_site:
+        state: present
+        name: "example-site"
+      register: create_result
+
+    - name: Display created site
+      ansible.builtin.debug:
+        var: create_result.site
+
+    - name: Gather information about a site object
+      paloaltonetworks.scm.scm_site:
+        state: gathered
+        name: "example-site"
+      register: gather_result
+
+    - name: Display gathered site
+      ansible.builtin.debug:
+        var: gather_result.site
+
+    - name: List all sites in a folder
+      paloaltonetworks.scm.scm_site_info:
+      register: list_result
+
+    - name: Display sites list
+      ansible.builtin.debug:
+        var: list_result.sites
+
+
+    - name: Delete the site object
+      paloaltonetworks.scm.scm_site:
+        state: absent
+        name: "example-site"
+

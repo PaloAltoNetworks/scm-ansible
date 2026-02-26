@@ -2,9 +2,9 @@
 
 Ansible collection for managing Palo Alto Networks **Strata Cloud Manager** (SCM) resources.
 
-This collection provides 120+ modules that map 1:1 to the SCM API, enabling
-infrastructure-as-code management of security policies, network objects, and
-cloud-managed firewall configurations.
+This collection provides 240+ modules (122 CRUD + 120 read-only `_info` modules)
+that map 1:1 to the SCM API, enabling infrastructure-as-code management of
+security policies, network objects, and cloud-managed firewall configurations.
 
 ## Requirements
 
@@ -63,7 +63,7 @@ When environment variables are set, you can omit credentials from tasks:
 
 ```yaml
 - name: Create an address object
-  paloaltonetworks.scm.scm_addresses:
+  paloaltonetworks.scm.scm_address:
     state: present
     name: "web-server-1"
     ip_netmask: "10.0.1.100/32"
@@ -95,7 +95,7 @@ Pass credentials directly in each task (useful for Ansible Vault integration):
 
 ```yaml
 - name: Create an address object
-  paloaltonetworks.scm.scm_addresses:
+  paloaltonetworks.scm.scm_address:
     client_id: "{{ vault_scm_client_id }}"
     client_secret: "{{ vault_scm_client_secret }}"
     tsg_id: "{{ vault_scm_tsg_id }}"
@@ -133,159 +133,348 @@ Most resources must be scoped to a container. Exactly one of these should be spe
 | `snippet`  | The snippet name                      |
 | `device`   | The device name                       |
 
-### Playbook Examples
+### Complete Workflow Example
 
-#### Create an address object
+This example shows every operation on a single address object — create, idempotent
+re-run, update, gather by name, get by ID, list, and delete — with the expected
+output from each step.
+
+#### Step 1: Create an address
 
 ```yaml
----
-- name: Manage SCM address objects
-  hosts: localhost
-  connection: local
-  gather_facts: false
-
-  tasks:
-    - name: Create a web server address
-      paloaltonetworks.scm.scm_addresses:
-        state: present
-        name: "web-server-1"
-        description: "Production web server"
-        ip_netmask: "10.0.1.100/32"
-        folder: "Shared"
-        tag:
-          - "production"
-          - "web"
-
-    - name: Create a network range
-      paloaltonetworks.scm.scm_addresses:
-        state: present
-        name: "internal-network"
-        description: "Internal network range"
-        ip_range: "10.0.0.1-10.0.0.254"
-        folder: "Shared"
+- name: Create a web server address
+  paloaltonetworks.scm.scm_address:
+    state: present
+    name: "web-server-1"
+    description: "Production web server"
+    ip_netmask: "10.0.1.100/32"
+    folder: "Shared"
+    tag:
+      - "production"
+      - "web"
+  register: create_result
 ```
 
-#### Manage address groups
+Output:
+```json
+{
+  "changed": true,
+  "address": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "web-server-1",
+    "description": "Production web server",
+    "ip_netmask": "10.0.1.100/32",
+    "folder": "Shared",
+    "tag": ["production", "web"]
+  },
+  "msg": "address created successfully"
+}
+```
+
+#### Step 2: Run the same task again (idempotency)
+
+Running the exact same task produces no changes. The module fetches the existing
+object, compares all fields, and finds nothing differs:
 
 ```yaml
-    - name: Create an address group
-      paloaltonetworks.scm.scm_address_groups:
-        state: present
-        name: "web-servers"
-        description: "All web server addresses"
-        static:
-          - "web-server-1"
-          - "web-server-2"
-        folder: "Shared"
+- name: Create a web server address (re-run)
+  paloaltonetworks.scm.scm_address:
+    state: present
+    name: "web-server-1"
+    description: "Production web server"
+    ip_netmask: "10.0.1.100/32"
+    folder: "Shared"
+    tag:
+      - "production"
+      - "web"
+  register: idempotent_result
+```
+
+Output (`changed: false` — no API call was made):
+```json
+{
+  "changed": false,
+  "address": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "web-server-1",
+    "description": "Production web server",
+    "ip_netmask": "10.0.1.100/32",
+    "folder": "Shared",
+    "tag": ["production", "web"]
+  },
+  "msg": "address already up to date"
+}
+```
+
+Note: Even if the API returns tags as `["web", "production"]` (different order),
+the module treats it as equal because list comparison is order-insensitive.
+
+#### Step 3: Update the address
+
+Change the description and add a tag. The module detects the difference and
+calls the update API:
+
+```yaml
+- name: Update the web server address
+  paloaltonetworks.scm.scm_address:
+    state: present
+    name: "web-server-1"
+    description: "Production web server - updated"
+    ip_netmask: "10.0.1.100/32"
+    folder: "Shared"
+    tag:
+      - "production"
+      - "web"
+      - "updated"
+  register: update_result
+```
+
+Output:
+```json
+{
+  "changed": true,
+  "address": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "web-server-1",
+    "description": "Production web server - updated",
+    "ip_netmask": "10.0.1.100/32",
+    "folder": "Shared",
+    "tag": ["production", "web", "updated"]
+  },
+  "msg": "address updated successfully"
+}
+```
+
+#### Step 4: Gather by name (using the CRUD module)
+
+Retrieve a single object by name without making any changes. Uses `state: gathered`
+on the CRUD module:
+
+```yaml
+- name: Gather address details by name
+  paloaltonetworks.scm.scm_address:
+    state: gathered
+    name: "web-server-1"
+    folder: "Shared"
+  register: gathered_result
+
+- name: Show the object
+  ansible.builtin.debug:
+    var: gathered_result.address
+```
+
+Output:
+```json
+{
+  "changed": false,
+  "address": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "web-server-1",
+    "description": "Production web server - updated",
+    "ip_netmask": "10.0.1.100/32",
+    "folder": "Shared",
+    "tag": ["production", "web", "updated"]
+  },
+  "msg": "address found"
+}
+```
+
+#### Step 5: Get by name (using the _info module)
+
+The `_info` module is read-only and returns results in a list format.
+Pass `name` to fetch a single object by name:
+
+```yaml
+- name: Get address by name using info module
+  paloaltonetworks.scm.scm_address_info:
+    name: "web-server-1"
+    folder: "Shared"
+  register: info_by_name
+```
+
+Output (note: returns a list with one item):
+```json
+{
+  "addresses": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "web-server-1",
+      "description": "Production web server - updated",
+      "ip_netmask": "10.0.1.100/32",
+      "folder": "Shared",
+      "tag": ["production", "web", "updated"]
+    }
+  ],
+  "total": 1
+}
+```
+
+#### Step 6: Get by ID (using the _info module)
+
+If you have the UUID (e.g., from a previous create), you can fetch directly by ID:
+
+```yaml
+- name: Get address by ID
+  paloaltonetworks.scm.scm_address_info:
+    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  register: info_by_id
+```
+
+Output:
+```json
+{
+  "addresses": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "name": "web-server-1",
+      "description": "Production web server - updated",
+      "ip_netmask": "10.0.1.100/32",
+      "folder": "Shared",
+      "tag": ["production", "web", "updated"]
+    }
+  ],
+  "total": 1
+}
+```
+
+#### Step 7: List all addresses in a folder
+
+Omit `name` and `id` to list all objects in a container. Supports pagination
+with `limit` and `offset`, or set `gather_all: true` to auto-paginate:
+
+```yaml
+- name: List all addresses in the Shared folder
+  paloaltonetworks.scm.scm_address_info:
+    folder: "Shared"
+    limit: 50
+  register: all_addresses
+
+- name: Show how many addresses were returned
+  ansible.builtin.debug:
+    msg: "Found {{ '{{' }} all_addresses.total {{ '}}' }} addresses"
+
+- name: List ALL addresses (auto-paginate through every page)
+  paloaltonetworks.scm.scm_address_info:
+    folder: "Shared"
+    gather_all: true
+  register: every_address
+```
+
+Output (abbreviated):
+```json
+{
+  "addresses": [
+    {"id": "aaa-111", "name": "web-server-1", "ip_netmask": "10.0.1.100/32", ...},
+    {"id": "bbb-222", "name": "db-server-1", "ip_netmask": "10.0.2.100/32", ...},
+    {"id": "ccc-333", "name": "app-server-1", "ip_netmask": "10.0.3.100/32", ...}
+  ],
+  "total": 3
+}
+```
+
+#### Step 8: Delete the address
+
+```yaml
+- name: Delete the web server address
+  paloaltonetworks.scm.scm_address:
+    state: absent
+    name: "web-server-1"
+    folder: "Shared"
+  register: delete_result
+```
+
+Output:
+```json
+{
+  "changed": true,
+  "address": {},
+  "msg": "address deleted successfully"
+}
+```
+
+Running the delete again produces no change (idempotent):
+```json
+{
+  "changed": false,
+  "address": {},
+  "msg": "address already absent"
+}
+```
+
+### More Examples
+
+#### Create address groups
+
+```yaml
+- name: Create an address group
+  paloaltonetworks.scm.scm_address_group:
+    state: present
+    name: "web-servers"
+    description: "All web server addresses"
+    static:
+      - "web-server-1"
+      - "web-server-2"
+    folder: "Shared"
 ```
 
 #### Create security rules
 
 ```yaml
-    - name: Allow web traffic
-      paloaltonetworks.scm.scm_security_rules:
-        state: present
-        name: "allow-web-traffic"
-        description: "Allow HTTP/HTTPS to web servers"
-        source:
-          - "any"
-        destination:
-          - "web-servers"
-        application:
-          - "web-browsing"
-          - "ssl"
-        action: "allow"
-        log_end: true
-        folder: "Shared"
+- name: Allow web traffic
+  paloaltonetworks.scm.scm_security_rule:
+    state: present
+    name: "allow-web-traffic"
+    description: "Allow HTTP/HTTPS to web servers"
+    source:
+      - "any"
+    destination:
+      - "web-servers"
+    application:
+      - "web-browsing"
+      - "ssl"
+    action: "allow"
+    log_end: true
+    folder: "Shared"
 ```
 
-#### Create tags
+#### List security rules (with position)
+
+Rule resources require a `position` parameter (`pre` or `post`):
 
 ```yaml
-    - name: Create tags
-      paloaltonetworks.scm.scm_tags:
-        state: present
-        name: "production"
-        color: "Red"
-        comments: "Production resources"
-        folder: "Shared"
+- name: List all pre-rules
+  paloaltonetworks.scm.scm_security_rule_info:
+    folder: "Shared"
+    position: pre
+  register: pre_rules
+
+- name: List all post-rules
+  paloaltonetworks.scm.scm_security_rule_info:
+    folder: "Shared"
+    position: post
+  register: post_rules
 ```
 
-#### Create service objects
+#### Create tags and services
 
 ```yaml
-    - name: Create a custom service
-      paloaltonetworks.scm.scm_services:
-        state: present
-        name: "custom-app-port"
-        description: "Custom application port"
-        protocol:
-          tcp:
-            port: "8443"
-        folder: "Shared"
+- name: Create a tag
+  paloaltonetworks.scm.scm_tag:
+    state: present
+    name: "production"
+    color: "Red"
+    comments: "Production resources"
+    folder: "Shared"
 
-    - name: Create a service group
-      paloaltonetworks.scm.scm_service_groups:
-        state: present
-        name: "web-services"
-        members:
-          - "custom-app-port"
-          - "service-http"
-          - "service-https"
-        folder: "Shared"
-```
-
-#### Gather existing resources
-
-```yaml
-    - name: Get address details
-      paloaltonetworks.scm.scm_addresses:
-        state: gathered
-        name: "web-server-1"
-        folder: "Shared"
-      register: addr_info
-
-    - name: Show result
-      ansible.builtin.debug:
-        var: addr_info.data
-```
-
-#### Delete a resource
-
-```yaml
-    - name: Remove an address
-      paloaltonetworks.scm.scm_addresses:
-        state: absent
-        name: "old-server"
-        folder: "Shared"
-```
-
-#### Manage security profiles
-
-```yaml
-    - name: Create anti-spyware profile
-      paloaltonetworks.scm.scm_anti_spyware_profiles:
-        state: present
-        name: "strict-anti-spyware"
-        description: "Strict anti-spyware profile"
-        folder: "Shared"
-
-    - name: Create URL access profile
-      paloaltonetworks.scm.scm_url_access_profiles:
-        state: present
-        name: "default-url-filtering"
-        description: "Default URL filtering profile"
-        folder: "Shared"
-
-    - name: Create a profile group
-      paloaltonetworks.scm.scm_profile_groups:
-        state: present
-        name: "strict-security"
-        spyware:
-          - "strict-anti-spyware"
-        url_filtering:
-          - "default-url-filtering"
-        folder: "Shared"
+- name: Create a custom service
+  paloaltonetworks.scm.scm_service:
+    state: present
+    name: "custom-app-port"
+    description: "Custom application port"
+    protocol:
+      tcp:
+        port: "8443"
+    folder: "Shared"
 ```
 
 ### Idempotency
@@ -312,130 +501,130 @@ All modules follow the naming convention `scm_<resource_name>`. Run
 `ansible-doc paloaltonetworks.scm.<module_name>` for full parameter documentation:
 
 ```bash
-ansible-doc paloaltonetworks.scm.scm_addresses
-ansible-doc paloaltonetworks.scm.scm_security_rules
-ansible-doc paloaltonetworks.scm.scm_tags
+ansible-doc paloaltonetworks.scm.scm_address
+ansible-doc paloaltonetworks.scm.scm_security_rule
+ansible-doc paloaltonetworks.scm.scm_tag
 ```
 
 ### Objects
 
 | Module | Description |
 |--------|-------------|
-| `scm_addresses` | IP addresses, FQDNs, and IP ranges |
-| `scm_address_groups` | Static and dynamic address groups |
-| `scm_applications` | Application definitions |
-| `scm_application_filters` | Application filter criteria |
-| `scm_application_groups` | Application groups |
-| `scm_external_dynamic_lists` | External dynamic lists (EDLs) |
-| `scm_hip_objects` | Host Information Profile objects |
-| `scm_hip_profiles` | HIP profiles |
-| `scm_regions` | Region definitions |
-| `scm_schedules` | Schedule objects |
-| `scm_services` | TCP/UDP service definitions |
-| `scm_service_groups` | Service groups |
-| `scm_tags` | Tag objects |
-| `scm_dynamic_user_groups` | Dynamic user groups |
+| `scm_address` | IP addresses, FQDNs, and IP ranges |
+| `scm_address_group` | Static and dynamic address groups |
+| `scm_application` | Application definitions |
+| `scm_application_filter` | Application filter criteria |
+| `scm_application_group` | Application groups |
+| `scm_external_dynamic_list` | External dynamic lists (EDLs) |
+| `scm_hip_object` | Host Information Profile objects |
+| `scm_hip_profile` | HIP profiles |
+| `scm_region` | Region definitions |
+| `scm_schedule` | Schedule objects |
+| `scm_service` | TCP/UDP service definitions |
+| `scm_service_group` | Service groups |
+| `scm_tag` | Tag objects |
+| `scm_dynamic_user_group` | Dynamic user groups |
 
 ### Security Policy
 
 | Module | Description |
 |--------|-------------|
-| `scm_security_rules` | Security policy rules |
-| `scm_nat_rules` | NAT policy rules |
-| `scm_decryption_rules` | Decryption policy rules |
-| `scm_authentication_rules` | Authentication policy rules |
-| `scm_application_override_rules` | Application override rules |
-| `scm_pbf_rules` | Policy-based forwarding rules |
-| `scm_do_s_protection_rules` | DoS protection rules |
-| `scm_qo_s_rules` | QoS policy rules |
+| `scm_security_rule` | Security policy rules |
+| `scm_nat_rule` | NAT policy rules |
+| `scm_decryption_rule` | Decryption policy rules |
+| `scm_authentication_rule` | Authentication policy rules |
+| `scm_application_override_rule` | Application override rules |
+| `scm_pbf_rule` | Policy-based forwarding rules |
+| `scm_dos_protection_rule` | DoS protection rules |
+| `scm_qos_rule` | QoS policy rules |
 
 ### Security Profiles
 
 | Module | Description |
 |--------|-------------|
-| `scm_anti_spyware_profiles` | Anti-spyware profiles |
-| `scm_dns_security_profiles` | DNS security profiles |
-| `scm_decryption_profiles` | Decryption profiles |
-| `scm_file_blocking_profiles` | File blocking profiles |
-| `scm_url_access_profiles` | URL filtering profiles |
-| `scm_vulnerability_protection_profiles` | Vulnerability protection profiles |
-| `scm_wild_fire_anti_virus_profiles` | WildFire antivirus profiles |
-| `scm_do_s_protection_profiles` | DoS protection profiles |
-| `scm_profile_groups` | Security profile groups |
+| `scm_anti_spyware_profile` | Anti-spyware profiles |
+| `scm_dns_security_profile` | DNS security profiles |
+| `scm_decryption_profile` | Decryption profiles |
+| `scm_file_blocking_profile` | File blocking profiles |
+| `scm_url_access_profile` | URL filtering profiles |
+| `scm_vulnerability_protection_profile` | Vulnerability protection profiles |
+| `scm_wildfire_anti_virus_profile` | WildFire antivirus profiles |
+| `scm_dos_protection_profile` | DoS protection profiles |
+| `scm_profile_group` | Security profile groups |
 
 ### Network Configuration
 
 | Module | Description |
 |--------|-------------|
-| `scm_ethernet_interfaces` | Ethernet interfaces |
-| `scm_loopback_interfaces` | Loopback interfaces |
-| `scm_tunnel_interfaces` | Tunnel interfaces |
-| `scm_vlan_interfaces` | VLAN interfaces |
-| `scm_aggregate_interfaces` | Aggregate interfaces |
-| `scm_layer2_subinterfaces` | Layer 2 subinterfaces |
-| `scm_layer3_subinterfaces` | Layer 3 subinterfaces |
-| `scm_dhcp_interfaces` | DHCP interfaces |
-| `scm_security_zones` | Security zones |
-| `scm_ike_gateways` | IKE gateways |
-| `scm_ike_crypto_profiles` | IKE crypto profiles |
-| `scm_i_psec_tunnels` | IPsec tunnels |
-| `scm_i_psec_crypto_profiles` | IPsec crypto profiles |
-| `scm_remote_networks` | Remote networks |
-| `scm_service_connections` | Service connections |
-| `scm_dns_proxies` | DNS proxies |
-| `scm_logical_routers` | Logical routers |
+| `scm_ethernet_interface` | Ethernet interfaces |
+| `scm_loopback_interface` | Loopback interfaces |
+| `scm_tunnel_interface` | Tunnel interfaces |
+| `scm_vlan_interface` | VLAN interfaces |
+| `scm_aggregate_interface` | Aggregate interfaces |
+| `scm_layer2_subinterface` | Layer 2 subinterfaces |
+| `scm_layer3_subinterface` | Layer 3 subinterfaces |
+| `scm_dhcp_interface` | DHCP interfaces |
+| `scm_security_zone` | Security zones |
+| `scm_ike_gateway` | IKE gateways |
+| `scm_ike_crypto_profile` | IKE crypto profiles |
+| `scm_ipsec_tunnel` | IPsec tunnels |
+| `scm_ipsec_crypto_profile` | IPsec crypto profiles |
+| `scm_remote_network` | Remote networks |
+| `scm_service_connection` | Service connections |
+| `scm_dns_proxy` | DNS proxies |
+| `scm_logical_router` | Logical routers |
 
 ### SD-WAN
 
 | Module | Description |
 |--------|-------------|
-| `scm_sdwan_rules` | SD-WAN rules |
-| `scm_sdwan_path_quality_profiles` | Path quality profiles |
-| `scm_sdwan_error_correction_profiles` | Error correction profiles |
-| `scm_sdwan_traffic_distribution_profiles` | Traffic distribution profiles |
-| `scm_traffic_steering_rules` | Traffic steering rules |
-| `scm_bandwidth_allocations` | Bandwidth allocations |
+| `scm_sdwan_rule` | SD-WAN rules |
+| `scm_sdwan_path_quality_profile` | Path quality profiles |
+| `scm_sdwan_error_correction_profile` | Error correction profiles |
+| `scm_sdwan_traffic_distribution_profile` | Traffic distribution profiles |
+| `scm_traffic_steering_rule` | Traffic steering rules |
+| `scm_bandwidth_allocation` | Bandwidth allocations |
 
 ### Authentication & Identity
 
 | Module | Description |
 |--------|-------------|
-| `scm_authentication_profiles` | Authentication profiles |
-| `scm_authentication_portals` | Authentication portals |
-| `scm_authentication_sequences` | Authentication sequences |
-| `scm_certificate_profiles` | Certificate profiles |
-| `scm_certificates` | Certificate management |
-| `scm_kerberos_server_profiles` | Kerberos server profiles |
-| `scm_ldap_server_profiles` | LDAP server profiles |
-| `scm_radius_server_profiles` | RADIUS server profiles |
-| `scm_saml_server_profiles` | SAML server profiles |
-| `scm_tacacs_server_profiles` | TACACS+ server profiles |
-| `scm_local_users` | Local user accounts |
-| `scm_local_user_groups` | Local user groups |
-| `scm_mfa_servers` | Multi-factor auth servers |
-| `scm_scep_profiles` | SCEP profiles |
-| `scm_tls_service_profiles` | TLS service profiles |
+| `scm_authentication_profile` | Authentication profiles |
+| `scm_authentication_portal` | Authentication portals |
+| `scm_authentication_sequence` | Authentication sequences |
+| `scm_certificate_profile` | Certificate profiles |
+| `scm_certificate` | Certificate management |
+| `scm_kerberos_server_profile` | Kerberos server profiles |
+| `scm_ldap_server_profile` | LDAP server profiles |
+| `scm_radius_server_profile` | RADIUS server profiles |
+| `scm_saml_server_profile` | SAML server profiles |
+| `scm_tacacs_server_profile` | TACACS+ server profiles |
+| `scm_local_user` | Local user accounts |
+| `scm_local_user_group` | Local user groups |
+| `scm_mfa_server` | Multi-factor auth servers |
+| `scm_scep_profile` | SCEP profiles |
+| `scm_tls_service_profile` | TLS service profiles |
 
 ### Logging & Monitoring
 
 | Module | Description |
 |--------|-------------|
-| `scm_log_forwarding_profiles` | Log forwarding profiles |
-| `scm_http_server_profiles` | HTTP server profiles |
-| `scm_http_header_profiles` | HTTP header profiles |
-| `scm_syslog_server_profiles` | Syslog server profiles |
+| `scm_log_forwarding_profile` | Log forwarding profiles |
+| `scm_http_server_profile` | HTTP server profiles |
+| `scm_http_header_profile` | HTTP header profiles |
+| `scm_syslog_server_profile` | Syslog server profiles |
 
 ### System Settings
 
 | Module | Description |
 |--------|-------------|
-| `scm_folders` | Folder management |
-| `scm_snippets` | Snippet management |
-| `scm_labels` | Label management |
-| `scm_variables` | Variable definitions |
-| `scm_general_settings` | General system settings |
-| `scm_url_categories` | Custom URL categories |
-| `scm_auto_tag_actions` | Auto-tagging actions |
+| `scm_folder` | Folder management |
+| `scm_snippet` | Snippet management |
+| `scm_label` | Label management |
+| `scm_variable` | Variable definitions |
+| `scm_general_setting` | General system settings |
+| `scm_url_category` | Custom URL categories |
+| `scm_auto_tag_action` | Auto-tagging actions |
 
 ## Troubleshooting
 

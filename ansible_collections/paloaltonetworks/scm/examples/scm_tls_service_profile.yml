@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_tls_service_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_tls_service_profile.yml
+
+- name: Manage tls_service_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a tls_service_profile object
+      paloaltonetworks.scm.scm_tls_service_profile:
+        state: present
+        name: "example-tls_service_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created tls_service_profile
+      ansible.builtin.debug:
+        var: create_result.tls_service_profile
+
+    - name: Gather information about a tls_service_profile object
+      paloaltonetworks.scm.scm_tls_service_profile:
+        state: gathered
+        name: "example-tls_service_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered tls_service_profile
+      ansible.builtin.debug:
+        var: gather_result.tls_service_profile
+
+    - name: List all tls_service_profiles in a folder
+      paloaltonetworks.scm.scm_tls_service_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display tls_service_profiles list
+      ansible.builtin.debug:
+        var: list_result.tls_service_profiles
+
+
+    - name: Delete the tls_service_profile object
+      paloaltonetworks.scm.scm_tls_service_profile:
+        state: absent
+        name: "example-tls_service_profile"
+        folder: "Shared"
+

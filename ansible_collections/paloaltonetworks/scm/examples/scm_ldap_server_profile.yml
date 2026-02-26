@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ldap_server_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_ldap_server_profile.yml
+
+- name: Manage ldap_server_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a ldap_server_profile object
+      paloaltonetworks.scm.scm_ldap_server_profile:
+        state: present
+        name: "example-ldap_server_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created ldap_server_profile
+      ansible.builtin.debug:
+        var: create_result.ldap_server_profile
+
+    - name: Gather information about a ldap_server_profile object
+      paloaltonetworks.scm.scm_ldap_server_profile:
+        state: gathered
+        name: "example-ldap_server_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered ldap_server_profile
+      ansible.builtin.debug:
+        var: gather_result.ldap_server_profile
+
+    - name: List all ldap_server_profiles in a folder
+      paloaltonetworks.scm.scm_ldap_server_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display ldap_server_profiles list
+      ansible.builtin.debug:
+        var: list_result.ldap_server_profiles
+
+
+    - name: Delete the ldap_server_profile object
+      paloaltonetworks.scm.scm_ldap_server_profile:
+        state: absent
+        name: "example-ldap_server_profile"
+        folder: "Shared"
+

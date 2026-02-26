@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_snippet
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_snippet.yml
+
+- name: Manage snippets in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a snippet object
+      paloaltonetworks.scm.scm_snippet:
+        state: present
+        name: "example-snippet"
+      register: create_result
+
+    - name: Display created snippet
+      ansible.builtin.debug:
+        var: create_result.snippet
+
+    - name: Gather information about a snippet object
+      paloaltonetworks.scm.scm_snippet:
+        state: gathered
+        name: "example-snippet"
+      register: gather_result
+
+    - name: Display gathered snippet
+      ansible.builtin.debug:
+        var: gather_result.snippet
+
+    - name: List all snippets in a folder
+      paloaltonetworks.scm.scm_snippet_info:
+      register: list_result
+
+    - name: Display snippets list
+      ansible.builtin.debug:
+        var: list_result.snippets
+
+
+    - name: Delete the snippet object
+      paloaltonetworks.scm.scm_snippet:
+        state: absent
+        name: "example-snippet"
+

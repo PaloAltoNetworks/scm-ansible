@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_decryption_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_decryption_rule.yml
+
+- name: Manage decryption_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a decryption_rule object
+      paloaltonetworks.scm.scm_decryption_rule:
+        state: present
+        name: "example-decryption_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created decryption_rule
+      ansible.builtin.debug:
+        var: create_result.decryption_rule
+
+    - name: Gather information about a decryption_rule object
+      paloaltonetworks.scm.scm_decryption_rule:
+        state: gathered
+        name: "example-decryption_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered decryption_rule
+      ansible.builtin.debug:
+        var: gather_result.decryption_rule
+
+    - name: List all decryption_rules in a folder
+      paloaltonetworks.scm.scm_decryption_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display decryption_rules list
+      ansible.builtin.debug:
+        var: list_result.decryption_rules
+
+
+    - name: Delete the decryption_rule object
+      paloaltonetworks.scm.scm_decryption_rule:
+        state: absent
+        name: "example-decryption_rule"
+        folder: "Shared"
+

@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_bandwidth_allocation
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_bandwidth_allocation.yml
+
+- name: Manage bandwidth_allocations in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a bandwidth_allocation object
+      paloaltonetworks.scm.scm_bandwidth_allocation:
+        state: present
+        name: "example-bandwidth_allocation"
+      register: create_result
+
+    - name: Display created bandwidth_allocation
+      ansible.builtin.debug:
+        var: create_result.bandwidth_allocation
+
+    - name: Gather information about a bandwidth_allocation object
+      paloaltonetworks.scm.scm_bandwidth_allocation:
+        state: gathered
+        name: "example-bandwidth_allocation"
+      register: gather_result
+
+    - name: Display gathered bandwidth_allocation
+      ansible.builtin.debug:
+        var: gather_result.bandwidth_allocation
+
+    - name: List all bandwidth_allocations in a folder
+      paloaltonetworks.scm.scm_bandwidth_allocation_info:
+      register: list_result
+
+    - name: Display bandwidth_allocations list
+      ansible.builtin.debug:
+        var: list_result.bandwidth_allocations
+
+
+    - name: Delete the bandwidth_allocation object
+      paloaltonetworks.scm.scm_bandwidth_allocation:
+        state: absent
+        name: "example-bandwidth_allocation"
+

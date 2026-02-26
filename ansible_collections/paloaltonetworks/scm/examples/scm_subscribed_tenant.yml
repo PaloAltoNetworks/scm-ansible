@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_subscribed_tenant
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_subscribed_tenant.yml
+
+- name: Manage subscribed_tenants in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a subscribed_tenant object
+      paloaltonetworks.scm.scm_subscribed_tenant:
+        state: present
+        name: "example-subscribed_tenant"
+      register: create_result
+
+    - name: Display created subscribed_tenant
+      ansible.builtin.debug:
+        var: create_result.subscribed_tenant
+
+    - name: Gather information about a subscribed_tenant object
+      paloaltonetworks.scm.scm_subscribed_tenant:
+        state: gathered
+        name: "example-subscribed_tenant"
+      register: gather_result
+
+    - name: Display gathered subscribed_tenant
+      ansible.builtin.debug:
+        var: gather_result.subscribed_tenant
+
+    - name: List all subscribed_tenants in a folder
+      paloaltonetworks.scm.scm_subscribed_tenant_info:
+      register: list_result
+
+    - name: Display subscribed_tenants list
+      ansible.builtin.debug:
+        var: list_result.subscribed_tenants
+
+
+    - name: Delete the subscribed_tenant object
+      paloaltonetworks.scm.scm_subscribed_tenant:
+        state: absent
+        name: "example-subscribed_tenant"
+

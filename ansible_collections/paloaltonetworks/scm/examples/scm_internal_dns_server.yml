@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_internal_dns_server
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_internal_dns_server.yml
+
+- name: Manage internal_dns_servers in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a internal_dns_server object
+      paloaltonetworks.scm.scm_internal_dns_server:
+        state: present
+        name: "example-internal_dns_server"
+      register: create_result
+
+    - name: Display created internal_dns_server
+      ansible.builtin.debug:
+        var: create_result.internal_dns_server
+
+    - name: Gather information about a internal_dns_server object
+      paloaltonetworks.scm.scm_internal_dns_server:
+        state: gathered
+        name: "example-internal_dns_server"
+      register: gather_result
+
+    - name: Display gathered internal_dns_server
+      ansible.builtin.debug:
+        var: gather_result.internal_dns_server
+
+    - name: List all internal_dns_servers in a folder
+      paloaltonetworks.scm.scm_internal_dns_server_info:
+      register: list_result
+
+    - name: Display internal_dns_servers list
+      ansible.builtin.debug:
+        var: list_result.internal_dns_servers
+
+
+    - name: Delete the internal_dns_server object
+      paloaltonetworks.scm.scm_internal_dns_server:
+        state: absent
+        name: "example-internal_dns_server"
+

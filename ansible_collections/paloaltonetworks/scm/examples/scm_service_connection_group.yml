@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_service_connection_group
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_service_connection_group.yml
+
+- name: Manage service_connection_groups in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a service_connection_group object
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: present
+        name: "example-service_connection_group"
+      register: create_result
+
+    - name: Display created service_connection_group
+      ansible.builtin.debug:
+        var: create_result.service_connection_group
+
+    - name: Gather information about a service_connection_group object
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: gathered
+        name: "example-service_connection_group"
+      register: gather_result
+
+    - name: Display gathered service_connection_group
+      ansible.builtin.debug:
+        var: gather_result.service_connection_group
+
+    - name: List all service_connection_groups in a folder
+      paloaltonetworks.scm.scm_service_connection_group_info:
+      register: list_result
+
+    - name: Display service_connection_groups list
+      ansible.builtin.debug:
+        var: list_result.service_connection_groups
+
+
+    - name: Delete the service_connection_group object
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: absent
+        name: "example-service_connection_group"
+

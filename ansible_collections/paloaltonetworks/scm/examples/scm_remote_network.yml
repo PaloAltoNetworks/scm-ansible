@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_remote_network
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_remote_network.yml
+
+- name: Manage remote_networks in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a remote_network object
+      paloaltonetworks.scm.scm_remote_network:
+        state: present
+        name: "example-remote_network"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created remote_network
+      ansible.builtin.debug:
+        var: create_result.remote_network
+
+    - name: Gather information about a remote_network object
+      paloaltonetworks.scm.scm_remote_network:
+        state: gathered
+        name: "example-remote_network"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered remote_network
+      ansible.builtin.debug:
+        var: gather_result.remote_network
+
+    - name: List all remote_networks in a folder
+      paloaltonetworks.scm.scm_remote_network_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display remote_networks list
+      ansible.builtin.debug:
+        var: list_result.remote_networks
+
+
+    - name: Delete the remote_network object
+      paloaltonetworks.scm.scm_remote_network:
+        state: absent
+        name: "example-remote_network"
+        folder: "Shared"
+

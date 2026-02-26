@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_url_access_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_url_access_profile.yml
+
+- name: Manage url_access_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a url_access_profile object
+      paloaltonetworks.scm.scm_url_access_profile:
+        state: present
+        name: "example-url_access_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created url_access_profile
+      ansible.builtin.debug:
+        var: create_result.url_access_profile
+
+    - name: Gather information about a url_access_profile object
+      paloaltonetworks.scm.scm_url_access_profile:
+        state: gathered
+        name: "example-url_access_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered url_access_profile
+      ansible.builtin.debug:
+        var: gather_result.url_access_profile
+
+    - name: List all url_access_profiles in a folder
+      paloaltonetworks.scm.scm_url_access_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display url_access_profiles list
+      ansible.builtin.debug:
+        var: list_result.url_access_profiles
+
+
+    - name: Delete the url_access_profile object
+      paloaltonetworks.scm.scm_url_access_profile:
+        state: absent
+        name: "example-url_access_profile"
+        folder: "Shared"
+

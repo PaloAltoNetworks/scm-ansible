@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_sdwan_traffic_distribution_profile.yml
+
+- name: Manage sdwan_traffic_distribution_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a sdwan_traffic_distribution_profile object
+      paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
+        state: present
+        name: "example-sdwan_traffic_distribution_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created sdwan_traffic_distribution_profile
+      ansible.builtin.debug:
+        var: create_result.sdwan_traffic_distribution_profile
+
+    - name: Gather information about a sdwan_traffic_distribution_profile object
+      paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
+        state: gathered
+        name: "example-sdwan_traffic_distribution_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered sdwan_traffic_distribution_profile
+      ansible.builtin.debug:
+        var: gather_result.sdwan_traffic_distribution_profile
+
+    - name: List all sdwan_traffic_distribution_profiles in a folder
+      paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display sdwan_traffic_distribution_profiles list
+      ansible.builtin.debug:
+        var: list_result.sdwan_traffic_distribution_profiles
+
+
+    - name: Delete the sdwan_traffic_distribution_profile object
+      paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
+        state: absent
+        name: "example-sdwan_traffic_distribution_profile"
+        folder: "Shared"
+

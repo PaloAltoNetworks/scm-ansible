@@ -1,0 +1,45 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_trust
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_trust.yml
+
+- name: Manage trusts in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a trust object
+      paloaltonetworks.scm.scm_trust:
+        state: present
+        name: "example-trust"
+      register: create_result
+
+    - name: Display created trust
+      ansible.builtin.debug:
+        var: create_result.trust
+
+    - name: Gather information about a trust object
+      paloaltonetworks.scm.scm_trust:
+        state: gathered
+        name: "example-trust"
+      register: gather_result
+
+    - name: Display gathered trust
+      ansible.builtin.debug:
+        var: gather_result.trust
+
+
+    - name: Delete the trust object
+      paloaltonetworks.scm.scm_trust:
+        state: absent
+        name: "example-trust"
+

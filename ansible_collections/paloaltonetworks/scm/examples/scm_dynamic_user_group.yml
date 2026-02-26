@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_dynamic_user_group
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_dynamic_user_group.yml
+
+- name: Manage dynamic_user_groups in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a dynamic_user_group object
+      paloaltonetworks.scm.scm_dynamic_user_group:
+        state: present
+        name: "example-dynamic_user_group"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created dynamic_user_group
+      ansible.builtin.debug:
+        var: create_result.dynamic_user_group
+
+    - name: Gather information about a dynamic_user_group object
+      paloaltonetworks.scm.scm_dynamic_user_group:
+        state: gathered
+        name: "example-dynamic_user_group"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered dynamic_user_group
+      ansible.builtin.debug:
+        var: gather_result.dynamic_user_group
+
+    - name: List all dynamic_user_groups in a folder
+      paloaltonetworks.scm.scm_dynamic_user_group_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display dynamic_user_groups list
+      ansible.builtin.debug:
+        var: list_result.dynamic_user_groups
+
+
+    - name: Delete the dynamic_user_group object
+      paloaltonetworks.scm.scm_dynamic_user_group:
+        state: absent
+        name: "example-dynamic_user_group"
+        folder: "Shared"
+

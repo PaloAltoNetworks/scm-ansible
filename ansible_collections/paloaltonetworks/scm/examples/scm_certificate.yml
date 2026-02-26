@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_certificate
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_certificate.yml
+
+- name: Manage certificates in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a certificate object
+      paloaltonetworks.scm.scm_certificate:
+        state: present
+        name: "example-certificate"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created certificate
+      ansible.builtin.debug:
+        var: create_result.certificate
+
+    - name: Gather information about a certificate object
+      paloaltonetworks.scm.scm_certificate:
+        state: gathered
+        name: "example-certificate"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered certificate
+      ansible.builtin.debug:
+        var: gather_result.certificate
+
+    - name: List all certificates in a folder
+      paloaltonetworks.scm.scm_certificate_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display certificates list
+      ansible.builtin.debug:
+        var: list_result.certificates
+
+
+    - name: Delete the certificate object
+      paloaltonetworks.scm.scm_certificate:
+        state: absent
+        name: "example-certificate"
+        folder: "Shared"
+

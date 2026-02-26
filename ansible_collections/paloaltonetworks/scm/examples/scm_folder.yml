@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_folder
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_folder.yml
+
+- name: Manage folders in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a folder object
+      paloaltonetworks.scm.scm_folder:
+        state: present
+        name: "example-folder"
+      register: create_result
+
+    - name: Display created folder
+      ansible.builtin.debug:
+        var: create_result.folder
+
+    - name: Gather information about a folder object
+      paloaltonetworks.scm.scm_folder:
+        state: gathered
+        name: "example-folder"
+      register: gather_result
+
+    - name: Display gathered folder
+      ansible.builtin.debug:
+        var: gather_result.folder
+
+    - name: List all folders in a folder
+      paloaltonetworks.scm.scm_folder_info:
+      register: list_result
+
+    - name: Display folders list
+      ansible.builtin.debug:
+        var: list_result.folders
+
+
+    - name: Delete the folder object
+      paloaltonetworks.scm.scm_folder:
+        state: absent
+        name: "example-folder"
+

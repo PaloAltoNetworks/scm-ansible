@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_device_redistribution_collector_setting
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_device_redistribution_collector_setting.yml
+
+- name: Manage device_redistribution_collector_settings in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a device_redistribution_collector_setting object
+      paloaltonetworks.scm.scm_device_redistribution_collector_setting:
+        state: present
+        name: "example-device_redistribution_collector_setting"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created device_redistribution_collector_setting
+      ansible.builtin.debug:
+        var: create_result.device_redistribution_collector_setting
+
+    - name: Gather information about a device_redistribution_collector_setting object
+      paloaltonetworks.scm.scm_device_redistribution_collector_setting:
+        state: gathered
+        name: "example-device_redistribution_collector_setting"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered device_redistribution_collector_setting
+      ansible.builtin.debug:
+        var: gather_result.device_redistribution_collector_setting
+
+    - name: List all device_redistribution_collector_settings in a folder
+      paloaltonetworks.scm.scm_device_redistribution_collector_setting_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display device_redistribution_collector_settings list
+      ansible.builtin.debug:
+        var: list_result.device_redistribution_collector_settings
+
+
+    - name: Delete the device_redistribution_collector_setting object
+      paloaltonetworks.scm.scm_device_redistribution_collector_setting:
+        state: absent
+        name: "example-device_redistribution_collector_setting"
+        folder: "Shared"
+

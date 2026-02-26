@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_auto_tag_action
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_auto_tag_action.yml
+
+- name: Manage auto_tag_actions in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a auto_tag_action object
+      paloaltonetworks.scm.scm_auto_tag_action:
+        state: present
+        name: "example-auto_tag_action"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created auto_tag_action
+      ansible.builtin.debug:
+        var: create_result.auto_tag_action
+
+    - name: Gather information about a auto_tag_action object
+      paloaltonetworks.scm.scm_auto_tag_action:
+        state: gathered
+        name: "example-auto_tag_action"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered auto_tag_action
+      ansible.builtin.debug:
+        var: gather_result.auto_tag_action
+
+    - name: List all auto_tag_actions in a folder
+      paloaltonetworks.scm.scm_auto_tag_action_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display auto_tag_actions list
+      ansible.builtin.debug:
+        var: list_result.auto_tag_actions
+
+
+    - name: Delete the auto_tag_action object
+      paloaltonetworks.scm.scm_auto_tag_action:
+        state: absent
+        name: "example-auto_tag_action"
+        folder: "Shared"
+

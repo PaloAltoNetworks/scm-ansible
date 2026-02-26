@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_layer3_subinterface
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_layer3_subinterface.yml
+
+- name: Manage layer3_subinterfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a layer3_subinterface object
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: present
+        name: "example-layer3_subinterface"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created layer3_subinterface
+      ansible.builtin.debug:
+        var: create_result.layer3_subinterface
+
+    - name: Gather information about a layer3_subinterface object
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: gathered
+        name: "example-layer3_subinterface"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered layer3_subinterface
+      ansible.builtin.debug:
+        var: gather_result.layer3_subinterface
+
+    - name: List all layer3_subinterfaces in a folder
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display layer3_subinterfaces list
+      ansible.builtin.debug:
+        var: list_result.layer3_subinterfaces
+
+
+    - name: Delete the layer3_subinterface object
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: absent
+        name: "example-layer3_subinterface"
+        folder: "Shared"
+

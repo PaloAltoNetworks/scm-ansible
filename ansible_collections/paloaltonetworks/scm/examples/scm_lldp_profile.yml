@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_lldp_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_lldp_profile.yml
+
+- name: Manage lldp_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a lldp_profile object
+      paloaltonetworks.scm.scm_lldp_profile:
+        state: present
+        name: "example-lldp_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created lldp_profile
+      ansible.builtin.debug:
+        var: create_result.lldp_profile
+
+    - name: Gather information about a lldp_profile object
+      paloaltonetworks.scm.scm_lldp_profile:
+        state: gathered
+        name: "example-lldp_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered lldp_profile
+      ansible.builtin.debug:
+        var: gather_result.lldp_profile
+
+    - name: List all lldp_profiles in a folder
+      paloaltonetworks.scm.scm_lldp_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display lldp_profiles list
+      ansible.builtin.debug:
+        var: list_result.lldp_profiles
+
+
+    - name: Delete the lldp_profile object
+      paloaltonetworks.scm.scm_lldp_profile:
+        state: absent
+        name: "example-lldp_profile"
+        folder: "Shared"
+

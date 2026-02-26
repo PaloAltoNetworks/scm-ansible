@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_bgp_route_map_redistribution
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_bgp_route_map_redistribution.yml
+
+- name: Manage bgp_route_map_redistributions in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a bgp_route_map_redistribution object
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution:
+        state: present
+        name: "example-bgp_route_map_redistribution"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created bgp_route_map_redistribution
+      ansible.builtin.debug:
+        var: create_result.bgp_route_map_redistribution
+
+    - name: Gather information about a bgp_route_map_redistribution object
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution:
+        state: gathered
+        name: "example-bgp_route_map_redistribution"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered bgp_route_map_redistribution
+      ansible.builtin.debug:
+        var: gather_result.bgp_route_map_redistribution
+
+    - name: List all bgp_route_map_redistributions in a folder
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display bgp_route_map_redistributions list
+      ansible.builtin.debug:
+        var: list_result.bgp_route_map_redistributions
+
+
+    - name: Delete the bgp_route_map_redistribution object
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution:
+        state: absent
+        name: "example-bgp_route_map_redistribution"
+        folder: "Shared"
+

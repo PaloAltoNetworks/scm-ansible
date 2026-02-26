@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_url_category
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_url_category.yml
+
+- name: Manage url_categories in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a url_category object
+      paloaltonetworks.scm.scm_url_category:
+        state: present
+        name: "example-url_category"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created url_category
+      ansible.builtin.debug:
+        var: create_result.url_category
+
+    - name: Gather information about a url_category object
+      paloaltonetworks.scm.scm_url_category:
+        state: gathered
+        name: "example-url_category"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered url_category
+      ansible.builtin.debug:
+        var: gather_result.url_category
+
+    - name: List all url_categories in a folder
+      paloaltonetworks.scm.scm_url_category_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display url_categories list
+      ansible.builtin.debug:
+        var: list_result.url_categories
+
+
+    - name: Delete the url_category object
+      paloaltonetworks.scm.scm_url_category:
+        state: absent
+        name: "example-url_category"
+        folder: "Shared"
+

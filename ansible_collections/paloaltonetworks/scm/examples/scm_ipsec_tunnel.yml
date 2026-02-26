@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ipsec_tunnel
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_ipsec_tunnel.yml
+
+- name: Manage ipsec_tunnels in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a ipsec_tunnel object
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: present
+        name: "example-ipsec_tunnel"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created ipsec_tunnel
+      ansible.builtin.debug:
+        var: create_result.ipsec_tunnel
+
+    - name: Gather information about a ipsec_tunnel object
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: gathered
+        name: "example-ipsec_tunnel"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered ipsec_tunnel
+      ansible.builtin.debug:
+        var: gather_result.ipsec_tunnel
+
+    - name: List all ipsec_tunnels in a folder
+      paloaltonetworks.scm.scm_ipsec_tunnel_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display ipsec_tunnels list
+      ansible.builtin.debug:
+        var: list_result.ipsec_tunnels
+
+
+    - name: Delete the ipsec_tunnel object
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: absent
+        name: "example-ipsec_tunnel"
+        folder: "Shared"
+

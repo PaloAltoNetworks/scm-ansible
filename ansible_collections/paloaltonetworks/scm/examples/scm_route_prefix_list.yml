@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_route_prefix_list
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_route_prefix_list.yml
+
+- name: Manage route_prefix_lists in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a route_prefix_list object
+      paloaltonetworks.scm.scm_route_prefix_list:
+        state: present
+        name: "example-route_prefix_list"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created route_prefix_list
+      ansible.builtin.debug:
+        var: create_result.route_prefix_list
+
+    - name: Gather information about a route_prefix_list object
+      paloaltonetworks.scm.scm_route_prefix_list:
+        state: gathered
+        name: "example-route_prefix_list"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered route_prefix_list
+      ansible.builtin.debug:
+        var: gather_result.route_prefix_list
+
+    - name: List all route_prefix_lists in a folder
+      paloaltonetworks.scm.scm_route_prefix_list_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display route_prefix_lists list
+      ansible.builtin.debug:
+        var: list_result.route_prefix_lists
+
+
+    - name: Delete the route_prefix_list object
+      paloaltonetworks.scm.scm_route_prefix_list:
+        state: absent
+        name: "example-route_prefix_list"
+        folder: "Shared"
+

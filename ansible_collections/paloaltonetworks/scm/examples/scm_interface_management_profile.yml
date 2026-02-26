@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_interface_management_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_interface_management_profile.yml
+
+- name: Manage interface_management_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a interface_management_profile object
+      paloaltonetworks.scm.scm_interface_management_profile:
+        state: present
+        name: "example-interface_management_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created interface_management_profile
+      ansible.builtin.debug:
+        var: create_result.interface_management_profile
+
+    - name: Gather information about a interface_management_profile object
+      paloaltonetworks.scm.scm_interface_management_profile:
+        state: gathered
+        name: "example-interface_management_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered interface_management_profile
+      ansible.builtin.debug:
+        var: gather_result.interface_management_profile
+
+    - name: List all interface_management_profiles in a folder
+      paloaltonetworks.scm.scm_interface_management_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display interface_management_profiles list
+      ansible.builtin.debug:
+        var: list_result.interface_management_profiles
+
+
+    - name: Delete the interface_management_profile object
+      paloaltonetworks.scm.scm_interface_management_profile:
+        state: absent
+        name: "example-interface_management_profile"
+        folder: "Shared"
+

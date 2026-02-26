@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_logical_router
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_logical_router.yml
+
+- name: Manage logical_routers in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a logical_router object
+      paloaltonetworks.scm.scm_logical_router:
+        state: present
+        name: "example-logical_router"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created logical_router
+      ansible.builtin.debug:
+        var: create_result.logical_router
+
+    - name: Gather information about a logical_router object
+      paloaltonetworks.scm.scm_logical_router:
+        state: gathered
+        name: "example-logical_router"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered logical_router
+      ansible.builtin.debug:
+        var: gather_result.logical_router
+
+    - name: List all logical_routers in a folder
+      paloaltonetworks.scm.scm_logical_router_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display logical_routers list
+      ansible.builtin.debug:
+        var: list_result.logical_routers
+
+
+    - name: Delete the logical_router object
+      paloaltonetworks.scm.scm_logical_router:
+        state: absent
+        name: "example-logical_router"
+        folder: "Shared"
+

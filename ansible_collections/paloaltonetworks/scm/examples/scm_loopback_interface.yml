@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_loopback_interface
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_loopback_interface.yml
+
+- name: Manage loopback_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a loopback_interface object
+      paloaltonetworks.scm.scm_loopback_interface:
+        state: present
+        name: "example-loopback_interface"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created loopback_interface
+      ansible.builtin.debug:
+        var: create_result.loopback_interface
+
+    - name: Gather information about a loopback_interface object
+      paloaltonetworks.scm.scm_loopback_interface:
+        state: gathered
+        name: "example-loopback_interface"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered loopback_interface
+      ansible.builtin.debug:
+        var: gather_result.loopback_interface
+
+    - name: List all loopback_interfaces in a folder
+      paloaltonetworks.scm.scm_loopback_interface_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display loopback_interfaces list
+      ansible.builtin.debug:
+        var: list_result.loopback_interfaces
+
+
+    - name: Delete the loopback_interface object
+      paloaltonetworks.scm.scm_loopback_interface:
+        state: absent
+        name: "example-loopback_interface"
+        folder: "Shared"
+

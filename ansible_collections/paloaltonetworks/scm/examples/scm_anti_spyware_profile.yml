@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_anti_spyware_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_anti_spyware_profile.yml
+
+- name: Manage anti_spyware_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a anti_spyware_profile object
+      paloaltonetworks.scm.scm_anti_spyware_profile:
+        state: present
+        name: "example-anti_spyware_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created anti_spyware_profile
+      ansible.builtin.debug:
+        var: create_result.anti_spyware_profile
+
+    - name: Gather information about a anti_spyware_profile object
+      paloaltonetworks.scm.scm_anti_spyware_profile:
+        state: gathered
+        name: "example-anti_spyware_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered anti_spyware_profile
+      ansible.builtin.debug:
+        var: gather_result.anti_spyware_profile
+
+    - name: List all anti_spyware_profiles in a folder
+      paloaltonetworks.scm.scm_anti_spyware_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display anti_spyware_profiles list
+      ansible.builtin.debug:
+        var: list_result.anti_spyware_profiles
+
+
+    - name: Delete the anti_spyware_profile object
+      paloaltonetworks.scm.scm_anti_spyware_profile:
+        state: absent
+        name: "example-anti_spyware_profile"
+        folder: "Shared"
+

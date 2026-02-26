@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_application
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_application.yml
+
+- name: Manage applications in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a application object
+      paloaltonetworks.scm.scm_application:
+        state: present
+        name: "example-application"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created application
+      ansible.builtin.debug:
+        var: create_result.application
+
+    - name: Gather information about a application object
+      paloaltonetworks.scm.scm_application:
+        state: gathered
+        name: "example-application"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered application
+      ansible.builtin.debug:
+        var: gather_result.application
+
+    - name: List all applications in a folder
+      paloaltonetworks.scm.scm_application_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display applications list
+      ansible.builtin.debug:
+        var: list_result.applications
+
+
+    - name: Delete the application object
+      paloaltonetworks.scm.scm_application:
+        state: absent
+        name: "example-application"
+        folder: "Shared"
+

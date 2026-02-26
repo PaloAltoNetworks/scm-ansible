@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_authentication_setting
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_authentication_setting.yml
+
+- name: Manage authentication_settings in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a authentication_setting object
+      paloaltonetworks.scm.scm_authentication_setting:
+        state: present
+        name: "example-authentication_setting"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created authentication_setting
+      ansible.builtin.debug:
+        var: create_result.authentication_setting
+
+    - name: Gather information about a authentication_setting object
+      paloaltonetworks.scm.scm_authentication_setting:
+        state: gathered
+        name: "example-authentication_setting"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered authentication_setting
+      ansible.builtin.debug:
+        var: gather_result.authentication_setting
+
+    - name: List all authentication_settings in a folder
+      paloaltonetworks.scm.scm_authentication_setting_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display authentication_settings list
+      ansible.builtin.debug:
+        var: list_result.authentication_settings
+
+
+    - name: Delete the authentication_setting object
+      paloaltonetworks.scm.scm_authentication_setting:
+        state: absent
+        name: "example-authentication_setting"
+        folder: "Shared"
+

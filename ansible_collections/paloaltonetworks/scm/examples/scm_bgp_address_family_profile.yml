@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_bgp_address_family_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_bgp_address_family_profile.yml
+
+- name: Manage bgp_address_family_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a bgp_address_family_profile object
+      paloaltonetworks.scm.scm_bgp_address_family_profile:
+        state: present
+        name: "example-bgp_address_family_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created bgp_address_family_profile
+      ansible.builtin.debug:
+        var: create_result.bgp_address_family_profile
+
+    - name: Gather information about a bgp_address_family_profile object
+      paloaltonetworks.scm.scm_bgp_address_family_profile:
+        state: gathered
+        name: "example-bgp_address_family_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered bgp_address_family_profile
+      ansible.builtin.debug:
+        var: gather_result.bgp_address_family_profile
+
+    - name: List all bgp_address_family_profiles in a folder
+      paloaltonetworks.scm.scm_bgp_address_family_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display bgp_address_family_profiles list
+      ansible.builtin.debug:
+        var: list_result.bgp_address_family_profiles
+
+
+    - name: Delete the bgp_address_family_profile object
+      paloaltonetworks.scm.scm_bgp_address_family_profile:
+        state: absent
+        name: "example-bgp_address_family_profile"
+        folder: "Shared"
+

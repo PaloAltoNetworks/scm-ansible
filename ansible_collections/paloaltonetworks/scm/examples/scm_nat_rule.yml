@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_nat_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_nat_rule.yml
+
+- name: Manage nat_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a nat_rule object
+      paloaltonetworks.scm.scm_nat_rule:
+        state: present
+        name: "example-nat_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created nat_rule
+      ansible.builtin.debug:
+        var: create_result.nat_rule
+
+    - name: Gather information about a nat_rule object
+      paloaltonetworks.scm.scm_nat_rule:
+        state: gathered
+        name: "example-nat_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered nat_rule
+      ansible.builtin.debug:
+        var: gather_result.nat_rule
+
+    - name: List all nat_rules in a folder
+      paloaltonetworks.scm.scm_nat_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display nat_rules list
+      ansible.builtin.debug:
+        var: list_result.nat_rules
+
+
+    - name: Delete the nat_rule object
+      paloaltonetworks.scm.scm_nat_rule:
+        state: absent
+        name: "example-nat_rule"
+        folder: "Shared"
+

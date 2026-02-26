@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_link_tag
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_link_tag.yml
+
+- name: Manage link_tags in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a link_tag object
+      paloaltonetworks.scm.scm_link_tag:
+        state: present
+        name: "example-link_tag"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created link_tag
+      ansible.builtin.debug:
+        var: create_result.link_tag
+
+    - name: Gather information about a link_tag object
+      paloaltonetworks.scm.scm_link_tag:
+        state: gathered
+        name: "example-link_tag"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered link_tag
+      ansible.builtin.debug:
+        var: gather_result.link_tag
+
+    - name: List all link_tags in a folder
+      paloaltonetworks.scm.scm_link_tag_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display link_tags list
+      ansible.builtin.debug:
+        var: list_result.link_tags
+
+
+    - name: Delete the link_tag object
+      paloaltonetworks.scm.scm_link_tag:
+        state: absent
+        name: "example-link_tag"
+        folder: "Shared"
+

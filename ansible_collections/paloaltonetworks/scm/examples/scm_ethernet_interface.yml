@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ethernet_interface
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_ethernet_interface.yml
+
+- name: Manage ethernet_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a ethernet_interface object
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "example-ethernet_interface"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created ethernet_interface
+      ansible.builtin.debug:
+        var: create_result.ethernet_interface
+
+    - name: Gather information about a ethernet_interface object
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: gathered
+        name: "example-ethernet_interface"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered ethernet_interface
+      ansible.builtin.debug:
+        var: gather_result.ethernet_interface
+
+    - name: List all ethernet_interfaces in a folder
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display ethernet_interfaces list
+      ansible.builtin.debug:
+        var: list_result.ethernet_interfaces
+
+
+    - name: Delete the ethernet_interface object
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "example-ethernet_interface"
+        folder: "Shared"
+

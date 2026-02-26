@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_file_blocking_profile
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_file_blocking_profile.yml
+
+- name: Manage file_blocking_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a file_blocking_profile object
+      paloaltonetworks.scm.scm_file_blocking_profile:
+        state: present
+        name: "example-file_blocking_profile"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created file_blocking_profile
+      ansible.builtin.debug:
+        var: create_result.file_blocking_profile
+
+    - name: Gather information about a file_blocking_profile object
+      paloaltonetworks.scm.scm_file_blocking_profile:
+        state: gathered
+        name: "example-file_blocking_profile"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered file_blocking_profile
+      ansible.builtin.debug:
+        var: gather_result.file_blocking_profile
+
+    - name: List all file_blocking_profiles in a folder
+      paloaltonetworks.scm.scm_file_blocking_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display file_blocking_profiles list
+      ansible.builtin.debug:
+        var: list_result.file_blocking_profiles
+
+
+    - name: Delete the file_blocking_profile object
+      paloaltonetworks.scm.scm_file_blocking_profile:
+        state: absent
+        name: "example-file_blocking_profile"
+        folder: "Shared"
+

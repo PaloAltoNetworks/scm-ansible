@@ -1,0 +1,53 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_quarantined_device
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_quarantined_device.yml
+
+- name: Manage quarantined_devices in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a quarantined_device object
+      paloaltonetworks.scm.scm_quarantined_device:
+        state: present
+        name: "example-quarantined_device"
+      register: create_result
+
+    - name: Display created quarantined_device
+      ansible.builtin.debug:
+        var: create_result.quarantined_device
+
+    - name: Gather information about a quarantined_device object
+      paloaltonetworks.scm.scm_quarantined_device:
+        state: gathered
+        name: "example-quarantined_device"
+      register: gather_result
+
+    - name: Display gathered quarantined_device
+      ansible.builtin.debug:
+        var: gather_result.quarantined_device
+
+    - name: List all quarantined_devices in a folder
+      paloaltonetworks.scm.scm_quarantined_device_info:
+      register: list_result
+
+    - name: Display quarantined_devices list
+      ansible.builtin.debug:
+        var: list_result.quarantined_devices
+
+
+    - name: Delete the quarantined_device object
+      paloaltonetworks.scm.scm_quarantined_device:
+        state: absent
+        name: "example-quarantined_device"
+

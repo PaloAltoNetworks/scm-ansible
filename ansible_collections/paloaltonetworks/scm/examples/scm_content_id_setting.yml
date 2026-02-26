@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_content_id_setting
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_content_id_setting.yml
+
+- name: Manage content_id_settings in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a content_id_setting object
+      paloaltonetworks.scm.scm_content_id_setting:
+        state: present
+        name: "example-content_id_setting"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created content_id_setting
+      ansible.builtin.debug:
+        var: create_result.content_id_setting
+
+    - name: Gather information about a content_id_setting object
+      paloaltonetworks.scm.scm_content_id_setting:
+        state: gathered
+        name: "example-content_id_setting"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered content_id_setting
+      ansible.builtin.debug:
+        var: gather_result.content_id_setting
+
+    - name: List all content_id_settings in a folder
+      paloaltonetworks.scm.scm_content_id_setting_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display content_id_settings list
+      ansible.builtin.debug:
+        var: list_result.content_id_settings
+
+
+    - name: Delete the content_id_setting object
+      paloaltonetworks.scm.scm_content_id_setting:
+        state: absent
+        name: "example-content_id_setting"
+        folder: "Shared"
+

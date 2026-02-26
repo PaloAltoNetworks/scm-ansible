@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_mfa_server
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_mfa_server.yml
+
+- name: Manage mfa_servers in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a mfa_server object
+      paloaltonetworks.scm.scm_mfa_server:
+        state: present
+        name: "example-mfa_server"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created mfa_server
+      ansible.builtin.debug:
+        var: create_result.mfa_server
+
+    - name: Gather information about a mfa_server object
+      paloaltonetworks.scm.scm_mfa_server:
+        state: gathered
+        name: "example-mfa_server"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered mfa_server
+      ansible.builtin.debug:
+        var: gather_result.mfa_server
+
+    - name: List all mfa_servers in a folder
+      paloaltonetworks.scm.scm_mfa_server_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display mfa_servers list
+      ansible.builtin.debug:
+        var: list_result.mfa_servers
+
+
+    - name: Delete the mfa_server object
+      paloaltonetworks.scm.scm_mfa_server:
+        state: absent
+        name: "example-mfa_server"
+        folder: "Shared"
+

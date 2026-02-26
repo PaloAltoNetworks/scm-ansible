@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_service
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_service.yml
+
+- name: Manage services in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a service object
+      paloaltonetworks.scm.scm_service:
+        state: present
+        name: "example-service"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created service
+      ansible.builtin.debug:
+        var: create_result.service
+
+    - name: Gather information about a service object
+      paloaltonetworks.scm.scm_service:
+        state: gathered
+        name: "example-service"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered service
+      ansible.builtin.debug:
+        var: gather_result.service
+
+    - name: List all services in a folder
+      paloaltonetworks.scm.scm_service_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display services list
+      ansible.builtin.debug:
+        var: list_result.services
+
+
+    - name: Delete the service object
+      paloaltonetworks.scm.scm_service:
+        state: absent
+        name: "example-service"
+        folder: "Shared"
+

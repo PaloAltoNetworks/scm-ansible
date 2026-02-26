@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_dhcp_interface
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_dhcp_interface.yml
+
+- name: Manage dhcp_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a dhcp_interface object
+      paloaltonetworks.scm.scm_dhcp_interface:
+        state: present
+        name: "example-dhcp_interface"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created dhcp_interface
+      ansible.builtin.debug:
+        var: create_result.dhcp_interface
+
+    - name: Gather information about a dhcp_interface object
+      paloaltonetworks.scm.scm_dhcp_interface:
+        state: gathered
+        name: "example-dhcp_interface"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered dhcp_interface
+      ansible.builtin.debug:
+        var: gather_result.dhcp_interface
+
+    - name: List all dhcp_interfaces in a folder
+      paloaltonetworks.scm.scm_dhcp_interface_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display dhcp_interfaces list
+      ansible.builtin.debug:
+        var: list_result.dhcp_interfaces
+
+
+    - name: Delete the dhcp_interface object
+      paloaltonetworks.scm.scm_dhcp_interface:
+        state: absent
+        name: "example-dhcp_interface"
+        folder: "Shared"
+

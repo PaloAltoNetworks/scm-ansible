@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_tag
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_tag.yml
+
+- name: Manage tags in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a tag object
+      paloaltonetworks.scm.scm_tag:
+        state: present
+        name: "example-tag"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created tag
+      ansible.builtin.debug:
+        var: create_result.tag
+
+    - name: Gather information about a tag object
+      paloaltonetworks.scm.scm_tag:
+        state: gathered
+        name: "example-tag"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered tag
+      ansible.builtin.debug:
+        var: gather_result.tag
+
+    - name: List all tags in a folder
+      paloaltonetworks.scm.scm_tag_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display tags list
+      ansible.builtin.debug:
+        var: list_result.tags
+
+
+    - name: Delete the tag object
+      paloaltonetworks.scm.scm_tag:
+        state: absent
+        name: "example-tag"
+        folder: "Shared"
+

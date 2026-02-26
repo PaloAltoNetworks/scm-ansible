@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ocsp_responder
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_ocsp_responder.yml
+
+- name: Manage ocsp_responders in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a ocsp_responder object
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: present
+        name: "example-ocsp_responder"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created ocsp_responder
+      ansible.builtin.debug:
+        var: create_result.ocsp_responder
+
+    - name: Gather information about a ocsp_responder object
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: gathered
+        name: "example-ocsp_responder"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered ocsp_responder
+      ansible.builtin.debug:
+        var: gather_result.ocsp_responder
+
+    - name: List all ocsp_responders in a folder
+      paloaltonetworks.scm.scm_ocsp_responder_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display ocsp_responders list
+      ansible.builtin.debug:
+        var: list_result.ocsp_responders
+
+
+    - name: Delete the ocsp_responder object
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: absent
+        name: "example-ocsp_responder"
+        folder: "Shared"
+

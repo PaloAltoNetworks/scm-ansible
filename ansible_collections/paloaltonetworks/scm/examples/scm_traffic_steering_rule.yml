@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_traffic_steering_rule
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_traffic_steering_rule.yml
+
+- name: Manage traffic_steering_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a traffic_steering_rule object
+      paloaltonetworks.scm.scm_traffic_steering_rule:
+        state: present
+        name: "example-traffic_steering_rule"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created traffic_steering_rule
+      ansible.builtin.debug:
+        var: create_result.traffic_steering_rule
+
+    - name: Gather information about a traffic_steering_rule object
+      paloaltonetworks.scm.scm_traffic_steering_rule:
+        state: gathered
+        name: "example-traffic_steering_rule"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered traffic_steering_rule
+      ansible.builtin.debug:
+        var: gather_result.traffic_steering_rule
+
+    - name: List all traffic_steering_rules in a folder
+      paloaltonetworks.scm.scm_traffic_steering_rule_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display traffic_steering_rules list
+      ansible.builtin.debug:
+        var: list_result.traffic_steering_rules
+
+
+    - name: Delete the traffic_steering_rule object
+      paloaltonetworks.scm.scm_traffic_steering_rule:
+        state: absent
+        name: "example-traffic_steering_rule"
+        folder: "Shared"
+

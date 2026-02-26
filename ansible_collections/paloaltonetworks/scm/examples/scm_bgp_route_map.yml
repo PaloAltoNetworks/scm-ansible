@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_bgp_route_map
+#
+# Prerequisites:
+#   pip install pan-scm-sdk ansible-core
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ansible-playbook examples/scm_bgp_route_map.yml
+
+- name: Manage bgp_route_maps in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Create a bgp_route_map object
+      paloaltonetworks.scm.scm_bgp_route_map:
+        state: present
+        name: "example-bgp_route_map"
+        folder: "Shared"
+      register: create_result
+
+    - name: Display created bgp_route_map
+      ansible.builtin.debug:
+        var: create_result.bgp_route_map
+
+    - name: Gather information about a bgp_route_map object
+      paloaltonetworks.scm.scm_bgp_route_map:
+        state: gathered
+        name: "example-bgp_route_map"
+        folder: "Shared"
+      register: gather_result
+
+    - name: Display gathered bgp_route_map
+      ansible.builtin.debug:
+        var: gather_result.bgp_route_map
+
+    - name: List all bgp_route_maps in a folder
+      paloaltonetworks.scm.scm_bgp_route_map_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Display bgp_route_maps list
+      ansible.builtin.debug:
+        var: list_result.bgp_route_maps
+
+
+    - name: Delete the bgp_route_map object
+      paloaltonetworks.scm.scm_bgp_route_map:
+        state: absent
+        name: "example-bgp_route_map"
+        folder: "Shared"
+
