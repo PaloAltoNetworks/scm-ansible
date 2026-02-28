@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_subscribed_tenant
 #
+# Demonstrates: create, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_subscribed_tenant.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_subscribed_tenant.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_subscribed_tenant' for full parameter docs.
 
 - name: Manage subscribed_tenants in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +26,31 @@
 
   tasks:
 
-    - name: Create a subscribed_tenant object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create subscribed_tenant
       paloaltonetworks.scm.scm_subscribed_tenant:
         state: present
-        name: "example-subscribed_tenant"
+        name: "ansible-test-subscribed_tenant"
+        # snippet_id: <required>
+        # snippet_name: <required>
       register: create_result
 
-    - name: Display created subscribed_tenant
+    - name: Show created subscribed_tenant
       ansible.builtin.debug:
         var: create_result.subscribed_tenant
 
-    - name: Gather information about a subscribed_tenant object
-      paloaltonetworks.scm.scm_subscribed_tenant:
-        state: gathered
-        name: "example-subscribed_tenant"
-      register: gather_result
-
-    - name: Display gathered subscribed_tenant
-      ansible.builtin.debug:
-        var: gather_result.subscribed_tenant
-
-    - name: List all subscribed_tenants in a folder
+    # ── List all ────────────────────────────────────────────
+    - name: List all subscribed_tenants
       paloaltonetworks.scm.scm_subscribed_tenant_info:
       register: list_result
 
-    - name: Display subscribed_tenants list
+    - name: Show subscribed_tenants count
       ansible.builtin.debug:
-        var: list_result.subscribed_tenants
+        msg: "Found {{ list_result.total }} subscribed_tenants"
 
-
-    - name: Delete the subscribed_tenant object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete subscribed_tenant
       paloaltonetworks.scm.scm_subscribed_tenant:
         state: absent
-        name: "example-subscribed_tenant"
+        name: "ansible-test-subscribed_tenant"
 

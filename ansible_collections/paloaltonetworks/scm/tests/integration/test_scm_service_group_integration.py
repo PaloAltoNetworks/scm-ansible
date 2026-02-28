@@ -34,7 +34,7 @@ class TestServiceGroupsLifecycle:
 
     def test_00_setup_service(self, run_id):
         """Create a prerequisite service for the group."""
-        name = f"ansible-integ-svc-for-grp-{run_id}"
+        name = f"an-svcgrp-for-grp-{run_id}"
         TestServiceGroupsLifecycle._svc_name = name
         result = run_svc(_svc_params(
             state="present", name=name,
@@ -45,7 +45,7 @@ class TestServiceGroupsLifecycle:
 
     def test_01_create(self, run_id):
         result = run_svc_group(_sg_params(
-            state="present", name=f"ansible-integ-sgrp-{run_id}",
+            state="present", name=f"an-svcgrp-{run_id}",
             members=[TestServiceGroupsLifecycle._svc_name],
             folder=TARGET_FOLDER,
         ))
@@ -56,7 +56,7 @@ class TestServiceGroupsLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_svc_group(_sg_params(
-            state="present", name=f"ansible-integ-sgrp-{run_id}",
+            state="present", name=f"an-svcgrp-{run_id}",
             members=[TestServiceGroupsLifecycle._svc_name],
             folder=TARGET_FOLDER,
         ))
@@ -65,7 +65,7 @@ class TestServiceGroupsLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_svc_group(_sg_params(
-            state="gathered", name=f"ansible-integ-sgrp-{run_id}",
+            state="gathered", name=f"an-svcgrp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -73,7 +73,7 @@ class TestServiceGroupsLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_svc_group(_sg_params(
-            state="absent", name=f"ansible-integ-sgrp-{run_id}",
+            state="absent", name=f"an-svcgrp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -81,7 +81,7 @@ class TestServiceGroupsLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_svc_group(_sg_params(
-            state="absent", name=f"ansible-integ-sgrp-{run_id}",
+            state="absent", name=f"an-svcgrp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

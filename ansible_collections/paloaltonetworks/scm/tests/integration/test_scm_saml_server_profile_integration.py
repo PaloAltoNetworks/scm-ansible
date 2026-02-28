@@ -28,7 +28,7 @@ class TestSamlServerProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-saml-{run_id}",
+            state="present", name=f"an-saml-{run_id}",
             certificate="Global Authentication Cookie Cert",
             entity_id=f"https://idp.test.com/saml/{run_id}",
             sso_url=f"https://idp.test.com/sso/{run_id}",
@@ -42,7 +42,7 @@ class TestSamlServerProfilesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-saml-{run_id}",
+            state="present", name=f"an-saml-{run_id}",
             certificate="Global Authentication Cookie Cert",
             entity_id=f"https://idp.test.com/saml/{run_id}",
             sso_url=f"https://idp.test.com/sso/{run_id}",
@@ -53,7 +53,7 @@ class TestSamlServerProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-saml-{run_id}",
+            state="gathered", name=f"an-saml-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -61,7 +61,7 @@ class TestSamlServerProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-saml-{run_id}",
+            state="absent", name=f"an-saml-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -69,7 +69,7 @@ class TestSamlServerProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-saml-{run_id}",
+            state="absent", name=f"an-saml-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

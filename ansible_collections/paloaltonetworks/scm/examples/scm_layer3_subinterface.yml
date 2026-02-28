@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_layer3_subinterface
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_layer3_subinterface.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_layer3_subinterface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_layer3_subinterface' for full parameter docs.
 
 - name: Manage layer3_subinterfaces in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a layer3_subinterface object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create layer3_subinterface
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: present
-        name: "example-layer3_subinterface"
-        folder: "Shared"
+        name: "ansible-test-layer3_subinterface"
+        folder: "All"
       register: create_result
 
-    - name: Display created layer3_subinterface
+    - name: Show created layer3_subinterface
       ansible.builtin.debug:
         var: create_result.layer3_subinterface
 
-    - name: Gather information about a layer3_subinterface object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update layer3_subinterface
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: present
+        name: "ansible-test-layer3_subinterface"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated layer3_subinterface
+      ansible.builtin.debug:
+        var: update_result.layer3_subinterface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get layer3_subinterface by name
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: gathered
-        name: "example-layer3_subinterface"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-layer3_subinterface"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered layer3_subinterface
+    - name: Show gathered layer3_subinterface
       ansible.builtin.debug:
-        var: gather_result.layer3_subinterface
+        var: gathered_result.layer3_subinterface
 
-    - name: List all layer3_subinterfaces in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get layer3_subinterface by name (info module)
       paloaltonetworks.scm.scm_layer3_subinterface_info:
-        folder: "Shared"
+        name: "ansible-test-layer3_subinterface"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.layer3_subinterfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get layer3_subinterface by ID (info module)
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        id: "{{ gathered_result.layer3_subinterface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.layer3_subinterfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all layer3_subinterfaces
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        folder: "All"
       register: list_result
 
-    - name: Display layer3_subinterfaces list
+    - name: Show layer3_subinterfaces count
       ansible.builtin.debug:
-        var: list_result.layer3_subinterfaces
+        msg: "Found {{ list_result.total }} layer3_subinterfaces"
 
-
-    - name: Delete the layer3_subinterface object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete layer3_subinterface
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: absent
-        name: "example-layer3_subinterface"
-        folder: "Shared"
+        name: "ansible-test-layer3_subinterface"
+        folder: "All"
 

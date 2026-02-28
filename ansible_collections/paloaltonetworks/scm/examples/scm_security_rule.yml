@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_security_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_security_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_security_rule.yml
+#
 
 - name: Manage security_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,111 @@
 
   tasks:
 
-    - name: Create a security_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create security_rule
       paloaltonetworks.scm.scm_security_rule:
         state: present
-        name: "example-security_rule"
-        folder: "Shared"
+        name: "ansible-test-secrule"
+        folder: "Prisma Access"
+        action: "allow"
+        var_from:
+          - "any"
+        to:
+          - "any"
+        source:
+          - "any"
+        destination:
+          - "any"
+        application:
+          - "any"
+        service:
+          - "any"
+        category:
+          - "any"
+        source_user:
+          - "any"
       register: create_result
 
-    - name: Display created security_rule
+    - name: Show created security_rule
       ansible.builtin.debug:
         var: create_result.security_rule
 
-    - name: Gather information about a security_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update security_rule
+      paloaltonetworks.scm.scm_security_rule:
+        state: present
+        name: "ansible-test-secrule"
+        folder: "Prisma Access"
+        description: "Updated by Ansible"
+        action: "deny"
+        var_from:
+          - "any"
+        to:
+          - "any"
+        source:
+          - "any"
+        destination:
+          - "any"
+        application:
+          - "any"
+        service:
+          - "any"
+        category:
+          - "any"
+        source_user:
+          - "any"
+      register: update_result
+
+    - name: Show updated security_rule
+      ansible.builtin.debug:
+        var: update_result.security_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get security_rule by name
       paloaltonetworks.scm.scm_security_rule:
         state: gathered
-        name: "example-security_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-secrule"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered security_rule
+    - name: Show gathered security_rule
       ansible.builtin.debug:
-        var: gather_result.security_rule
+        var: gathered_result.security_rule
 
-    - name: List all security_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get security_rule by name (info module)
       paloaltonetworks.scm.scm_security_rule_info:
-        folder: "Shared"
+        name: "ansible-test-secrule"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.security_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get security_rule by ID (info module)
+      paloaltonetworks.scm.scm_security_rule_info:
+        id: "{{ gathered_result.security_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.security_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all security_rules
+      paloaltonetworks.scm.scm_security_rule_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display security_rules list
+    - name: Show security_rules count
       ansible.builtin.debug:
-        var: list_result.security_rules
+        msg: "Found {{ list_result.total }} security_rules"
 
-
-    - name: Delete the security_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete security_rule
       paloaltonetworks.scm.scm_security_rule:
         state: absent
-        name: "example-security_rule"
-        folder: "Shared"
-
+        name: "ansible-test-secrule"
+        folder: "Prisma Access"

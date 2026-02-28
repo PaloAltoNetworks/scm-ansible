@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_service_setting
 #
+# Demonstrates: create, update, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_service_setting.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_service_setting.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_service_setting' for full parameter docs.
 
 - name: Manage service_settings in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,55 @@
 
   tasks:
 
-    - name: Create a service_setting object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create service_setting
       paloaltonetworks.scm.scm_service_setting:
         state: present
-        name: "example-service_setting"
-        folder: "Shared"
+        name: "ansible-test-service_setting"
+        folder: "All"
       register: create_result
 
-    - name: Display created service_setting
+    - name: Show created service_setting
       ansible.builtin.debug:
         var: create_result.service_setting
 
-    - name: Gather information about a service_setting object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update service_setting
       paloaltonetworks.scm.scm_service_setting:
-        state: gathered
-        name: "example-service_setting"
-        folder: "Shared"
-      register: gather_result
+        state: present
+        name: "ansible-test-service_setting"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
 
-    - name: Display gathered service_setting
+    - name: Show updated service_setting
       ansible.builtin.debug:
-        var: gather_result.service_setting
+        var: update_result.service_setting
 
-    - name: List all service_settings in a folder
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get service_setting by ID (info module)
       paloaltonetworks.scm.scm_service_setting_info:
-        folder: "Shared"
+        id: "your-object-uuid-here"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.service_settings
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all service_settings
+      paloaltonetworks.scm.scm_service_setting_info:
+        folder: "All"
       register: list_result
 
-    - name: Display service_settings list
+    - name: Show service_settings count
       ansible.builtin.debug:
-        var: list_result.service_settings
+        msg: "Found {{ list_result.total }} service_settings"
 
-
-    - name: Delete the service_setting object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete service_setting
       paloaltonetworks.scm.scm_service_setting:
         state: absent
-        name: "example-service_setting"
-        folder: "Shared"
+        name: "ansible-test-service_setting"
+        folder: "All"
 

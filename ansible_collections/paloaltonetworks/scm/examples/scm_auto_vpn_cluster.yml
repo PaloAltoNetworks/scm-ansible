@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_auto_vpn_cluster
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_auto_vpn_cluster.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_auto_vpn_cluster.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_auto_vpn_cluster' for full parameter docs.
 
 - name: Manage auto_vpn_clusters in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +26,72 @@
 
   tasks:
 
-    - name: Create a auto_vpn_cluster object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create auto_vpn_cluster
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: present
-        name: "example-auto_vpn_cluster"
+        name: "ansible-test-auto_vpn_cluster"
       register: create_result
 
-    - name: Display created auto_vpn_cluster
+    - name: Show created auto_vpn_cluster
       ansible.builtin.debug:
         var: create_result.auto_vpn_cluster
 
-    - name: Gather information about a auto_vpn_cluster object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update auto_vpn_cluster
+      paloaltonetworks.scm.scm_auto_vpn_cluster:
+        state: present
+        name: "ansible-test-auto_vpn_cluster"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated auto_vpn_cluster
+      ansible.builtin.debug:
+        var: update_result.auto_vpn_cluster
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get auto_vpn_cluster by name
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: gathered
-        name: "example-auto_vpn_cluster"
-      register: gather_result
+        name: "ansible-test-auto_vpn_cluster"
+      register: gathered_result
 
-    - name: Display gathered auto_vpn_cluster
+    - name: Show gathered auto_vpn_cluster
       ansible.builtin.debug:
-        var: gather_result.auto_vpn_cluster
+        var: gathered_result.auto_vpn_cluster
 
-    - name: List all auto_vpn_clusters in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get auto_vpn_cluster by name (info module)
+      paloaltonetworks.scm.scm_auto_vpn_cluster_info:
+        name: "ansible-test-auto_vpn_cluster"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.auto_vpn_clusters
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get auto_vpn_cluster by ID (info module)
+      paloaltonetworks.scm.scm_auto_vpn_cluster_info:
+        id: "{{ gathered_result.auto_vpn_cluster.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.auto_vpn_clusters
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all auto_vpn_clusters
       paloaltonetworks.scm.scm_auto_vpn_cluster_info:
       register: list_result
 
-    - name: Display auto_vpn_clusters list
+    - name: Show auto_vpn_clusters count
       ansible.builtin.debug:
-        var: list_result.auto_vpn_clusters
+        msg: "Found {{ list_result.total }} auto_vpn_clusters"
 
-
-    - name: Delete the auto_vpn_cluster object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete auto_vpn_cluster
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: absent
-        name: "example-auto_vpn_cluster"
+        name: "ansible-test-auto_vpn_cluster"
 

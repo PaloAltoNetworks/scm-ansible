@@ -24,7 +24,7 @@ class TestOcspRespondersLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ocsp-{run_id}",
+            state="present", name=f"an-ocsp-{run_id}",
             host_name="ocsp.example.com",
             folder=TARGET_FOLDER,
         ))
@@ -35,7 +35,7 @@ class TestOcspRespondersLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ocsp-{run_id}",
+            state="present", name=f"an-ocsp-{run_id}",
             host_name="ocsp.example.com",
             folder=TARGET_FOLDER,
         ))
@@ -44,7 +44,7 @@ class TestOcspRespondersLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-ocsp-{run_id}",
+            state="gathered", name=f"an-ocsp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -52,7 +52,7 @@ class TestOcspRespondersLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ocsp-{run_id}",
+            state="present", name=f"an-ocsp-{run_id}",
             host_name="ocsp2.example.com",
             folder=TARGET_FOLDER,
         ))
@@ -61,7 +61,7 @@ class TestOcspRespondersLifecycle:
 
     def test_05_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ocsp-{run_id}",
+            state="absent", name=f"an-ocsp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -69,7 +69,7 @@ class TestOcspRespondersLifecycle:
 
     def test_06_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ocsp-{run_id}",
+            state="absent", name=f"an-ocsp-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

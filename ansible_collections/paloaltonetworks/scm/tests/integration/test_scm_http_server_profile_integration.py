@@ -24,7 +24,7 @@ class TestHttpServerProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-http-{run_id}",
+            state="present", name=f"an-httpsrv-{run_id}",
             server=[{
                 "name": "test-server",
                 "address": "https://example.com/webhook",
@@ -41,7 +41,7 @@ class TestHttpServerProfilesLifecycle:
     def test_02_create_idempotent(self, run_id):
         # Note: idempotent may report changed=True due to nested object enrichment
         result = run_module(_params(
-            state="present", name=f"ansible-integ-http-{run_id}",
+            state="present", name=f"an-httpsrv-{run_id}",
             server=[{
                 "name": "test-server",
                 "address": "https://example.com/webhook",
@@ -54,7 +54,7 @@ class TestHttpServerProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-http-{run_id}",
+            state="gathered", name=f"an-httpsrv-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -62,7 +62,7 @@ class TestHttpServerProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-http-{run_id}",
+            state="absent", name=f"an-httpsrv-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -70,7 +70,7 @@ class TestHttpServerProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-http-{run_id}",
+            state="absent", name=f"an-httpsrv-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -29,7 +29,7 @@ class TestHipObjectsLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-hip-{run_id}",
+            state="present", name=f"an-hipobj-{run_id}",
             description=f"Integration test {run_id}",
             disk_encryption={"criteria": {"is_installed": True}},
             folder=TARGET_FOLDER,
@@ -44,7 +44,7 @@ class TestHipObjectsLifecycle:
         # enriched nested objects (extra defaults) that differ from our input.
         # We only verify it doesn't fail.
         result = run_module(_params(
-            state="present", name=f"ansible-integ-hip-{run_id}",
+            state="present", name=f"an-hipobj-{run_id}",
             description=f"Integration test {run_id}",
             disk_encryption={"criteria": {"is_installed": True}},
             folder=TARGET_FOLDER,
@@ -53,7 +53,7 @@ class TestHipObjectsLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-hip-{run_id}",
+            state="gathered", name=f"an-hipobj-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -61,7 +61,7 @@ class TestHipObjectsLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-hip-{run_id}",
+            state="present", name=f"an-hipobj-{run_id}",
             description=f"Updated {run_id}",
             disk_encryption={"criteria": {"is_installed": True}},
             folder=TARGET_FOLDER,
@@ -71,7 +71,7 @@ class TestHipObjectsLifecycle:
 
     def test_05_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-hip-{run_id}",
+            state="absent", name=f"an-hipobj-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -79,7 +79,7 @@ class TestHipObjectsLifecycle:
 
     def test_06_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-hip-{run_id}",
+            state="absent", name=f"an-hipobj-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

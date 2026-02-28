@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_sdwan_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_sdwan_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_sdwan_rule.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_sdwan_rule' for full parameter docs.
 
 - name: Manage sdwan_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,88 @@
 
   tasks:
 
-    - name: Create a sdwan_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create sdwan_rule
       paloaltonetworks.scm.scm_sdwan_rule:
         state: present
-        name: "example-sdwan_rule"
-        folder: "Shared"
+        name: "ansible-test-sdwan_rule"
+        folder: "All"
+        # action: <required>
+        # application: <required>
+        # destination: <required>
+        # path_quality_profile: <required>
+        # position: <required>
+        # service: <required>
+        # source: <required>
+        # source_user: <required>
+        # to: <required>
+        # var_from: <required>
       register: create_result
 
-    - name: Display created sdwan_rule
+    - name: Show created sdwan_rule
       ansible.builtin.debug:
         var: create_result.sdwan_rule
 
-    - name: Gather information about a sdwan_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update sdwan_rule
+      paloaltonetworks.scm.scm_sdwan_rule:
+        state: present
+        name: "ansible-test-sdwan_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated sdwan_rule
+      ansible.builtin.debug:
+        var: update_result.sdwan_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get sdwan_rule by name
       paloaltonetworks.scm.scm_sdwan_rule:
         state: gathered
-        name: "example-sdwan_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-sdwan_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered sdwan_rule
+    - name: Show gathered sdwan_rule
       ansible.builtin.debug:
-        var: gather_result.sdwan_rule
+        var: gathered_result.sdwan_rule
 
-    - name: List all sdwan_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get sdwan_rule by name (info module)
       paloaltonetworks.scm.scm_sdwan_rule_info:
-        folder: "Shared"
+        name: "ansible-test-sdwan_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.sdwan_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get sdwan_rule by ID (info module)
+      paloaltonetworks.scm.scm_sdwan_rule_info:
+        id: "{{ gathered_result.sdwan_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.sdwan_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all sdwan_rules
+      paloaltonetworks.scm.scm_sdwan_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display sdwan_rules list
+    - name: Show sdwan_rules count
       ansible.builtin.debug:
-        var: list_result.sdwan_rules
+        msg: "Found {{ list_result.total }} sdwan_rules"
 
-
-    - name: Delete the sdwan_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete sdwan_rule
       paloaltonetworks.scm.scm_sdwan_rule:
         state: absent
-        name: "example-sdwan_rule"
-        folder: "Shared"
+        name: "ansible-test-sdwan_rule"
+        folder: "All"
 

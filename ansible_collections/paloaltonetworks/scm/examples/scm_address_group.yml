@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_address_group
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_address_group.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_address_group.yml
+#
 
 - name: Manage address_groups in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,82 @@
 
   tasks:
 
-    - name: Create a address_group object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create address_group
       paloaltonetworks.scm.scm_address_group:
         state: present
-        name: "example-address_group"
-        folder: "Shared"
+        name: "ansible-test-addrgrp"
+        folder: "Prisma Access"
+        dynamic:
+          filter: "'ansible-test-tag'"
+        description: "Created by Ansible"
       register: create_result
 
-    - name: Display created address_group
+    - name: Show created address_group
       ansible.builtin.debug:
         var: create_result.address_group
 
-    - name: Gather information about a address_group object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update address_group
+      paloaltonetworks.scm.scm_address_group:
+        state: present
+        name: "ansible-test-addrgrp"
+        folder: "Prisma Access"
+        description: "Updated by Ansible"
+        dynamic:
+          filter: "'ansible-test-tag'"
+      register: update_result
+
+    - name: Show updated address_group
+      ansible.builtin.debug:
+        var: update_result.address_group
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get address_group by name
       paloaltonetworks.scm.scm_address_group:
         state: gathered
-        name: "example-address_group"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-addrgrp"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered address_group
+    - name: Show gathered address_group
       ansible.builtin.debug:
-        var: gather_result.address_group
+        var: gathered_result.address_group
 
-    - name: List all address_groups in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get address_group by name (info module)
       paloaltonetworks.scm.scm_address_group_info:
-        folder: "Shared"
+        name: "ansible-test-addrgrp"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.address_groups
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get address_group by ID (info module)
+      paloaltonetworks.scm.scm_address_group_info:
+        id: "{{ gathered_result.address_group.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.address_groups
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all address_groups
+      paloaltonetworks.scm.scm_address_group_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display address_groups list
+    - name: Show address_groups count
       ansible.builtin.debug:
-        var: list_result.address_groups
+        msg: "Found {{ list_result.total }} address_groups"
 
-
-    - name: Delete the address_group object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete address_group
       paloaltonetworks.scm.scm_address_group:
         state: absent
-        name: "example-address_group"
-        folder: "Shared"
-
+        name: "ansible-test-addrgrp"
+        folder: "Prisma Access"

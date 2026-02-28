@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_internal_dns_server
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_internal_dns_server.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_internal_dns_server.yml
+#
 
 - name: Manage internal_dns_servers in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +24,76 @@
 
   tasks:
 
-    - name: Create a internal_dns_server object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create internal_dns_server
       paloaltonetworks.scm.scm_internal_dns_server:
         state: present
-        name: "example-internal_dns_server"
+        name: "ansible-test-internal_dns_server"
+        domain_name: ["example.com"]
+        primary: "8.8.8.8"
       register: create_result
 
-    - name: Display created internal_dns_server
+    - name: Show created internal_dns_server
       ansible.builtin.debug:
         var: create_result.internal_dns_server
 
-    - name: Gather information about a internal_dns_server object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update internal_dns_server
+      paloaltonetworks.scm.scm_internal_dns_server:
+        state: present
+        name: "ansible-test-internal_dns_server"
+        description: "Updated by Ansible"
+        domain_name: ["example.com"]
+        primary: "8.8.8.8"
+      register: update_result
+
+    - name: Show updated internal_dns_server
+      ansible.builtin.debug:
+        var: update_result.internal_dns_server
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get internal_dns_server by name
       paloaltonetworks.scm.scm_internal_dns_server:
         state: gathered
-        name: "example-internal_dns_server"
-      register: gather_result
+        name: "ansible-test-internal_dns_server"
+      register: gathered_result
 
-    - name: Display gathered internal_dns_server
+    - name: Show gathered internal_dns_server
       ansible.builtin.debug:
-        var: gather_result.internal_dns_server
+        var: gathered_result.internal_dns_server
 
-    - name: List all internal_dns_servers in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get internal_dns_server by name (info module)
+      paloaltonetworks.scm.scm_internal_dns_server_info:
+        name: "ansible-test-internal_dns_server"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.internal_dns_servers
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get internal_dns_server by ID (info module)
+      paloaltonetworks.scm.scm_internal_dns_server_info:
+        id: "{{ gathered_result.internal_dns_server.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.internal_dns_servers
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all internal_dns_servers
       paloaltonetworks.scm.scm_internal_dns_server_info:
       register: list_result
 
-    - name: Display internal_dns_servers list
+    - name: Show internal_dns_servers count
       ansible.builtin.debug:
-        var: list_result.internal_dns_servers
+        msg: "Found {{ list_result.total }} internal_dns_servers"
 
-
-    - name: Delete the internal_dns_server object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete internal_dns_server
       paloaltonetworks.scm.scm_internal_dns_server:
         state: absent
-        name: "example-internal_dns_server"
+        name: "ansible-test-internal_dns_server"
 

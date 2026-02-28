@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_nat_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_nat_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_nat_rule.yml
+#
 
 - name: Manage nat_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,110 @@
 
   tasks:
 
-    - name: Create a nat_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create nat_rule
       paloaltonetworks.scm.scm_nat_rule:
         state: present
-        name: "example-nat_rule"
-        folder: "Shared"
+        name: "ansible-test-nat_rule"
+        folder: "All"
+        from_: ["any"]
+        to_: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"
+        nat_type: "ipv4"
+        destination_translation:
+          translated_address: "10.1.1.10"
+          translated_port: 443
+          dns_rewrite:
+            direction: "reverse"
+        source_translation:
+          dynamic_ip_and_port:
+            translated_address:
+            - "10.1.1.20"
+            - "10.2.2.23"
       register: create_result
 
-    - name: Display created nat_rule
+    - name: Show created nat_rule
       ansible.builtin.debug:
         var: create_result.nat_rule
 
-    - name: Gather information about a nat_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update nat_rule
+      paloaltonetworks.scm.scm_nat_rule:
+        state: present
+        name: "ansible-test-nat_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+        from_: ["any"]
+        to_: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"
+        nat_type: "ipv4"
+        destination_translation:
+          translated_address: "10.1.1.10"
+          translated_port: 443
+          dns_rewrite:
+            direction: "reverse"
+        source_translation:
+          dynamic_ip_and_port:
+            translated_address:
+            - "10.1.1.20"
+            - "10.2.2.23"
+      register: update_result
+
+    - name: Show updated nat_rule
+      ansible.builtin.debug:
+        var: update_result.nat_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get nat_rule by name
       paloaltonetworks.scm.scm_nat_rule:
         state: gathered
-        name: "example-nat_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-nat_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered nat_rule
+    - name: Show gathered nat_rule
       ansible.builtin.debug:
-        var: gather_result.nat_rule
+        var: gathered_result.nat_rule
 
-    - name: List all nat_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get nat_rule by name (info module)
       paloaltonetworks.scm.scm_nat_rule_info:
-        folder: "Shared"
+        name: "ansible-test-nat_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.nat_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get nat_rule by ID (info module)
+      paloaltonetworks.scm.scm_nat_rule_info:
+        id: "{{ gathered_result.nat_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.nat_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all nat_rules
+      paloaltonetworks.scm.scm_nat_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display nat_rules list
+    - name: Show nat_rules count
       ansible.builtin.debug:
-        var: list_result.nat_rules
+        msg: "Found {{ list_result.total }} nat_rules"
 
-
-    - name: Delete the nat_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete nat_rule
       paloaltonetworks.scm.scm_nat_rule:
         state: absent
-        name: "example-nat_rule"
-        folder: "Shared"
+        name: "ansible-test-nat_rule"
+        folder: "All"
 

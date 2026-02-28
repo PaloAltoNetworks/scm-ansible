@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_authentication_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_authentication_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_authentication_rule.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_authentication_rule' for full parameter docs.
 
 - name: Manage authentication_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,83 @@
 
   tasks:
 
-    - name: Create a authentication_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create authentication_rule
       paloaltonetworks.scm.scm_authentication_rule:
         state: present
-        name: "example-authentication_rule"
-        folder: "Shared"
+        name: "ansible-test-authentication_rule"
+        folder: "All"
+        # destination: <required>
+        # service: <required>
+        # source: <required>
+        # to: <required>
+        # var_from: <required>
       register: create_result
 
-    - name: Display created authentication_rule
+    - name: Show created authentication_rule
       ansible.builtin.debug:
         var: create_result.authentication_rule
 
-    - name: Gather information about a authentication_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update authentication_rule
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: present
+        name: "ansible-test-authentication_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated authentication_rule
+      ansible.builtin.debug:
+        var: update_result.authentication_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get authentication_rule by name
       paloaltonetworks.scm.scm_authentication_rule:
         state: gathered
-        name: "example-authentication_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-authentication_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered authentication_rule
+    - name: Show gathered authentication_rule
       ansible.builtin.debug:
-        var: gather_result.authentication_rule
+        var: gathered_result.authentication_rule
 
-    - name: List all authentication_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get authentication_rule by name (info module)
       paloaltonetworks.scm.scm_authentication_rule_info:
-        folder: "Shared"
+        name: "ansible-test-authentication_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.authentication_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get authentication_rule by ID (info module)
+      paloaltonetworks.scm.scm_authentication_rule_info:
+        id: "{{ gathered_result.authentication_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.authentication_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all authentication_rules
+      paloaltonetworks.scm.scm_authentication_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display authentication_rules list
+    - name: Show authentication_rules count
       ansible.builtin.debug:
-        var: list_result.authentication_rules
+        msg: "Found {{ list_result.total }} authentication_rules"
 
-
-    - name: Delete the authentication_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete authentication_rule
       paloaltonetworks.scm.scm_authentication_rule:
         state: absent
-        name: "example-authentication_rule"
-        folder: "Shared"
+        name: "ansible-test-authentication_rule"
+        folder: "All"
 

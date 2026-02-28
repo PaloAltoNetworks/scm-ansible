@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_external_dynamic_list
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_external_dynamic_list.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_external_dynamic_list.yml
+#
 
 - name: Manage external_dynamic_lists in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,90 @@
 
   tasks:
 
-    - name: Create a external_dynamic_list object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create external_dynamic_list
       paloaltonetworks.scm.scm_external_dynamic_list:
         state: present
-        name: "example-external_dynamic_list"
-        folder: "Shared"
+        name: "ansible-test-edl"
+        folder: "Prisma Access"
+        type:
+          domain:
+            url: "http://example.com/domains.txt"
+            description: "Created by Ansible"
+            recurring:
+              daily:
+                at: "03"
       register: create_result
 
-    - name: Display created external_dynamic_list
+    - name: Show created external_dynamic_list
       ansible.builtin.debug:
         var: create_result.external_dynamic_list
 
-    - name: Gather information about a external_dynamic_list object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update external_dynamic_list
+      paloaltonetworks.scm.scm_external_dynamic_list:
+        state: present
+        name: "ansible-test-edl"
+        folder: "Prisma Access"
+        type:
+          domain:
+            url: "http://example.com/updated-domains.txt"
+            description: "Updated by Ansible"
+            recurring:
+              daily:
+                at: "05"
+      register: update_result
+
+    - name: Show updated external_dynamic_list
+      ansible.builtin.debug:
+        var: update_result.external_dynamic_list
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get external_dynamic_list by name
       paloaltonetworks.scm.scm_external_dynamic_list:
         state: gathered
-        name: "example-external_dynamic_list"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-edl"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered external_dynamic_list
+    - name: Show gathered external_dynamic_list
       ansible.builtin.debug:
-        var: gather_result.external_dynamic_list
+        var: gathered_result.external_dynamic_list
 
-    - name: List all external_dynamic_lists in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get external_dynamic_list by name (info module)
       paloaltonetworks.scm.scm_external_dynamic_list_info:
-        folder: "Shared"
+        name: "ansible-test-edl"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.external_dynamic_lists
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get external_dynamic_list by ID (info module)
+      paloaltonetworks.scm.scm_external_dynamic_list_info:
+        id: "{{ gathered_result.external_dynamic_list.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.external_dynamic_lists
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all external_dynamic_lists
+      paloaltonetworks.scm.scm_external_dynamic_list_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display external_dynamic_lists list
+    - name: Show external_dynamic_lists count
       ansible.builtin.debug:
-        var: list_result.external_dynamic_lists
+        msg: "Found {{ list_result.total }} external_dynamic_lists"
 
-
-    - name: Delete the external_dynamic_list object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete external_dynamic_list
       paloaltonetworks.scm.scm_external_dynamic_list:
         state: absent
-        name: "example-external_dynamic_list"
-        folder: "Shared"
-
+        name: "ansible-test-edl"
+        folder: "Prisma Access"

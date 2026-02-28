@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_dynamic_user_group
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_dynamic_user_group.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_dynamic_user_group.yml
+#
 
 - name: Manage dynamic_user_groups in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,82 @@
 
   tasks:
 
-    - name: Create a dynamic_user_group object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create dynamic_user_group
       paloaltonetworks.scm.scm_dynamic_user_group:
         state: present
-        name: "example-dynamic_user_group"
-        folder: "Shared"
+        name: "ansible-test-dug"
+        folder: "Prisma Access"
+        filter: "'Microsoft 365 Access'"
+        description: "Created by Ansible"
       register: create_result
 
-    - name: Display created dynamic_user_group
+    - name: Show created dynamic_user_group
       ansible.builtin.debug:
         var: create_result.dynamic_user_group
 
-    - name: Gather information about a dynamic_user_group object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update dynamic_user_group
+      paloaltonetworks.scm.scm_dynamic_user_group:
+        state: present
+        name: "ansible-test-dug"
+        folder: "Prisma Access"
+        filter: "'Microsoft 365 Access'"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated dynamic_user_group
+      ansible.builtin.debug:
+        var: update_result.dynamic_user_group
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get dynamic_user_group by name
       paloaltonetworks.scm.scm_dynamic_user_group:
         state: gathered
-        name: "example-dynamic_user_group"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-dug"
+        folder: "Prisma Access"
+        filter: "placeholder"
+      register: gathered_result
 
-    - name: Display gathered dynamic_user_group
+    - name: Show gathered dynamic_user_group
       ansible.builtin.debug:
-        var: gather_result.dynamic_user_group
+        var: gathered_result.dynamic_user_group
 
-    - name: List all dynamic_user_groups in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get dynamic_user_group by name (info module)
       paloaltonetworks.scm.scm_dynamic_user_group_info:
-        folder: "Shared"
+        name: "ansible-test-dug"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.dynamic_user_groups
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get dynamic_user_group by ID (info module)
+      paloaltonetworks.scm.scm_dynamic_user_group_info:
+        id: "{{ gathered_result.dynamic_user_group.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.dynamic_user_groups
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all dynamic_user_groups
+      paloaltonetworks.scm.scm_dynamic_user_group_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display dynamic_user_groups list
+    - name: Show dynamic_user_groups count
       ansible.builtin.debug:
-        var: list_result.dynamic_user_groups
+        msg: "Found {{ list_result.total }} dynamic_user_groups"
 
-
-    - name: Delete the dynamic_user_group object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete dynamic_user_group
       paloaltonetworks.scm.scm_dynamic_user_group:
         state: absent
-        name: "example-dynamic_user_group"
-        folder: "Shared"
-
+        name: "ansible-test-dug"
+        folder: "Prisma Access"
+        filter: "placeholder"

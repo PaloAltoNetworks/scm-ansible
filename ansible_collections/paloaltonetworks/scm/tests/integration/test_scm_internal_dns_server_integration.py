@@ -24,7 +24,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-idns-{run_id}",
+            state="present", name=f"an-intdns-{run_id}",
             domain_name=["example.com"], primary="8.8.8.8",
             folder=TARGET_FOLDER,
         ))
@@ -35,7 +35,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-idns-{run_id}",
+            state="present", name=f"an-intdns-{run_id}",
             domain_name=["example.com"], primary="8.8.8.8",
             folder=TARGET_FOLDER,
         ))
@@ -45,7 +45,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-idns-{run_id}",
+            state="gathered", name=f"an-intdns-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"GATHER: {json.dumps(result, indent=2, default=str)}")
@@ -54,7 +54,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-idns-{run_id}",
+            state="present", name=f"an-intdns-{run_id}",
             domain_name=["example.com"], primary="8.8.4.4",
             folder=TARGET_FOLDER,
         ))
@@ -64,7 +64,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_05_update_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-idns-{run_id}",
+            state="present", name=f"an-intdns-{run_id}",
             domain_name=["example.com"], primary="8.8.4.4",
             folder=TARGET_FOLDER,
         ))
@@ -74,7 +74,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_06_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-idns-{run_id}",
+            state="absent", name=f"an-intdns-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"DELETE: {json.dumps(result, indent=2, default=str)}")
@@ -83,7 +83,7 @@ class TestInternalDnsServersLifecycle:
 
     def test_07_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-idns-{run_id}",
+            state="absent", name=f"an-intdns-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"DELETE-IDEMPOTENT: {json.dumps(result, indent=2, default=str)}")

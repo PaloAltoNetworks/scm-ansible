@@ -12,7 +12,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_auto_vp
 logger = logging.getLogger(__name__)
 run_module = make_runner(scm_auto_vpn_config_push, "scm_auto_vpn_config_push")
 
-_FIELDS = dict(name=None)
+_FIELDS = dict(name=None,)
 
 
 def _params(**overrides):
@@ -25,7 +25,7 @@ class TestAutoVpnConfigPushLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-avpncp-{run_id}",
+            state="present", name=f"an-autovpnpush-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -34,7 +34,7 @@ class TestAutoVpnConfigPushLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-avpncp-{run_id}",
+            state="absent", name=f"an-autovpnpush-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -42,7 +42,7 @@ class TestAutoVpnConfigPushLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-avpncp-{run_id}",
+            state="absent", name=f"an-autovpnpush-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

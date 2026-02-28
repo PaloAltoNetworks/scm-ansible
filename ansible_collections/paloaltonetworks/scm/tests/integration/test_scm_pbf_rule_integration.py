@@ -28,7 +28,7 @@ class TestPbfRulesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-pbf-{run_id}",
+            state="present", name=f"an-pbfrule-{run_id}",
             var_from={"zone": ["trust"]},
             source=["192.168.10.0/24"],
             destination=["192.168.10.0/24"],
@@ -44,7 +44,7 @@ class TestPbfRulesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-pbf-{run_id}",
+            state="present", name=f"an-pbfrule-{run_id}",
             var_from={"zone": ["trust"]},
             source=["192.168.10.0/24"],
             destination=["192.168.10.0/24"],
@@ -57,7 +57,7 @@ class TestPbfRulesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-pbf-{run_id}",
+            state="gathered", name=f"an-pbfrule-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -65,7 +65,7 @@ class TestPbfRulesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-pbf-{run_id}",
+            state="absent", name=f"an-pbfrule-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -73,7 +73,7 @@ class TestPbfRulesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-pbf-{run_id}",
+            state="absent", name=f"an-pbfrule-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_remote_network
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_remote_network.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_remote_network.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_remote_network' for full parameter docs.
 
 - name: Manage remote_networks in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,80 @@
 
   tasks:
 
-    - name: Create a remote_network object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create remote_network
       paloaltonetworks.scm.scm_remote_network:
         state: present
-        name: "example-remote_network"
-        folder: "Shared"
+        name: "ansible-test-remote_network"
+        folder: "All"
+        # license_type: <required>
+        # region: <required>
       register: create_result
 
-    - name: Display created remote_network
+    - name: Show created remote_network
       ansible.builtin.debug:
         var: create_result.remote_network
 
-    - name: Gather information about a remote_network object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update remote_network
+      paloaltonetworks.scm.scm_remote_network:
+        state: present
+        name: "ansible-test-remote_network"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated remote_network
+      ansible.builtin.debug:
+        var: update_result.remote_network
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get remote_network by name
       paloaltonetworks.scm.scm_remote_network:
         state: gathered
-        name: "example-remote_network"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-remote_network"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered remote_network
+    - name: Show gathered remote_network
       ansible.builtin.debug:
-        var: gather_result.remote_network
+        var: gathered_result.remote_network
 
-    - name: List all remote_networks in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get remote_network by name (info module)
       paloaltonetworks.scm.scm_remote_network_info:
-        folder: "Shared"
+        name: "ansible-test-remote_network"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.remote_networks
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get remote_network by ID (info module)
+      paloaltonetworks.scm.scm_remote_network_info:
+        id: "{{ gathered_result.remote_network.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.remote_networks
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all remote_networks
+      paloaltonetworks.scm.scm_remote_network_info:
+        folder: "All"
       register: list_result
 
-    - name: Display remote_networks list
+    - name: Show remote_networks count
       ansible.builtin.debug:
-        var: list_result.remote_networks
+        msg: "Found {{ list_result.total }} remote_networks"
 
-
-    - name: Delete the remote_network object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete remote_network
       paloaltonetworks.scm.scm_remote_network:
         state: absent
-        name: "example-remote_network"
-        folder: "Shared"
+        name: "ansible-test-remote_network"
+        folder: "All"
 

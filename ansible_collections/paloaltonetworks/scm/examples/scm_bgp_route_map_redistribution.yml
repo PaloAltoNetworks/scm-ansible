@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_bgp_route_map_redistribution
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_bgp_route_map_redistribution.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_bgp_route_map_redistribution.yml
+#
 
 - name: Manage bgp_route_map_redistributions in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,79 @@
 
   tasks:
 
-    - name: Create a bgp_route_map_redistribution object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create bgp_route_map_redistribution
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: present
-        name: "example-bgp_route_map_redistribution"
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map_redistribution"
+        folder: "All"
+        description: "Test BGP route map redistribution"
       register: create_result
 
-    - name: Display created bgp_route_map_redistribution
+    - name: Show created bgp_route_map_redistribution
       ansible.builtin.debug:
         var: create_result.bgp_route_map_redistribution
 
-    - name: Gather information about a bgp_route_map_redistribution object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update bgp_route_map_redistribution
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution:
+        state: present
+        name: "ansible-test-bgp_route_map_redistribution"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated bgp_route_map_redistribution
+      ansible.builtin.debug:
+        var: update_result.bgp_route_map_redistribution
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get bgp_route_map_redistribution by name
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: gathered
-        name: "example-bgp_route_map_redistribution"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-bgp_route_map_redistribution"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered bgp_route_map_redistribution
+    - name: Show gathered bgp_route_map_redistribution
       ansible.builtin.debug:
-        var: gather_result.bgp_route_map_redistribution
+        var: gathered_result.bgp_route_map_redistribution
 
-    - name: List all bgp_route_map_redistributions in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get bgp_route_map_redistribution by name (info module)
       paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map_redistribution"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.bgp_route_map_redistributions
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get bgp_route_map_redistribution by ID (info module)
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
+        id: "{{ gathered_result.bgp_route_map_redistribution.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.bgp_route_map_redistributions
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all bgp_route_map_redistributions
+      paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
+        folder: "All"
       register: list_result
 
-    - name: Display bgp_route_map_redistributions list
+    - name: Show bgp_route_map_redistributions count
       ansible.builtin.debug:
-        var: list_result.bgp_route_map_redistributions
+        msg: "Found {{ list_result.total }} bgp_route_map_redistributions"
 
-
-    - name: Delete the bgp_route_map_redistribution object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete bgp_route_map_redistribution
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: absent
-        name: "example-bgp_route_map_redistribution"
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map_redistribution"
+        folder: "All"
 

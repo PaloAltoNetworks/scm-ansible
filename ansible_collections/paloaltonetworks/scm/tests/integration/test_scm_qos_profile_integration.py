@@ -24,7 +24,7 @@ class TestQoSProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-qos-{run_id}",
+            state="present", name=f"an-qos-{run_id}",
             class_bandwidth_type={
                 "mbps": {
                     "var_class": [
@@ -46,7 +46,7 @@ class TestQoSProfilesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-qos-{run_id}",
+            state="present", name=f"an-qos-{run_id}",
             class_bandwidth_type={
                 "mbps": {
                     "var_class": [
@@ -65,7 +65,7 @@ class TestQoSProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-qos-{run_id}",
+            state="gathered", name=f"an-qos-{run_id}",
             folder="Service Connections",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -73,7 +73,7 @@ class TestQoSProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-qos-{run_id}",
+            state="absent", name=f"an-qos-{run_id}",
             folder="Service Connections",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -81,7 +81,7 @@ class TestQoSProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-qos-{run_id}",
+            state="absent", name=f"an-qos-{run_id}",
             folder="Service Connections",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

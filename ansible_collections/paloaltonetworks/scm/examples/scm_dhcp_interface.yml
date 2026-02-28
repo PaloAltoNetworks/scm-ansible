@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_dhcp_interface
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_dhcp_interface.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_dhcp_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_dhcp_interface' for full parameter docs.
 
 - name: Manage dhcp_interfaces in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a dhcp_interface object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create dhcp_interface
       paloaltonetworks.scm.scm_dhcp_interface:
         state: present
-        name: "example-dhcp_interface"
-        folder: "Shared"
+        name: "ansible-test-dhcp_interface"
+        folder: "All"
       register: create_result
 
-    - name: Display created dhcp_interface
+    - name: Show created dhcp_interface
       ansible.builtin.debug:
         var: create_result.dhcp_interface
 
-    - name: Gather information about a dhcp_interface object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update dhcp_interface
+      paloaltonetworks.scm.scm_dhcp_interface:
+        state: present
+        name: "ansible-test-dhcp_interface"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated dhcp_interface
+      ansible.builtin.debug:
+        var: update_result.dhcp_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get dhcp_interface by name
       paloaltonetworks.scm.scm_dhcp_interface:
         state: gathered
-        name: "example-dhcp_interface"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-dhcp_interface"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered dhcp_interface
+    - name: Show gathered dhcp_interface
       ansible.builtin.debug:
-        var: gather_result.dhcp_interface
+        var: gathered_result.dhcp_interface
 
-    - name: List all dhcp_interfaces in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get dhcp_interface by name (info module)
       paloaltonetworks.scm.scm_dhcp_interface_info:
-        folder: "Shared"
+        name: "ansible-test-dhcp_interface"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.dhcp_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get dhcp_interface by ID (info module)
+      paloaltonetworks.scm.scm_dhcp_interface_info:
+        id: "{{ gathered_result.dhcp_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.dhcp_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all dhcp_interfaces
+      paloaltonetworks.scm.scm_dhcp_interface_info:
+        folder: "All"
       register: list_result
 
-    - name: Display dhcp_interfaces list
+    - name: Show dhcp_interfaces count
       ansible.builtin.debug:
-        var: list_result.dhcp_interfaces
+        msg: "Found {{ list_result.total }} dhcp_interfaces"
 
-
-    - name: Delete the dhcp_interface object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete dhcp_interface
       paloaltonetworks.scm.scm_dhcp_interface:
         state: absent
-        name: "example-dhcp_interface"
-        folder: "Shared"
+        name: "ansible-test-dhcp_interface"
+        folder: "All"
 

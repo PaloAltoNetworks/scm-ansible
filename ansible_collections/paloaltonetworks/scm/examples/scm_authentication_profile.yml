@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_authentication_profile
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_authentication_profile.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_authentication_profile.yml
+#
 
 - name: Manage authentication_profiles in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,84 @@
 
   tasks:
 
-    - name: Create a authentication_profile object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create authentication_profile
       paloaltonetworks.scm.scm_authentication_profile:
         state: present
-        name: "example-authentication_profile"
-        folder: "Shared"
+        name: "ansible-test-authentication_profile"
+        folder: "All"
+        allow_list: ["all"]
+        method:
+          local_database: {}
       register: create_result
 
-    - name: Display created authentication_profile
+    - name: Show created authentication_profile
       ansible.builtin.debug:
         var: create_result.authentication_profile
 
-    - name: Gather information about a authentication_profile object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update authentication_profile
+      paloaltonetworks.scm.scm_authentication_profile:
+        state: present
+        name: "ansible-test-authentication_profile"
+        description: "Updated by Ansible"
+        folder: "All"
+        allow_list: ["all"]
+        method:
+          local_database: {}
+      register: update_result
+
+    - name: Show updated authentication_profile
+      ansible.builtin.debug:
+        var: update_result.authentication_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get authentication_profile by name
       paloaltonetworks.scm.scm_authentication_profile:
         state: gathered
-        name: "example-authentication_profile"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-authentication_profile"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered authentication_profile
+    - name: Show gathered authentication_profile
       ansible.builtin.debug:
-        var: gather_result.authentication_profile
+        var: gathered_result.authentication_profile
 
-    - name: List all authentication_profiles in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get authentication_profile by name (info module)
       paloaltonetworks.scm.scm_authentication_profile_info:
-        folder: "Shared"
+        name: "ansible-test-authentication_profile"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.authentication_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get authentication_profile by ID (info module)
+      paloaltonetworks.scm.scm_authentication_profile_info:
+        id: "{{ gathered_result.authentication_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.authentication_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all authentication_profiles
+      paloaltonetworks.scm.scm_authentication_profile_info:
+        folder: "All"
       register: list_result
 
-    - name: Display authentication_profiles list
+    - name: Show authentication_profiles count
       ansible.builtin.debug:
-        var: list_result.authentication_profiles
+        msg: "Found {{ list_result.total }} authentication_profiles"
 
-
-    - name: Delete the authentication_profile object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete authentication_profile
       paloaltonetworks.scm.scm_authentication_profile:
         state: absent
-        name: "example-authentication_profile"
-        folder: "Shared"
+        name: "ansible-test-authentication_profile"
+        folder: "All"
 

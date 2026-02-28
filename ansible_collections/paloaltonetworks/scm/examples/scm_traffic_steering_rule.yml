@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_traffic_steering_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_traffic_steering_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_traffic_steering_rule.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_traffic_steering_rule' for full parameter docs.
 
 - name: Manage traffic_steering_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,80 @@
 
   tasks:
 
-    - name: Create a traffic_steering_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create traffic_steering_rule
       paloaltonetworks.scm.scm_traffic_steering_rule:
         state: present
-        name: "example-traffic_steering_rule"
-        folder: "Shared"
+        name: "ansible-test-traffic_steering_rule"
+        folder: "All"
+        # service: <required>
+        # source: <required>
       register: create_result
 
-    - name: Display created traffic_steering_rule
+    - name: Show created traffic_steering_rule
       ansible.builtin.debug:
         var: create_result.traffic_steering_rule
 
-    - name: Gather information about a traffic_steering_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update traffic_steering_rule
+      paloaltonetworks.scm.scm_traffic_steering_rule:
+        state: present
+        name: "ansible-test-traffic_steering_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated traffic_steering_rule
+      ansible.builtin.debug:
+        var: update_result.traffic_steering_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get traffic_steering_rule by name
       paloaltonetworks.scm.scm_traffic_steering_rule:
         state: gathered
-        name: "example-traffic_steering_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-traffic_steering_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered traffic_steering_rule
+    - name: Show gathered traffic_steering_rule
       ansible.builtin.debug:
-        var: gather_result.traffic_steering_rule
+        var: gathered_result.traffic_steering_rule
 
-    - name: List all traffic_steering_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get traffic_steering_rule by name (info module)
       paloaltonetworks.scm.scm_traffic_steering_rule_info:
-        folder: "Shared"
+        name: "ansible-test-traffic_steering_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.traffic_steering_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get traffic_steering_rule by ID (info module)
+      paloaltonetworks.scm.scm_traffic_steering_rule_info:
+        id: "{{ gathered_result.traffic_steering_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.traffic_steering_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all traffic_steering_rules
+      paloaltonetworks.scm.scm_traffic_steering_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display traffic_steering_rules list
+    - name: Show traffic_steering_rules count
       ansible.builtin.debug:
-        var: list_result.traffic_steering_rules
+        msg: "Found {{ list_result.total }} traffic_steering_rules"
 
-
-    - name: Delete the traffic_steering_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete traffic_steering_rule
       paloaltonetworks.scm.scm_traffic_steering_rule:
         state: absent
-        name: "example-traffic_steering_rule"
-        folder: "Shared"
+        name: "ansible-test-traffic_steering_rule"
+        folder: "All"
 

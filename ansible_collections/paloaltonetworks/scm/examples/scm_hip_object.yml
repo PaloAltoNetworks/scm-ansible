@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_hip_object
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_hip_object.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_hip_object.yml
+#
 
 - name: Manage hip_objects in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,91 @@
 
   tasks:
 
-    - name: Create a hip_object object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create hip_object
       paloaltonetworks.scm.scm_hip_object:
         state: present
-        name: "example-hip_object"
+        name: "ansible-test-hip"
         folder: "Shared"
+        description: "Created by Ansible"
+        host_info:
+          criteria:
+            os:
+              contains:
+                apple: "macOS"
       register: create_result
 
-    - name: Display created hip_object
+    - name: Show created hip_object
       ansible.builtin.debug:
         var: create_result.hip_object
 
-    - name: Gather information about a hip_object object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update hip_object
+      paloaltonetworks.scm.scm_hip_object:
+        state: present
+        name: "ansible-test-hip"
+        folder: "Shared"
+        description: "Updated by Ansible"
+        host_info:
+          criteria:
+            os:
+              contains:
+                microsoft: "Microsoft Windows 10"
+        disk_encryption:
+          criteria:
+            is_installed: true
+      register: update_result
+
+    - name: Show updated hip_object
+      ansible.builtin.debug:
+        var: update_result.hip_object
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get hip_object by name
       paloaltonetworks.scm.scm_hip_object:
         state: gathered
-        name: "example-hip_object"
+        name: "ansible-test-hip"
         folder: "Shared"
-      register: gather_result
+      register: gathered_result
 
-    - name: Display gathered hip_object
+    - name: Show gathered hip_object
       ansible.builtin.debug:
-        var: gather_result.hip_object
+        var: gathered_result.hip_object
 
-    - name: List all hip_objects in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get hip_object by name (info module)
+      paloaltonetworks.scm.scm_hip_object_info:
+        name: "ansible-test-hip"
+        folder: "Shared"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.hip_objects
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get hip_object by ID (info module)
+      paloaltonetworks.scm.scm_hip_object_info:
+        id: "{{ gathered_result.hip_object.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.hip_objects
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all hip_objects
       paloaltonetworks.scm.scm_hip_object_info:
         folder: "Shared"
       register: list_result
 
-    - name: Display hip_objects list
+    - name: Show hip_objects count
       ansible.builtin.debug:
-        var: list_result.hip_objects
+        msg: "Found {{ list_result.total }} hip_objects"
 
-
-    - name: Delete the hip_object object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete hip_object
       paloaltonetworks.scm.scm_hip_object:
         state: absent
-        name: "example-hip_object"
+        name: "ansible-test-hip"
         folder: "Shared"
-

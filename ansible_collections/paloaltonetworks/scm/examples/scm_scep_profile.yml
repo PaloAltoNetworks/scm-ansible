@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_scep_profile
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_scep_profile.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_scep_profile.yml
+#
 
 - name: Manage scep_profiles in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,96 @@
 
   tasks:
 
-    - name: Create a scep_profile object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create scep_profile
       paloaltonetworks.scm.scm_scep_profile:
         state: present
-        name: "example-scep_profile"
-        folder: "Shared"
+        name: "ansible-test-scep_profile"
+        folder: "All"
+        scep_url: "https://scep.example.com/"
+        ca_identity_name: "Default"
+        digest: "sha256"
+        subject: "CN=$USERNAME"
+        algorithm:
+          rsa:
+            rsa_nbits: "2048"
+        scep_challenge:
+          fixed: "mypassword123"
       register: create_result
 
-    - name: Display created scep_profile
+    - name: Show created scep_profile
       ansible.builtin.debug:
         var: create_result.scep_profile
 
-    - name: Gather information about a scep_profile object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update scep_profile
+      paloaltonetworks.scm.scm_scep_profile:
+        state: present
+        name: "ansible-test-scep_profile"
+        description: "Updated by Ansible"
+        folder: "All"
+        scep_url: "https://scep.example.com/"
+        ca_identity_name: "Default"
+        digest: "sha256"
+        subject: "CN=$USERNAME"
+        algorithm:
+          rsa:
+            rsa_nbits: "2048"
+        scep_challenge:
+          fixed: "mypassword123"
+      register: update_result
+
+    - name: Show updated scep_profile
+      ansible.builtin.debug:
+        var: update_result.scep_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get scep_profile by name
       paloaltonetworks.scm.scm_scep_profile:
         state: gathered
-        name: "example-scep_profile"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-scep_profile"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered scep_profile
+    - name: Show gathered scep_profile
       ansible.builtin.debug:
-        var: gather_result.scep_profile
+        var: gathered_result.scep_profile
 
-    - name: List all scep_profiles in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get scep_profile by name (info module)
       paloaltonetworks.scm.scm_scep_profile_info:
-        folder: "Shared"
+        name: "ansible-test-scep_profile"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.scep_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get scep_profile by ID (info module)
+      paloaltonetworks.scm.scm_scep_profile_info:
+        id: "{{ gathered_result.scep_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.scep_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all scep_profiles
+      paloaltonetworks.scm.scm_scep_profile_info:
+        folder: "All"
       register: list_result
 
-    - name: Display scep_profiles list
+    - name: Show scep_profiles count
       ansible.builtin.debug:
-        var: list_result.scep_profiles
+        msg: "Found {{ list_result.total }} scep_profiles"
 
-
-    - name: Delete the scep_profile object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete scep_profile
       paloaltonetworks.scm.scm_scep_profile:
         state: absent
-        name: "example-scep_profile"
-        folder: "Shared"
+        name: "ansible-test-scep_profile"
+        folder: "All"
 

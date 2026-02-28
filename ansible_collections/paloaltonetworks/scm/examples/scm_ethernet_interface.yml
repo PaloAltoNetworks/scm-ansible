@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_ethernet_interface
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_ethernet_interface.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_ethernet_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_ethernet_interface' for full parameter docs.
 
 - name: Manage ethernet_interfaces in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a ethernet_interface object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create ethernet_interface
       paloaltonetworks.scm.scm_ethernet_interface:
         state: present
-        name: "example-ethernet_interface"
-        folder: "Shared"
+        name: "ansible-test-ethernet_interface"
+        folder: "All"
       register: create_result
 
-    - name: Display created ethernet_interface
+    - name: Show created ethernet_interface
       ansible.builtin.debug:
         var: create_result.ethernet_interface
 
-    - name: Gather information about a ethernet_interface object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ethernet_interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "ansible-test-ethernet_interface"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated ethernet_interface
+      ansible.builtin.debug:
+        var: update_result.ethernet_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ethernet_interface by name
       paloaltonetworks.scm.scm_ethernet_interface:
         state: gathered
-        name: "example-ethernet_interface"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-ethernet_interface"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered ethernet_interface
+    - name: Show gathered ethernet_interface
       ansible.builtin.debug:
-        var: gather_result.ethernet_interface
+        var: gathered_result.ethernet_interface
 
-    - name: List all ethernet_interfaces in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ethernet_interface by name (info module)
       paloaltonetworks.scm.scm_ethernet_interface_info:
-        folder: "Shared"
+        name: "ansible-test-ethernet_interface"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ethernet_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ethernet_interface by ID (info module)
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        id: "{{ gathered_result.ethernet_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ethernet_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ethernet_interfaces
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        folder: "All"
       register: list_result
 
-    - name: Display ethernet_interfaces list
+    - name: Show ethernet_interfaces count
       ansible.builtin.debug:
-        var: list_result.ethernet_interfaces
+        msg: "Found {{ list_result.total }} ethernet_interfaces"
 
-
-    - name: Delete the ethernet_interface object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ethernet_interface
       paloaltonetworks.scm.scm_ethernet_interface:
         state: absent
-        name: "example-ethernet_interface"
-        folder: "Shared"
+        name: "ansible-test-ethernet_interface"
+        folder: "All"
 

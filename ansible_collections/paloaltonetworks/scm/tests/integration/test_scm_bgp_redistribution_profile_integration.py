@@ -24,7 +24,7 @@ class TestBgpRedistributionProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-bgpredist-{run_id}",
+            state="present", name=f"an-bgpredist-{run_id}",
             ipv4={"unicast": {"static": {"enable": True}}},
             folder=TARGET_FOLDER,
         ))
@@ -35,7 +35,7 @@ class TestBgpRedistributionProfilesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-bgpredist-{run_id}",
+            state="present", name=f"an-bgpredist-{run_id}",
             ipv4={"unicast": {"static": {"enable": True}}},
             folder=TARGET_FOLDER,
         ))
@@ -43,7 +43,7 @@ class TestBgpRedistributionProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-bgpredist-{run_id}",
+            state="gathered", name=f"an-bgpredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -51,7 +51,7 @@ class TestBgpRedistributionProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-bgpredist-{run_id}",
+            state="absent", name=f"an-bgpredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestBgpRedistributionProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-bgpredist-{run_id}",
+            state="absent", name=f"an-bgpredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

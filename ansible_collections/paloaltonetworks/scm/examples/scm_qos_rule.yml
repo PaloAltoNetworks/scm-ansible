@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_qos_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_qos_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_qos_rule.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_qos_rule' for full parameter docs.
 
 - name: Manage qos_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,79 @@
 
   tasks:
 
-    - name: Create a qos_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create qos_rule
       paloaltonetworks.scm.scm_qos_rule:
         state: present
-        name: "example-qos_rule"
-        folder: "Shared"
+        name: "ansible-test-qos_rule"
+        folder: "All"
+        # action: <required>
       register: create_result
 
-    - name: Display created qos_rule
+    - name: Show created qos_rule
       ansible.builtin.debug:
         var: create_result.qos_rule
 
-    - name: Gather information about a qos_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update qos_rule
+      paloaltonetworks.scm.scm_qos_rule:
+        state: present
+        name: "ansible-test-qos_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated qos_rule
+      ansible.builtin.debug:
+        var: update_result.qos_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get qos_rule by name
       paloaltonetworks.scm.scm_qos_rule:
         state: gathered
-        name: "example-qos_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-qos_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered qos_rule
+    - name: Show gathered qos_rule
       ansible.builtin.debug:
-        var: gather_result.qos_rule
+        var: gathered_result.qos_rule
 
-    - name: List all qos_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get qos_rule by name (info module)
       paloaltonetworks.scm.scm_qos_rule_info:
-        folder: "Shared"
+        name: "ansible-test-qos_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.qos_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get qos_rule by ID (info module)
+      paloaltonetworks.scm.scm_qos_rule_info:
+        id: "{{ gathered_result.qos_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.qos_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all qos_rules
+      paloaltonetworks.scm.scm_qos_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display qos_rules list
+    - name: Show qos_rules count
       ansible.builtin.debug:
-        var: list_result.qos_rules
+        msg: "Found {{ list_result.total }} qos_rules"
 
-
-    - name: Delete the qos_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete qos_rule
       paloaltonetworks.scm.scm_qos_rule:
         state: absent
-        name: "example-qos_rule"
-        folder: "Shared"
+        name: "ansible-test-qos_rule"
+        folder: "All"
 

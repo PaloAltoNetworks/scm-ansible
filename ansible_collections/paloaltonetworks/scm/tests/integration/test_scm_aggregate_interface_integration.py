@@ -12,7 +12,10 @@ from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_aggrega
 logger = logging.getLogger(__name__)
 run_module = make_runner(scm_aggregate_interface, "scm_aggregate_interface")
 
-_FIELDS = dict(name=None)
+_FIELDS = dict(
+    comment=None, decrypt_mirror=None, ha=None,
+    layer2=None, layer3=None, lacp=None, members=None, name=None,
+)
 
 
 def _params(**overrides):
@@ -25,7 +28,7 @@ class TestAggregateInterfacesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-aggif-{run_id}",
+            state="present", name=f"an-aggif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -34,7 +37,7 @@ class TestAggregateInterfacesLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-aggif-{run_id}",
+            state="absent", name=f"an-aggif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -42,7 +45,7 @@ class TestAggregateInterfacesLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-aggif-{run_id}",
+            state="absent", name=f"an-aggif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_dos_protection_rule
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_dos_protection_rule.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_dos_protection_rule.yml
+#
 
 - name: Manage dos_protection_rules in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,92 @@
 
   tasks:
 
-    - name: Create a dos_protection_rule object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create dos_protection_rule
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: present
-        name: "example-dos_protection_rule"
-        folder: "Shared"
+        name: "ansible-test-dos_protection_rule"
+        folder: "All"
+        action:
+          protect: {}
+        destination: ["any"]
+        from_: ["any"]
+        service: ["any"]
+        source: ["any"]
+        to_: ["any"]
       register: create_result
 
-    - name: Display created dos_protection_rule
+    - name: Show created dos_protection_rule
       ansible.builtin.debug:
         var: create_result.dos_protection_rule
 
-    - name: Gather information about a dos_protection_rule object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update dos_protection_rule
+      paloaltonetworks.scm.scm_dos_protection_rule:
+        state: present
+        name: "ansible-test-dos_protection_rule"
+        description: "Updated by Ansible"
+        folder: "All"
+        action:
+          protect: {}
+        destination: ["any"]
+        from_: ["any"]
+        service: ["any"]
+        source: ["any"]
+        to_: ["any"]
+      register: update_result
+
+    - name: Show updated dos_protection_rule
+      ansible.builtin.debug:
+        var: update_result.dos_protection_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get dos_protection_rule by name
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: gathered
-        name: "example-dos_protection_rule"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-dos_protection_rule"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered dos_protection_rule
+    - name: Show gathered dos_protection_rule
       ansible.builtin.debug:
-        var: gather_result.dos_protection_rule
+        var: gathered_result.dos_protection_rule
 
-    - name: List all dos_protection_rules in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get dos_protection_rule by name (info module)
       paloaltonetworks.scm.scm_dos_protection_rule_info:
-        folder: "Shared"
+        name: "ansible-test-dos_protection_rule"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.dos_protection_rules
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get dos_protection_rule by ID (info module)
+      paloaltonetworks.scm.scm_dos_protection_rule_info:
+        id: "{{ gathered_result.dos_protection_rule.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.dos_protection_rules
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all dos_protection_rules
+      paloaltonetworks.scm.scm_dos_protection_rule_info:
+        folder: "All"
       register: list_result
 
-    - name: Display dos_protection_rules list
+    - name: Show dos_protection_rules count
       ansible.builtin.debug:
-        var: list_result.dos_protection_rules
+        msg: "Found {{ list_result.total }} dos_protection_rules"
 
-
-    - name: Delete the dos_protection_rule object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete dos_protection_rule
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: absent
-        name: "example-dos_protection_rule"
-        folder: "Shared"
+        name: "ansible-test-dos_protection_rule"
+        folder: "All"
 

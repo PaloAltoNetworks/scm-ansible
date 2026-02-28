@@ -32,7 +32,7 @@ class TestSecurityRulesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-secrule-{run_id}",
+            state="present", name=f"an-secrule-{run_id}",
             action="allow",
             application=["any"],
             category=["any"],
@@ -51,7 +51,7 @@ class TestSecurityRulesLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-secrule-{run_id}",
+            state="absent", name=f"an-secrule-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestSecurityRulesLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-secrule-{run_id}",
+            state="absent", name=f"an-secrule-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

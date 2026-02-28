@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_trust
 #
+# Demonstrates: create, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_trust.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_trust.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_trust' for full parameter docs.
 
 - name: Manage trusts in Strata Cloud Manager
   hosts: localhost
@@ -17,29 +26,20 @@
 
   tasks:
 
-    - name: Create a trust object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create trust
       paloaltonetworks.scm.scm_trust:
         state: present
-        name: "example-trust"
+        name: "ansible-test-trust"
       register: create_result
 
-    - name: Display created trust
+    - name: Show created trust
       ansible.builtin.debug:
         var: create_result.trust
 
-    - name: Gather information about a trust object
-      paloaltonetworks.scm.scm_trust:
-        state: gathered
-        name: "example-trust"
-      register: gather_result
-
-    - name: Display gathered trust
-      ansible.builtin.debug:
-        var: gather_result.trust
-
-
-    - name: Delete the trust object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete trust
       paloaltonetworks.scm.scm_trust:
         state: absent
-        name: "example-trust"
+        name: "ansible-test-trust"
 

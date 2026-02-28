@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_snippet_audit_log
 #
+# Demonstrates: create, get by ID
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_snippet_audit_log.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_snippet_audit_log.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_snippet_audit_log' for full parameter docs.
 
 - name: Manage snippet_audit_logs in Strata Cloud Manager
   hosts: localhost
@@ -17,24 +26,24 @@
 
   tasks:
 
-    - name: Create a snippet_audit_log object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create snippet_audit_log
       paloaltonetworks.scm.scm_snippet_audit_log:
         state: present
-        name: "example-snippet_audit_log"
+        name: "ansible-test-snippet_audit_log"
       register: create_result
 
-    - name: Display created snippet_audit_log
+    - name: Show created snippet_audit_log
       ansible.builtin.debug:
         var: create_result.snippet_audit_log
 
-    - name: Gather information about a snippet_audit_log object
-      paloaltonetworks.scm.scm_snippet_audit_log:
-        state: gathered
-        name: "example-snippet_audit_log"
-      register: gather_result
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get snippet_audit_log by ID (info module)
+      paloaltonetworks.scm.scm_snippet_audit_log_info:
+        id: "your-object-uuid-here"
+      register: info_by_id
 
-    - name: Display gathered snippet_audit_log
+    - name: Show info-by-ID result
       ansible.builtin.debug:
-        var: gather_result.snippet_audit_log
-
+        var: info_by_id.snippet_audit_logs
 

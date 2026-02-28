@@ -24,7 +24,7 @@ class TestBgpRouteMapRedistributionsLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-bgprmdist-{run_id}",
+            state="present", name=f"an-bgprtmapredist-{run_id}",
             description="Test BGP route map redistribution",
             folder=TARGET_FOLDER,
         ))
@@ -35,7 +35,7 @@ class TestBgpRouteMapRedistributionsLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-bgprmdist-{run_id}",
+            state="present", name=f"an-bgprtmapredist-{run_id}",
             description="Test BGP route map redistribution",
             folder=TARGET_FOLDER,
         ))
@@ -43,7 +43,7 @@ class TestBgpRouteMapRedistributionsLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-bgprmdist-{run_id}",
+            state="gathered", name=f"an-bgprtmapredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -51,7 +51,7 @@ class TestBgpRouteMapRedistributionsLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-bgprmdist-{run_id}",
+            state="absent", name=f"an-bgprtmapredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestBgpRouteMapRedistributionsLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-bgprmdist-{run_id}",
+            state="absent", name=f"an-bgprtmapredist-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

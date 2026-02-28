@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_quarantined_device
 #
+# Demonstrates: create, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_quarantined_device.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_quarantined_device.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_quarantined_device' for full parameter docs.
 
 - name: Manage quarantined_devices in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +26,30 @@
 
   tasks:
 
-    - name: Create a quarantined_device object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create quarantined_device
       paloaltonetworks.scm.scm_quarantined_device:
         state: present
-        name: "example-quarantined_device"
+        name: "ansible-test-quarantined_device"
+        # host_id: <required>
       register: create_result
 
-    - name: Display created quarantined_device
+    - name: Show created quarantined_device
       ansible.builtin.debug:
         var: create_result.quarantined_device
 
-    - name: Gather information about a quarantined_device object
-      paloaltonetworks.scm.scm_quarantined_device:
-        state: gathered
-        name: "example-quarantined_device"
-      register: gather_result
-
-    - name: Display gathered quarantined_device
-      ansible.builtin.debug:
-        var: gather_result.quarantined_device
-
-    - name: List all quarantined_devices in a folder
+    # ── List all ────────────────────────────────────────────
+    - name: List all quarantined_devices
       paloaltonetworks.scm.scm_quarantined_device_info:
       register: list_result
 
-    - name: Display quarantined_devices list
+    - name: Show quarantined_devices count
       ansible.builtin.debug:
-        var: list_result.quarantined_devices
+        msg: "Found {{ list_result.total }} quarantined_devices"
 
-
-    - name: Delete the quarantined_device object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete quarantined_device
       paloaltonetworks.scm.scm_quarantined_device:
         state: absent
-        name: "example-quarantined_device"
+        name: "ansible-test-quarantined_device"
 

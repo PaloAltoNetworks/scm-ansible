@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_folder
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_folder.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_folder.yml
+#
 
 - name: Manage folders in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +24,75 @@
 
   tasks:
 
-    - name: Create a folder object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create folder
       paloaltonetworks.scm.scm_folder:
         state: present
-        name: "example-folder"
+        name: "ansible-test-folder"
+        parent: "All"
+        description: "Created by Ansible"
       register: create_result
 
-    - name: Display created folder
+    - name: Show created folder
       ansible.builtin.debug:
         var: create_result.folder
 
-    - name: Gather information about a folder object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update folder
+      paloaltonetworks.scm.scm_folder:
+        state: present
+        name: "ansible-test-folder"
+        description: "Updated by Ansible"
+        parent: "All"
+      register: update_result
+
+    - name: Show updated folder
+      ansible.builtin.debug:
+        var: update_result.folder
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get folder by name
       paloaltonetworks.scm.scm_folder:
         state: gathered
-        name: "example-folder"
-      register: gather_result
+        name: "ansible-test-folder"
+      register: gathered_result
 
-    - name: Display gathered folder
+    - name: Show gathered folder
       ansible.builtin.debug:
-        var: gather_result.folder
+        var: gathered_result.folder
 
-    - name: List all folders in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get folder by name (info module)
+      paloaltonetworks.scm.scm_folder_info:
+        name: "ansible-test-folder"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.folders
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get folder by ID (info module)
+      paloaltonetworks.scm.scm_folder_info:
+        id: "{{ gathered_result.folder.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.folders
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all folders
       paloaltonetworks.scm.scm_folder_info:
       register: list_result
 
-    - name: Display folders list
+    - name: Show folders count
       ansible.builtin.debug:
-        var: list_result.folders
+        msg: "Found {{ list_result.total }} folders"
 
-
-    - name: Delete the folder object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete folder
       paloaltonetworks.scm.scm_folder:
         state: absent
-        name: "example-folder"
+        name: "ansible-test-folder"
 

@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_variable
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_variable.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_variable.yml
+#
 
 - name: Manage variables in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,83 @@
 
   tasks:
 
-    - name: Create a variable object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create variable
       paloaltonetworks.scm.scm_variable:
         state: present
-        name: "example-variable"
-        folder: "Shared"
+        name: "ansible-test-variable"
+        folder: "All"
+        type: "ip-netmask"
+        value: "10.0.0.0/24"
+        description: "Test variable"
       register: create_result
 
-    - name: Display created variable
+    - name: Show created variable
       ansible.builtin.debug:
         var: create_result.variable
 
-    - name: Gather information about a variable object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update variable
+      paloaltonetworks.scm.scm_variable:
+        state: present
+        name: "ansible-test-variable"
+        description: "Updated by Ansible"
+        folder: "All"
+        type: "ip-netmask"
+        value: "10.0.0.0/24"
+      register: update_result
+
+    - name: Show updated variable
+      ansible.builtin.debug:
+        var: update_result.variable
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get variable by name
       paloaltonetworks.scm.scm_variable:
         state: gathered
-        name: "example-variable"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-variable"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered variable
+    - name: Show gathered variable
       ansible.builtin.debug:
-        var: gather_result.variable
+        var: gathered_result.variable
 
-    - name: List all variables in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get variable by name (info module)
       paloaltonetworks.scm.scm_variable_info:
-        folder: "Shared"
+        name: "ansible-test-variable"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.variables
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get variable by ID (info module)
+      paloaltonetworks.scm.scm_variable_info:
+        id: "{{ gathered_result.variable.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.variables
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all variables
+      paloaltonetworks.scm.scm_variable_info:
+        folder: "All"
       register: list_result
 
-    - name: Display variables list
+    - name: Show variables count
       ansible.builtin.debug:
-        var: list_result.variables
+        msg: "Found {{ list_result.total }} variables"
 
-
-    - name: Delete the variable object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete variable
       paloaltonetworks.scm.scm_variable:
         state: absent
-        name: "example-variable"
-        folder: "Shared"
+        name: "ansible-test-variable"
+        folder: "All"
 

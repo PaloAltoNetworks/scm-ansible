@@ -24,7 +24,7 @@ class TestSdwanErrorCorrectionProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-sdwanecp-{run_id}",
+            state="present", name=f"an-sdwanerr-{run_id}",
             activation_threshold=2,
             mode={"forward_error_correction": {
                 "ratio": "10% (20:2)",
@@ -39,7 +39,7 @@ class TestSdwanErrorCorrectionProfilesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-sdwanecp-{run_id}",
+            state="present", name=f"an-sdwanerr-{run_id}",
             activation_threshold=2,
             mode={"forward_error_correction": {
                 "ratio": "10% (20:2)",
@@ -51,7 +51,7 @@ class TestSdwanErrorCorrectionProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-sdwanecp-{run_id}",
+            state="gathered", name=f"an-sdwanerr-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestSdwanErrorCorrectionProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-sdwanecp-{run_id}",
+            state="absent", name=f"an-sdwanerr-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -67,7 +67,7 @@ class TestSdwanErrorCorrectionProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-sdwanecp-{run_id}",
+            state="absent", name=f"an-sdwanerr-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

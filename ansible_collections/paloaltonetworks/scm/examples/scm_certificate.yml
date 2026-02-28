@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_certificate
 #
+# Demonstrates: create, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_certificate.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_certificate.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_certificate' for full parameter docs.
 
 - name: Manage certificates in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,70 @@
 
   tasks:
 
-    - name: Create a certificate object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create certificate
       paloaltonetworks.scm.scm_certificate:
         state: present
-        name: "example-certificate"
-        folder: "Shared"
+        name: "ansible-test-certificate"
+        folder: "All"
+        # algorithm: <required>
+        # certificate_name: <required>
+        # common_name: <required>
+        # digest: <required>
+        # signed_by: <required>
       register: create_result
 
-    - name: Display created certificate
+    - name: Show created certificate
       ansible.builtin.debug:
         var: create_result.certificate
 
-    - name: Gather information about a certificate object
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get certificate by name
       paloaltonetworks.scm.scm_certificate:
         state: gathered
-        name: "example-certificate"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-certificate"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered certificate
+    - name: Show gathered certificate
       ansible.builtin.debug:
-        var: gather_result.certificate
+        var: gathered_result.certificate
 
-    - name: List all certificates in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get certificate by name (info module)
       paloaltonetworks.scm.scm_certificate_info:
-        folder: "Shared"
+        name: "ansible-test-certificate"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.certificates
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get certificate by ID (info module)
+      paloaltonetworks.scm.scm_certificate_info:
+        id: "{{ gathered_result.certificate.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.certificates
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all certificates
+      paloaltonetworks.scm.scm_certificate_info:
+        folder: "All"
       register: list_result
 
-    - name: Display certificates list
+    - name: Show certificates count
       ansible.builtin.debug:
-        var: list_result.certificates
+        msg: "Found {{ list_result.total }} certificates"
 
-
-    - name: Delete the certificate object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete certificate
       paloaltonetworks.scm.scm_certificate:
         state: absent
-        name: "example-certificate"
-        folder: "Shared"
+        name: "ansible-test-certificate"
+        folder: "All"
 

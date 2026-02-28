@@ -24,7 +24,7 @@ class TestExternalDynamicListsLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-edl-{run_id}",
+            state="present", name=f"an-edl-{run_id}",
             type={"ip": {
                 "url": "https://example.com/blocklist.txt",
                 "recurring": {"daily": {"at": "03"}},
@@ -40,7 +40,7 @@ class TestExternalDynamicListsLifecycle:
         # Note: idempotent may report changed=True because the API returns
         # enriched nested objects (extra defaults) that differ from our input.
         result = run_module(_params(
-            state="present", name=f"ansible-integ-edl-{run_id}",
+            state="present", name=f"an-edl-{run_id}",
             type={"ip": {
                 "url": "https://example.com/blocklist.txt",
                 "recurring": {"daily": {"at": "03"}},
@@ -51,7 +51,7 @@ class TestExternalDynamicListsLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-edl-{run_id}",
+            state="gathered", name=f"an-edl-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestExternalDynamicListsLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-edl-{run_id}",
+            state="present", name=f"an-edl-{run_id}",
             type={"ip": {
                 "url": "https://example.com/updated-blocklist.txt",
                 "recurring": {"daily": {"at": "03"}},
@@ -71,7 +71,7 @@ class TestExternalDynamicListsLifecycle:
 
     def test_05_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-edl-{run_id}",
+            state="absent", name=f"an-edl-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -79,7 +79,7 @@ class TestExternalDynamicListsLifecycle:
 
     def test_06_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-edl-{run_id}",
+            state="absent", name=f"an-edl-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -6,6 +6,124 @@ This collection provides 240+ modules (122 CRUD + 120 read-only `_info` modules)
 that map 1:1 to the SCM API, enabling infrastructure-as-code management of
 security policies, network objects, and cloud-managed firewall configurations.
 
+## Quick Start
+
+Get up and running in 3 steps:
+
+### 1. Install dependencies
+
+```bash
+pip install scm-python ansible-core
+```
+
+### 2. Configure authentication
+
+Create a config file with your SCM service account credentials:
+
+```bash
+mkdir -p config
+cat > config/scm-config.json << 'EOF'
+{
+  "client_id": "myaccount@1234567890.iam.panserviceaccount.com",
+  "client_secret": "your-client-secret-here",
+  "scope": "tsg_id:1234567890"
+}
+EOF
+```
+
+Then export the path so Ansible modules can find it (Ansible runs modules in
+a temporary directory, so the config file must be referenced by absolute path):
+
+```bash
+export SCM_CONFIG_FILE="$(pwd)/config/scm-config.json"
+```
+
+### 3. Run a playbook
+
+Save this as `address_example.yml`:
+
+```yaml
+---
+- name: Manage addresses in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create address
+      paloaltonetworks.scm.scm_address:
+        state: present
+        name: "ansible-test-address"
+        folder: "All"
+        ip_netmask: "10.100.0.0/24"
+        description: "Created by Ansible"
+      register: create_result
+
+    - name: Show created address
+      ansible.builtin.debug:
+        var: create_result.address
+
+    - name: Update address
+      paloaltonetworks.scm.scm_address:
+        state: present
+        name: "ansible-test-address"
+        folder: "All"
+        ip_netmask: "10.100.0.0/24"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated address
+      ansible.builtin.debug:
+        var: update_result.address
+
+    - name: Get address by name
+      paloaltonetworks.scm.scm_address:
+        state: gathered
+        name: "ansible-test-address"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered address
+      ansible.builtin.debug:
+        var: gathered_result.address
+
+    - name: List all addresses
+      paloaltonetworks.scm.scm_address_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show addresses count
+      ansible.builtin.debug:
+        msg: "Found {{ '{{' }} list_result.total {{ '}}' }} addresses"
+
+    - name: Delete address
+      paloaltonetworks.scm.scm_address:
+        state: absent
+        name: "ansible-test-address"
+        folder: "All"
+      register: delete_result
+
+    - name: Show delete result
+      ansible.builtin.debug:
+        var: delete_result
+```
+
+Run it:
+
+```bash
+ANSIBLE_COLLECTIONS_PATH=. ansible-playbook address_example.yml
+```
+
+Expected output:
+
+```
+TASK [Create address]      changed  {"address": {"id": "d6f9...", "name": "ansible-test-address", "ip_netmask": "10.100.0.0/24", ...}}
+TASK [Update address]      changed  {"address": {"description": "Updated by Ansible", ...}}
+TASK [Get address by name] ok       {"address": {"name": "ansible-test-address", ...}}
+TASK [List all addresses]  ok       "Found 42 addresses"
+TASK [Delete address]      changed  {"msg": "address deleted successfully"}
+```
+
 ## Requirements
 
 - Python 3.8+
@@ -37,6 +155,15 @@ collections:
   - name: paloaltonetworks.scm
 ```
 
+Or for development, clone the repository and set `ANSIBLE_COLLECTIONS_PATH` to point
+to the directory containing `ansible_collections/`:
+
+```bash
+git clone https://github.com/paloaltonetworks/scm-ansible.git
+cd scm-ansible
+ANSIBLE_COLLECTIONS_PATH=. ansible-playbook your_playbook.yml
+```
+
 ## Authentication
 
 The modules authenticate to SCM using OAuth2 client credentials. You need:
@@ -49,7 +176,32 @@ The modules authenticate to SCM using OAuth2 client credentials. You need:
 
 Obtain these from the Strata Cloud Manager portal under **Settings > Identity & Access > Service Accounts**.
 
-### Option 1: Environment Variables (recommended)
+Credentials are resolved in priority order: **module parameter > environment variable > config file**.
+
+### Option 1: Config File with SCM_CONFIG_FILE (recommended)
+
+Create a JSON config file and export its absolute path. This is recommended because
+Ansible modules execute in a temporary directory, so a relative path like
+`config/scm-config.json` won't be found at runtime.
+
+```bash
+export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+```
+
+The file format (same as scm-go and scm-python):
+
+```json
+{
+  "client_id": "myaccount@1234567890.iam.panserviceaccount.com",
+  "client_secret": "your-client-secret-here",
+  "scope": "tsg_id:1234567890"
+}
+```
+
+The `scope` field uses the format `tsg_id:<your-tsg-id>`. You can also use a plain
+`tsg_id` field instead of `scope`.
+
+### Option 2: Environment Variables
 
 Set these environment variables before running your playbook:
 
@@ -68,25 +220,6 @@ When environment variables are set, you can omit credentials from tasks:
     name: "web-server-1"
     ip_netmask: "10.0.1.100/32"
     folder: "Shared"
-```
-
-### Option 2: Config File
-
-Create a JSON config file at `config/scm-config.json` relative to the collection root,
-or set the `SCM_CONFIG_FILE` environment variable to point to it:
-
-```bash
-export SCM_CONFIG_FILE="/path/to/scm-config.json"
-```
-
-The file format:
-
-```json
-{
-  "client_id": "myaccount@1234567890.iam.panserviceaccount.com",
-  "client_secret": "your-client-secret-here",
-  "scope": "tsg_id:1234567890"
-}
 ```
 
 ### Option 3: Inline Credentials

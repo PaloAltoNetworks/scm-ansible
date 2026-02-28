@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_application
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_application.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_application.yml
+#
 
 - name: Manage applications in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,98 @@
 
   tasks:
 
-    - name: Create a application object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create application
       paloaltonetworks.scm.scm_application:
         state: present
-        name: "example-application"
-        folder: "Shared"
+        name: "ansible-test-app"
+        folder: "Prisma Access"
+        category: "business-systems"
+        subcategory: "ics-protocols"
+        technology: "client-server"
+        risk: "3"
+        description: "Created by Ansible"
+        default:
+          port:
+            - "tcp/80"
+            - "tcp/443"
       register: create_result
 
-    - name: Display created application
+    - name: Show created application
       ansible.builtin.debug:
         var: create_result.application
 
-    - name: Gather information about a application object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update application
+      paloaltonetworks.scm.scm_application:
+        state: present
+        name: "ansible-test-app"
+        folder: "Prisma Access"
+        category: "business-systems"
+        subcategory: "ics-protocols"
+        technology: "client-server"
+        risk: "3"
+        description: "Updated by Ansible"
+        default:
+          port:
+            - "tcp/80"
+            - "tcp/443"
+      register: update_result
+
+    - name: Show updated application
+      ansible.builtin.debug:
+        var: update_result.application
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get application by name
       paloaltonetworks.scm.scm_application:
         state: gathered
-        name: "example-application"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-app"
+        folder: "Prisma Access"
+        category: "business-systems"
+        risk: "3"
+      register: gathered_result
 
-    - name: Display gathered application
+    - name: Show gathered application
       ansible.builtin.debug:
-        var: gather_result.application
+        var: gathered_result.application
 
-    - name: List all applications in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get application by name (info module)
       paloaltonetworks.scm.scm_application_info:
-        folder: "Shared"
+        name: "ansible-test-app"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.applications
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get application by ID (info module)
+      paloaltonetworks.scm.scm_application_info:
+        id: "{{ gathered_result.application.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.applications
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all applications
+      paloaltonetworks.scm.scm_application_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display applications list
+    - name: Show applications count
       ansible.builtin.debug:
-        var: list_result.applications
+        msg: "Found {{ list_result.total }} applications"
 
-
-    - name: Delete the application object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete application
       paloaltonetworks.scm.scm_application:
         state: absent
-        name: "example-application"
-        folder: "Shared"
-
+        name: "ansible-test-app"
+        folder: "Prisma Access"
+        category: "business-systems"
+        risk: "3"

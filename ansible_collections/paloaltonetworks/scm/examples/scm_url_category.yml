@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_url_category
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_url_category.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_url_category.yml
+#
 
 - name: Manage url_categories in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,87 @@
 
   tasks:
 
-    - name: Create a url_category object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create url_category
       paloaltonetworks.scm.scm_url_category:
         state: present
-        name: "example-url_category"
-        folder: "Shared"
+        name: "ansible-test-urlcat"
+        folder: "Prisma Access"
+        description: "Created by Ansible"
+        list:
+          - "example.com"
+          - "test.com"
+        type: "URL List"
       register: create_result
 
-    - name: Display created url_category
+    - name: Show created url_category
       ansible.builtin.debug:
         var: create_result.url_category
 
-    - name: Gather information about a url_category object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update url_category
+      paloaltonetworks.scm.scm_url_category:
+        state: present
+        name: "ansible-test-urlcat"
+        folder: "Prisma Access"
+        description: "Updated by Ansible"
+        list:
+          - "example.com"
+          - "test.com"
+          - "updated.com"
+        type: "URL List"
+      register: update_result
+
+    - name: Show updated url_category
+      ansible.builtin.debug:
+        var: update_result.url_category
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get url_category by name
       paloaltonetworks.scm.scm_url_category:
         state: gathered
-        name: "example-url_category"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-urlcat"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered url_category
+    - name: Show gathered url_category
       ansible.builtin.debug:
-        var: gather_result.url_category
+        var: gathered_result.url_category
 
-    - name: List all url_categories in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get url_category by name (info module)
       paloaltonetworks.scm.scm_url_category_info:
-        folder: "Shared"
+        name: "ansible-test-urlcat"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.url_categories
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get url_category by ID (info module)
+      paloaltonetworks.scm.scm_url_category_info:
+        id: "{{ gathered_result.url_category.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.url_categories
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all url_categories
+      paloaltonetworks.scm.scm_url_category_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display url_categories list
+    - name: Show url_categories count
       ansible.builtin.debug:
-        var: list_result.url_categories
+        msg: "Found {{ list_result.total }} url_categories"
 
-
-    - name: Delete the url_category object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete url_category
       paloaltonetworks.scm.scm_url_category:
         state: absent
-        name: "example-url_category"
-        folder: "Shared"
-
+        name: "ansible-test-urlcat"
+        folder: "Prisma Access"

@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_link_tag
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_link_tag.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_link_tag.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_link_tag' for full parameter docs.
 
 - name: Manage link_tags in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a link_tag object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create link_tag
       paloaltonetworks.scm.scm_link_tag:
         state: present
-        name: "example-link_tag"
-        folder: "Shared"
+        name: "ansible-test-link_tag"
+        folder: "All"
       register: create_result
 
-    - name: Display created link_tag
+    - name: Show created link_tag
       ansible.builtin.debug:
         var: create_result.link_tag
 
-    - name: Gather information about a link_tag object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update link_tag
+      paloaltonetworks.scm.scm_link_tag:
+        state: present
+        name: "ansible-test-link_tag"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated link_tag
+      ansible.builtin.debug:
+        var: update_result.link_tag
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get link_tag by name
       paloaltonetworks.scm.scm_link_tag:
         state: gathered
-        name: "example-link_tag"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-link_tag"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered link_tag
+    - name: Show gathered link_tag
       ansible.builtin.debug:
-        var: gather_result.link_tag
+        var: gathered_result.link_tag
 
-    - name: List all link_tags in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get link_tag by name (info module)
       paloaltonetworks.scm.scm_link_tag_info:
-        folder: "Shared"
+        name: "ansible-test-link_tag"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.link_tags
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get link_tag by ID (info module)
+      paloaltonetworks.scm.scm_link_tag_info:
+        id: "{{ gathered_result.link_tag.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.link_tags
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all link_tags
+      paloaltonetworks.scm.scm_link_tag_info:
+        folder: "All"
       register: list_result
 
-    - name: Display link_tags list
+    - name: Show link_tags count
       ansible.builtin.debug:
-        var: list_result.link_tags
+        msg: "Found {{ list_result.total }} link_tags"
 
-
-    - name: Delete the link_tag object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete link_tag
       paloaltonetworks.scm.scm_link_tag:
         state: absent
-        name: "example-link_tag"
-        folder: "Shared"
+        name: "ansible-test-link_tag"
+        folder: "All"
 

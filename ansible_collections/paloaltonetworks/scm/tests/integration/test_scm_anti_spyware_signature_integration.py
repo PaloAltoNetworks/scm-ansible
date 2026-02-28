@@ -31,7 +31,7 @@ class TestAntiSpywareSignaturesLifecycle:
         result = run_module(_params(
             state="present",
             threat_id=15000,
-            threatname=f"ansible-integ-asig-{run_id}",
+            threatname=f"an-aspysig-{run_id}",
             severity="low",
             direction="client2server",
             default_action={"alert": {}},
@@ -46,7 +46,7 @@ class TestAntiSpywareSignaturesLifecycle:
         result = run_module(_params(
             state="absent",
             threat_id=15000,
-            threatname=f"ansible-integ-asig-{run_id}",
+            threatname=f"an-aspysig-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -56,7 +56,7 @@ class TestAntiSpywareSignaturesLifecycle:
         result = run_module(_params(
             state="absent",
             threat_id=15000,
-            threatname=f"ansible-integ-asig-{run_id}",
+            threatname=f"an-aspysig-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

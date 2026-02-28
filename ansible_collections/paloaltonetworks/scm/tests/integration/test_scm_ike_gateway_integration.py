@@ -12,7 +12,11 @@ from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_ike_gat
 logger = logging.getLogger(__name__)
 run_module = make_runner(scm_ike_gateway, "scm_ike_gateway")
 
-_FIELDS = dict(name=None)
+_FIELDS = dict(
+    authentication=None, local_id=None, name=None,
+    peer_address=None, peer_id=None, protocol=None,
+    protocol_common=None,
+)
 
 
 def _params(**overrides):
@@ -25,7 +29,10 @@ class TestIkeGatewaysLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ikegw-{run_id}",
+            state="present", name=f"an-ikegw-{run_id}",
+            authentication={"pre_shared_key": {"key": "secret123"}},
+            peer_address={"ip": "1.1.1.1"},
+            protocol={"ikev1": {"ike_crypto_profile": "default"}, "version": "ikev1"},
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -34,7 +41,7 @@ class TestIkeGatewaysLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ikegw-{run_id}",
+            state="absent", name=f"an-ikegw-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -42,7 +49,7 @@ class TestIkeGatewaysLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ikegw-{run_id}",
+            state="absent", name=f"an-ikegw-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

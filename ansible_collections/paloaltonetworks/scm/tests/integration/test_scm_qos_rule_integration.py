@@ -12,7 +12,10 @@ from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_qos_rul
 logger = logging.getLogger(__name__)
 run_module = make_runner(scm_qos_rule, "scm_qos_rule")
 
-_FIELDS = dict(name=None)
+_FIELDS = dict(
+    action=None, application=None, description=None,
+    dscp_tos=None, name=None, schedule=None, source=None,
+)
 
 
 def _params(**overrides):
@@ -25,7 +28,7 @@ class TestQoSRulesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-qosrule-{run_id}",
+            state="present", name=f"an-qosrule-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -34,7 +37,7 @@ class TestQoSRulesLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-qosrule-{run_id}",
+            state="absent", name=f"an-qosrule-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -42,7 +45,7 @@ class TestQoSRulesLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-qosrule-{run_id}",
+            state="absent", name=f"an-qosrule-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

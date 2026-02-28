@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_bgp_filtering_profile
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_bgp_filtering_profile.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_bgp_filtering_profile.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_bgp_filtering_profile' for full parameter docs.
 
 - name: Manage bgp_filtering_profiles in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a bgp_filtering_profile object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create bgp_filtering_profile
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: present
-        name: "example-bgp_filtering_profile"
-        folder: "Shared"
+        name: "ansible-test-bgp_filtering_profile"
+        folder: "All"
       register: create_result
 
-    - name: Display created bgp_filtering_profile
+    - name: Show created bgp_filtering_profile
       ansible.builtin.debug:
         var: create_result.bgp_filtering_profile
 
-    - name: Gather information about a bgp_filtering_profile object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update bgp_filtering_profile
+      paloaltonetworks.scm.scm_bgp_filtering_profile:
+        state: present
+        name: "ansible-test-bgp_filtering_profile"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated bgp_filtering_profile
+      ansible.builtin.debug:
+        var: update_result.bgp_filtering_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get bgp_filtering_profile by name
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: gathered
-        name: "example-bgp_filtering_profile"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-bgp_filtering_profile"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered bgp_filtering_profile
+    - name: Show gathered bgp_filtering_profile
       ansible.builtin.debug:
-        var: gather_result.bgp_filtering_profile
+        var: gathered_result.bgp_filtering_profile
 
-    - name: List all bgp_filtering_profiles in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get bgp_filtering_profile by name (info module)
       paloaltonetworks.scm.scm_bgp_filtering_profile_info:
-        folder: "Shared"
+        name: "ansible-test-bgp_filtering_profile"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.bgp_filtering_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get bgp_filtering_profile by ID (info module)
+      paloaltonetworks.scm.scm_bgp_filtering_profile_info:
+        id: "{{ gathered_result.bgp_filtering_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.bgp_filtering_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all bgp_filtering_profiles
+      paloaltonetworks.scm.scm_bgp_filtering_profile_info:
+        folder: "All"
       register: list_result
 
-    - name: Display bgp_filtering_profiles list
+    - name: Show bgp_filtering_profiles count
       ansible.builtin.debug:
-        var: list_result.bgp_filtering_profiles
+        msg: "Found {{ list_result.total }} bgp_filtering_profiles"
 
-
-    - name: Delete the bgp_filtering_profile object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete bgp_filtering_profile
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: absent
-        name: "example-bgp_filtering_profile"
-        folder: "Shared"
+        name: "ansible-test-bgp_filtering_profile"
+        folder: "All"
 

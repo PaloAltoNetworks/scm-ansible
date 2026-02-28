@@ -29,19 +29,19 @@ class TestAddressesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-addr-{run_id}",
+            state="present", name=f"an-addr-{run_id}",
             ip_netmask="10.99.0.1/32", description=f"Integration test {run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
-        assert result["address"]["name"] == f"ansible-integ-addr-{run_id}"
+        assert result["address"]["name"] == f"an-addr-{run_id}"
         TestAddressesLifecycle._created_id = result["address"]["id"]
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-addr-{run_id}",
+            state="present", name=f"an-addr-{run_id}",
             ip_netmask="10.99.0.1/32", description=f"Integration test {run_id}",
             folder=TARGET_FOLDER,
         ))
@@ -51,7 +51,7 @@ class TestAddressesLifecycle:
 
     def test_03_gather_by_name(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-addr-{run_id}",
+            state="gathered", name=f"an-addr-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"GATHER: {json.dumps(result, indent=2, default=str)}")
@@ -60,7 +60,7 @@ class TestAddressesLifecycle:
 
     def test_04_gather_by_id(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-addr-{run_id}",
+            state="gathered", name=f"an-addr-{run_id}",
             id=TestAddressesLifecycle._created_id,
         ))
         logger.info(f"GATHER-BY-ID: {json.dumps(result, indent=2, default=str)}")
@@ -69,7 +69,7 @@ class TestAddressesLifecycle:
 
     def test_05_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-addr-{run_id}",
+            state="present", name=f"an-addr-{run_id}",
             ip_netmask="10.99.0.1/32", description=f"Updated {run_id}",
             folder=TARGET_FOLDER,
         ))
@@ -79,7 +79,7 @@ class TestAddressesLifecycle:
 
     def test_06_update_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-addr-{run_id}",
+            state="present", name=f"an-addr-{run_id}",
             ip_netmask="10.99.0.1/32", description=f"Updated {run_id}",
             folder=TARGET_FOLDER,
         ))
@@ -89,7 +89,7 @@ class TestAddressesLifecycle:
 
     def test_07_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-addr-{run_id}",
+            state="absent", name=f"an-addr-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"DELETE: {json.dumps(result, indent=2, default=str)}")
@@ -98,7 +98,7 @@ class TestAddressesLifecycle:
 
     def test_08_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-addr-{run_id}",
+            state="absent", name=f"an-addr-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"DELETE-IDEMPOTENT: {json.dumps(result, indent=2, default=str)}")
@@ -107,7 +107,7 @@ class TestAddressesLifecycle:
 
     def test_09_gather_after_delete(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-addr-{run_id}",
+            state="gathered", name=f"an-addr-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"GATHER-DELETED: {json.dumps(result, indent=2, default=str)}")

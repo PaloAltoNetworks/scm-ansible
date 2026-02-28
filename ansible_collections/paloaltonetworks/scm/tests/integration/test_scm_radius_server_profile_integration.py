@@ -24,7 +24,7 @@ class TestRadiusServerProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-radius-{run_id}",
+            state="present", name=f"an-radius-{run_id}",
             protocol={"pap": {}},
             server=[{"name": "rad1", "ip_address": "10.0.0.60", "secret": "radsecret", "port": 1812}],
             retries=3,
@@ -39,7 +39,7 @@ class TestRadiusServerProfilesLifecycle:
     def test_02_create_idempotent(self, run_id):
         # Note: idempotent may report changed=True due to secret being write-only
         result = run_module(_params(
-            state="present", name=f"a-integ-radius-{run_id}",
+            state="present", name=f"an-radius-{run_id}",
             protocol={"pap": {}},
             server=[{"name": "rad1", "ip_address": "10.0.0.60", "secret": "radsecret", "port": 1812}],
             retries=3,
@@ -50,7 +50,7 @@ class TestRadiusServerProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-radius-{run_id}",
+            state="gathered", name=f"an-radius-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -58,7 +58,7 @@ class TestRadiusServerProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-radius-{run_id}",
+            state="absent", name=f"an-radius-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -66,7 +66,7 @@ class TestRadiusServerProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-radius-{run_id}",
+            state="absent", name=f"an-radius-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_application_filter
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_application_filter.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_application_filter.yml
+#
 
 - name: Manage application_filters in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,87 @@
 
   tasks:
 
-    - name: Create a application_filter object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create application_filter
       paloaltonetworks.scm.scm_application_filter:
         state: present
-        name: "example-application_filter"
-        folder: "Shared"
+        name: "ansible-test-appfilter"
+        folder: "Prisma Access"
+        category:
+          - "business-systems"
+        risk:
+          - 2
+        technology:
+          - "client-server"
       register: create_result
 
-    - name: Display created application_filter
+    - name: Show created application_filter
       ansible.builtin.debug:
         var: create_result.application_filter
 
-    - name: Gather information about a application_filter object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update application_filter
+      paloaltonetworks.scm.scm_application_filter:
+        state: present
+        name: "ansible-test-appfilter"
+        folder: "Prisma Access"
+        category:
+          - "business-systems"
+        risk:
+          - 1
+        evasive: true
+      register: update_result
+
+    - name: Show updated application_filter
+      ansible.builtin.debug:
+        var: update_result.application_filter
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get application_filter by name
       paloaltonetworks.scm.scm_application_filter:
         state: gathered
-        name: "example-application_filter"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-appfilter"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered application_filter
+    - name: Show gathered application_filter
       ansible.builtin.debug:
-        var: gather_result.application_filter
+        var: gathered_result.application_filter
 
-    - name: List all application_filters in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get application_filter by name (info module)
       paloaltonetworks.scm.scm_application_filter_info:
-        folder: "Shared"
+        name: "ansible-test-appfilter"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.application_filters
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get application_filter by ID (info module)
+      paloaltonetworks.scm.scm_application_filter_info:
+        id: "{{ gathered_result.application_filter.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.application_filters
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all application_filters
+      paloaltonetworks.scm.scm_application_filter_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display application_filters list
+    - name: Show application_filters count
       ansible.builtin.debug:
-        var: list_result.application_filters
+        msg: "Found {{ list_result.total }} application_filters"
 
-
-    - name: Delete the application_filter object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete application_filter
       paloaltonetworks.scm.scm_application_filter:
         state: absent
-        name: "example-application_filter"
-        folder: "Shared"
-
+        name: "ansible-test-appfilter"
+        folder: "Prisma Access"

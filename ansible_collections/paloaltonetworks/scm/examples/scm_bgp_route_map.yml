@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_bgp_route_map
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_bgp_route_map.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_bgp_route_map.yml
+#
 
 - name: Manage bgp_route_maps in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,84 @@
 
   tasks:
 
-    - name: Create a bgp_route_map object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create bgp_route_map
       paloaltonetworks.scm.scm_bgp_route_map:
         state: present
-        name: "example-bgp_route_map"
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map"
+        folder: "All"
+        route_map:
+        - action: "permit"
+          name: 1
       register: create_result
 
-    - name: Display created bgp_route_map
+    - name: Show created bgp_route_map
       ansible.builtin.debug:
         var: create_result.bgp_route_map
 
-    - name: Gather information about a bgp_route_map object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update bgp_route_map
+      paloaltonetworks.scm.scm_bgp_route_map:
+        state: present
+        name: "ansible-test-bgp_route_map"
+        description: "Updated by Ansible"
+        folder: "All"
+        route_map:
+        - action: "permit"
+          name: 1
+      register: update_result
+
+    - name: Show updated bgp_route_map
+      ansible.builtin.debug:
+        var: update_result.bgp_route_map
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get bgp_route_map by name
       paloaltonetworks.scm.scm_bgp_route_map:
         state: gathered
-        name: "example-bgp_route_map"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-bgp_route_map"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered bgp_route_map
+    - name: Show gathered bgp_route_map
       ansible.builtin.debug:
-        var: gather_result.bgp_route_map
+        var: gathered_result.bgp_route_map
 
-    - name: List all bgp_route_maps in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get bgp_route_map by name (info module)
       paloaltonetworks.scm.scm_bgp_route_map_info:
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.bgp_route_maps
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get bgp_route_map by ID (info module)
+      paloaltonetworks.scm.scm_bgp_route_map_info:
+        id: "{{ gathered_result.bgp_route_map.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.bgp_route_maps
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all bgp_route_maps
+      paloaltonetworks.scm.scm_bgp_route_map_info:
+        folder: "All"
       register: list_result
 
-    - name: Display bgp_route_maps list
+    - name: Show bgp_route_maps count
       ansible.builtin.debug:
-        var: list_result.bgp_route_maps
+        msg: "Found {{ list_result.total }} bgp_route_maps"
 
-
-    - name: Delete the bgp_route_map object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete bgp_route_map
       paloaltonetworks.scm.scm_bgp_route_map:
         state: absent
-        name: "example-bgp_route_map"
-        folder: "Shared"
+        name: "ansible-test-bgp_route_map"
+        folder: "All"
 

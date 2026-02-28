@@ -24,7 +24,7 @@ class TestServicesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-svc-{run_id}",
+            state="present", name=f"an-svc-{run_id}",
             protocol={"tcp": {"port": "8080"}},
             description=f"Integration test {run_id}",
             folder=TARGET_FOLDER,
@@ -36,7 +36,7 @@ class TestServicesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-svc-{run_id}",
+            state="present", name=f"an-svc-{run_id}",
             protocol={"tcp": {"port": "8080"}},
             description=f"Integration test {run_id}",
             folder=TARGET_FOLDER,
@@ -46,7 +46,7 @@ class TestServicesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-svc-{run_id}",
+            state="gathered", name=f"an-svc-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -54,7 +54,7 @@ class TestServicesLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-svc-{run_id}",
+            state="present", name=f"an-svc-{run_id}",
             protocol={"tcp": {"port": "9090"}},
             description=f"Updated {run_id}",
             folder=TARGET_FOLDER,
@@ -64,7 +64,7 @@ class TestServicesLifecycle:
 
     def test_05_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-svc-{run_id}",
+            state="absent", name=f"an-svc-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -72,7 +72,7 @@ class TestServicesLifecycle:
 
     def test_06_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-svc-{run_id}",
+            state="absent", name=f"an-svc-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

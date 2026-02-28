@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_ipsec_tunnel
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_ipsec_tunnel.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_ipsec_tunnel.yml
+#
 
 - name: Manage ipsec_tunnels in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,150 @@
 
   tasks:
 
-    - name: Create a ipsec_tunnel object
+    # ── Dependencies ─────────────────────────────────────────
+    - name: Create dependency IKE crypto profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: present
+        name: "ansible-dep-ike-crypto-t"
+        folder: "Remote Networks"
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]
+        lifetime:
+          hours: 8
+      register: dep_crypto
+
+    - name: Create dependency IKE gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: present
+        name: "ansible-dep-ike-gw-t"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "1.1.1.1"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto-t"
+          version: "ikev1"
+      register: dep_gateway
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create ipsec_tunnel
       paloaltonetworks.scm.scm_ipsec_tunnel:
         state: present
-        name: "example-ipsec_tunnel"
-        folder: "Shared"
+        name: "ansible-test-ipsec-tunnel"
+        folder: "Remote Networks"
+        auto_key:
+          ike_gateway:
+          - name: "ansible-dep-ike-gw-t"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+        anti_replay: true
+        copy_tos: false
       register: create_result
 
-    - name: Display created ipsec_tunnel
+    - name: Show created ipsec_tunnel
       ansible.builtin.debug:
         var: create_result.ipsec_tunnel
 
-    - name: Gather information about a ipsec_tunnel object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ipsec_tunnel
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: present
+        name: "ansible-test-ipsec-tunnel"
+        folder: "Remote Networks"
+        auto_key:
+          ike_gateway:
+          - name: "ansible-dep-ike-gw-t"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+        anti_replay: false
+        copy_tos: false
+      register: update_result
+
+    - name: Show updated ipsec_tunnel
+      ansible.builtin.debug:
+        var: update_result.ipsec_tunnel
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ipsec_tunnel by name
       paloaltonetworks.scm.scm_ipsec_tunnel:
         state: gathered
-        name: "example-ipsec_tunnel"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-ipsec-tunnel"
+        folder: "Remote Networks"
+        auto_key:
+          ike_gateway:
+          - name: "ansible-dep-ike-gw-t"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+      register: gathered_result
 
-    - name: Display gathered ipsec_tunnel
+    - name: Show gathered ipsec_tunnel
       ansible.builtin.debug:
-        var: gather_result.ipsec_tunnel
+        var: gathered_result.ipsec_tunnel
 
-    - name: List all ipsec_tunnels in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ipsec_tunnel by name (info module)
       paloaltonetworks.scm.scm_ipsec_tunnel_info:
-        folder: "Shared"
+        name: "ansible-test-ipsec-tunnel"
+        folder: "Remote Networks"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ipsec_tunnels
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ipsec_tunnel by ID (info module)
+      paloaltonetworks.scm.scm_ipsec_tunnel_info:
+        id: "{{ gathered_result.ipsec_tunnel.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ipsec_tunnels
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ipsec_tunnels
+      paloaltonetworks.scm.scm_ipsec_tunnel_info:
+        folder: "Remote Networks"
       register: list_result
 
-    - name: Display ipsec_tunnels list
+    - name: Show ipsec_tunnels count
       ansible.builtin.debug:
-        var: list_result.ipsec_tunnels
+        msg: "Found {{ list_result.total }} ipsec_tunnels"
 
-
-    - name: Delete the ipsec_tunnel object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ipsec_tunnel
       paloaltonetworks.scm.scm_ipsec_tunnel:
         state: absent
-        name: "example-ipsec_tunnel"
-        folder: "Shared"
+        name: "ansible-test-ipsec-tunnel"
+        folder: "Remote Networks"
+        auto_key:
+          ike_gateway:
+          - name: "ansible-dep-ike-gw-t"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
 
+    # ── Cleanup dependencies ─────────────────────────────────
+    - name: Delete dependency IKE gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: absent
+        name: "ansible-dep-ike-gw-t"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "1.1.1.1"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto-t"
+          version: "ikev1"
+
+    - name: Delete dependency IKE crypto profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: absent
+        name: "ansible-dep-ike-crypto-t"
+        folder: "Remote Networks"
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]

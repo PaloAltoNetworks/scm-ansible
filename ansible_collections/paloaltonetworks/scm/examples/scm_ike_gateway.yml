@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_ike_gateway
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_ike_gateway.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_ike_gateway.yml
+#
 
 - name: Manage ike_gateways in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,135 @@
 
   tasks:
 
-    - name: Create a ike_gateway object
+    # ── Dependency: IKE Crypto Profile ──────────────────────
+    - name: Create dependency IKE crypto profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: present
+        name: "ansible-dep-ike-crypto"
+        folder: "Remote Networks"
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]
+        lifetime:
+          hours: 8
+      register: dep_crypto
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create ike_gateway
       paloaltonetworks.scm.scm_ike_gateway:
         state: present
-        name: "example-ike_gateway"
-        folder: "Shared"
+        name: "ansible-test-ike-gateway"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "1.1.1.1"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto"
+          version: "ikev1"
       register: create_result
 
-    - name: Display created ike_gateway
+    - name: Show created ike_gateway
       ansible.builtin.debug:
         var: create_result.ike_gateway
 
-    - name: Gather information about a ike_gateway object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ike_gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: present
+        name: "ansible-test-ike-gateway"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "newsecret456"
+        peer_address:
+          ip: "2.2.2.2"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto"
+          version: "ikev1"
+      register: update_result
+
+    - name: Show updated ike_gateway
+      ansible.builtin.debug:
+        var: update_result.ike_gateway
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ike_gateway by name
       paloaltonetworks.scm.scm_ike_gateway:
         state: gathered
-        name: "example-ike_gateway"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-ike-gateway"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "newsecret456"
+        peer_address:
+          ip: "2.2.2.2"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto"
+          version: "ikev1"
+      register: gathered_result
 
-    - name: Display gathered ike_gateway
+    - name: Show gathered ike_gateway
       ansible.builtin.debug:
-        var: gather_result.ike_gateway
+        var: gathered_result.ike_gateway
 
-    - name: List all ike_gateways in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ike_gateway by name (info module)
       paloaltonetworks.scm.scm_ike_gateway_info:
-        folder: "Shared"
+        name: "ansible-test-ike-gateway"
+        folder: "Remote Networks"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ike_gateways
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ike_gateway by ID (info module)
+      paloaltonetworks.scm.scm_ike_gateway_info:
+        id: "{{ gathered_result.ike_gateway.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ike_gateways
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ike_gateways
+      paloaltonetworks.scm.scm_ike_gateway_info:
+        folder: "Remote Networks"
       register: list_result
 
-    - name: Display ike_gateways list
+    - name: Show ike_gateways count
       ansible.builtin.debug:
-        var: list_result.ike_gateways
+        msg: "Found {{ list_result.total }} ike_gateways"
 
-
-    - name: Delete the ike_gateway object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ike_gateway
       paloaltonetworks.scm.scm_ike_gateway:
         state: absent
-        name: "example-ike_gateway"
-        folder: "Shared"
+        name: "ansible-test-ike-gateway"
+        folder: "Remote Networks"
+        authentication:
+          pre_shared_key:
+            key: "newsecret456"
+        peer_address:
+          ip: "2.2.2.2"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "ansible-dep-ike-crypto"
+          version: "ikev1"
 
+    # ── Cleanup dependency ───────────────────────────────────
+    - name: Delete dependency IKE crypto profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: absent
+        name: "ansible-dep-ike-crypto"
+        folder: "Remote Networks"
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]

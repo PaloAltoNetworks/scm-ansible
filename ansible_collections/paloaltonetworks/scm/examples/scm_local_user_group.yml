@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_local_user_group
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_local_user_group.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_local_user_group.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_local_user_group' for full parameter docs.
 
 - name: Manage local_user_groups in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a local_user_group object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create local_user_group
       paloaltonetworks.scm.scm_local_user_group:
         state: present
-        name: "example-local_user_group"
-        folder: "Shared"
+        name: "ansible-test-local_user_group"
+        folder: "All"
       register: create_result
 
-    - name: Display created local_user_group
+    - name: Show created local_user_group
       ansible.builtin.debug:
         var: create_result.local_user_group
 
-    - name: Gather information about a local_user_group object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update local_user_group
+      paloaltonetworks.scm.scm_local_user_group:
+        state: present
+        name: "ansible-test-local_user_group"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated local_user_group
+      ansible.builtin.debug:
+        var: update_result.local_user_group
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get local_user_group by name
       paloaltonetworks.scm.scm_local_user_group:
         state: gathered
-        name: "example-local_user_group"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-local_user_group"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered local_user_group
+    - name: Show gathered local_user_group
       ansible.builtin.debug:
-        var: gather_result.local_user_group
+        var: gathered_result.local_user_group
 
-    - name: List all local_user_groups in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get local_user_group by name (info module)
       paloaltonetworks.scm.scm_local_user_group_info:
-        folder: "Shared"
+        name: "ansible-test-local_user_group"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.local_user_groups
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get local_user_group by ID (info module)
+      paloaltonetworks.scm.scm_local_user_group_info:
+        id: "{{ gathered_result.local_user_group.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.local_user_groups
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all local_user_groups
+      paloaltonetworks.scm.scm_local_user_group_info:
+        folder: "All"
       register: list_result
 
-    - name: Display local_user_groups list
+    - name: Show local_user_groups count
       ansible.builtin.debug:
-        var: list_result.local_user_groups
+        msg: "Found {{ list_result.total }} local_user_groups"
 
-
-    - name: Delete the local_user_group object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete local_user_group
       paloaltonetworks.scm.scm_local_user_group:
         state: absent
-        name: "example-local_user_group"
-        folder: "Shared"
+        name: "ansible-test-local_user_group"
+        folder: "All"
 

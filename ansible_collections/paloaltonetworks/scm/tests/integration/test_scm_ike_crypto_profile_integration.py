@@ -27,7 +27,7 @@ class TestIkeCryptoProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="present", name=f"an-ikecrypto-{run_id}",
             dh_group=["group14"],
             encryption=["aes-256-cbc"],
             hash=["sha256"],
@@ -42,7 +42,7 @@ class TestIkeCryptoProfilesLifecycle:
     def test_02_create_idempotent(self, run_id):
         # Note: idempotent may report changed=True due to nested object enrichment
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="present", name=f"an-ikecrypto-{run_id}",
             dh_group=["group14"],
             encryption=["aes-256-cbc"],
             hash=["sha256"],
@@ -53,7 +53,7 @@ class TestIkeCryptoProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="gathered", name=f"an-ikecrypto-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -61,7 +61,7 @@ class TestIkeCryptoProfilesLifecycle:
 
     def test_04_update(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="present", name=f"an-ikecrypto-{run_id}",
             dh_group=["group14"],
             encryption=["aes-256-cbc"],
             hash=["sha256"],
@@ -73,7 +73,7 @@ class TestIkeCryptoProfilesLifecycle:
 
     def test_05_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="absent", name=f"an-ikecrypto-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -81,7 +81,7 @@ class TestIkeCryptoProfilesLifecycle:
 
     def test_06_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-ikecrypto-{run_id}",
+            state="absent", name=f"an-ikecrypto-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

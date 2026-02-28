@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_bandwidth_allocation
 #
+# Demonstrates: create, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_bandwidth_allocation.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_bandwidth_allocation.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_bandwidth_allocation' for full parameter docs.
 
 - name: Manage bandwidth_allocations in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +26,30 @@
 
   tasks:
 
-    - name: Create a bandwidth_allocation object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create bandwidth_allocation
       paloaltonetworks.scm.scm_bandwidth_allocation:
         state: present
-        name: "example-bandwidth_allocation"
+        name: "ansible-test-bandwidth_allocation"
+        # allocated_bandwidth: <required>
       register: create_result
 
-    - name: Display created bandwidth_allocation
+    - name: Show created bandwidth_allocation
       ansible.builtin.debug:
         var: create_result.bandwidth_allocation
 
-    - name: Gather information about a bandwidth_allocation object
-      paloaltonetworks.scm.scm_bandwidth_allocation:
-        state: gathered
-        name: "example-bandwidth_allocation"
-      register: gather_result
-
-    - name: Display gathered bandwidth_allocation
-      ansible.builtin.debug:
-        var: gather_result.bandwidth_allocation
-
-    - name: List all bandwidth_allocations in a folder
+    # ── List all ────────────────────────────────────────────
+    - name: List all bandwidth_allocations
       paloaltonetworks.scm.scm_bandwidth_allocation_info:
       register: list_result
 
-    - name: Display bandwidth_allocations list
+    - name: Show bandwidth_allocations count
       ansible.builtin.debug:
-        var: list_result.bandwidth_allocations
+        msg: "Found {{ list_result.total }} bandwidth_allocations"
 
-
-    - name: Delete the bandwidth_allocation object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete bandwidth_allocation
       paloaltonetworks.scm.scm_bandwidth_allocation:
         state: absent
-        name: "example-bandwidth_allocation"
+        name: "ansible-test-bandwidth_allocation"
 

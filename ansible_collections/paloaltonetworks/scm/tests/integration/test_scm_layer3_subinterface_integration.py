@@ -12,7 +12,14 @@ from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_layer3_
 logger = logging.getLogger(__name__)
 run_module = make_runner(scm_layer3_subinterface, "scm_layer3_subinterface")
 
-_FIELDS = dict(name=None)
+_FIELDS = dict(
+    adjust_tcp_mss=None, arp=None, bonjour=None,
+    comment=None, ddns_config=None, decrypt_mirror=None,
+    df_ignore=None, interface_management_profile=None,
+    ip=None, ipv6=None, mtu=None, name=None,
+    ndp_proxy=None, netflow_profile=None, tag=None,
+    untagged_sub_interface=None,
+)
 
 
 def _params(**overrides):
@@ -25,7 +32,7 @@ class TestLayer3SubinterfacesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"ansible-integ-l3sub-{run_id}",
+            state="present", name=f"an-l3subif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -34,7 +41,7 @@ class TestLayer3SubinterfacesLifecycle:
 
     def test_02_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-l3sub-{run_id}",
+            state="absent", name=f"an-l3subif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -42,7 +49,7 @@ class TestLayer3SubinterfacesLifecycle:
 
     def test_03_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"ansible-integ-l3sub-{run_id}",
+            state="absent", name=f"an-l3subif-{run_id}",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

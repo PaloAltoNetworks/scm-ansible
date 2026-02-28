@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_site
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_site.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_site.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_site' for full parameter docs.
 
 - name: Manage sites in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +26,72 @@
 
   tasks:
 
-    - name: Create a site object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create site
       paloaltonetworks.scm.scm_site:
         state: present
-        name: "example-site"
+        name: "ansible-test-site"
       register: create_result
 
-    - name: Display created site
+    - name: Show created site
       ansible.builtin.debug:
         var: create_result.site
 
-    - name: Gather information about a site object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update site
+      paloaltonetworks.scm.scm_site:
+        state: present
+        name: "ansible-test-site"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated site
+      ansible.builtin.debug:
+        var: update_result.site
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get site by name
       paloaltonetworks.scm.scm_site:
         state: gathered
-        name: "example-site"
-      register: gather_result
+        name: "ansible-test-site"
+      register: gathered_result
 
-    - name: Display gathered site
+    - name: Show gathered site
       ansible.builtin.debug:
-        var: gather_result.site
+        var: gathered_result.site
 
-    - name: List all sites in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get site by name (info module)
+      paloaltonetworks.scm.scm_site_info:
+        name: "ansible-test-site"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.sites
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get site by ID (info module)
+      paloaltonetworks.scm.scm_site_info:
+        id: "{{ gathered_result.site.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.sites
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all sites
       paloaltonetworks.scm.scm_site_info:
       register: list_result
 
-    - name: Display sites list
+    - name: Show sites count
       ansible.builtin.debug:
-        var: list_result.sites
+        msg: "Found {{ list_result.total }} sites"
 
-
-    - name: Delete the site object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete site
       paloaltonetworks.scm.scm_site:
         state: absent
-        name: "example-site"
+        name: "ansible-test-site"
 

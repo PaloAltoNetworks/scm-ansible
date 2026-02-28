@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_ike_crypto_profile
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_ike_crypto_profile.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_ike_crypto_profile.yml
+#
 
 - name: Manage ike_crypto_profiles in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,92 @@
 
   tasks:
 
-    - name: Create a ike_crypto_profile object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create ike_crypto_profile
       paloaltonetworks.scm.scm_ike_crypto_profile:
         state: present
-        name: "example-ike_crypto_profile"
+        name: "ansible-test-ike-crypto"
         folder: "Shared"
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]
+        lifetime:
+          hours: 8
       register: create_result
 
-    - name: Display created ike_crypto_profile
+    - name: Show created ike_crypto_profile
       ansible.builtin.debug:
         var: create_result.ike_crypto_profile
 
-    - name: Gather information about a ike_crypto_profile object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ike_crypto_profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: present
+        name: "ansible-test-ike-crypto"
+        folder: "Shared"
+        dh_group: ["group14", "group19"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256", "sha384"]
+        lifetime:
+          hours: 8
+      register: update_result
+
+    - name: Show updated ike_crypto_profile
+      ansible.builtin.debug:
+        var: update_result.ike_crypto_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ike_crypto_profile by name
       paloaltonetworks.scm.scm_ike_crypto_profile:
         state: gathered
-        name: "example-ike_crypto_profile"
+        name: "ansible-test-ike-crypto"
         folder: "Shared"
-      register: gather_result
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]
+      register: gathered_result
 
-    - name: Display gathered ike_crypto_profile
+    - name: Show gathered ike_crypto_profile
       ansible.builtin.debug:
-        var: gather_result.ike_crypto_profile
+        var: gathered_result.ike_crypto_profile
 
-    - name: List all ike_crypto_profiles in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ike_crypto_profile by name (info module)
+      paloaltonetworks.scm.scm_ike_crypto_profile_info:
+        name: "ansible-test-ike-crypto"
+        folder: "Shared"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ike_crypto_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ike_crypto_profile by ID (info module)
+      paloaltonetworks.scm.scm_ike_crypto_profile_info:
+        id: "{{ gathered_result.ike_crypto_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ike_crypto_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ike_crypto_profiles
       paloaltonetworks.scm.scm_ike_crypto_profile_info:
         folder: "Shared"
       register: list_result
 
-    - name: Display ike_crypto_profiles list
+    - name: Show ike_crypto_profiles count
       ansible.builtin.debug:
-        var: list_result.ike_crypto_profiles
+        msg: "Found {{ list_result.total }} ike_crypto_profiles"
 
-
-    - name: Delete the ike_crypto_profile object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ike_crypto_profile
       paloaltonetworks.scm.scm_ike_crypto_profile:
         state: absent
-        name: "example-ike_crypto_profile"
+        name: "ansible-test-ike-crypto"
         folder: "Shared"
-
+        dh_group: ["group14"]
+        encryption: ["aes-256-cbc"]
+        hash: ["sha256"]

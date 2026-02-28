@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_wildfire_anti_virus_profile
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_wildfire_anti_virus_profile.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_wildfire_anti_virus_profile.yml
+#
 
 - name: Manage wildfire_anti_virus_profiles in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,78 @@
 
   tasks:
 
-    - name: Create a wildfire_anti_virus_profile object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create wildfire_anti_virus_profile
       paloaltonetworks.scm.scm_wildfire_anti_virus_profile:
         state: present
-        name: "example-wildfire_anti_virus_profile"
-        folder: "Shared"
+        name: "ansible-test-wfav"
+        folder: "Prisma Access"
+        description: "Created by Ansible"
       register: create_result
 
-    - name: Display created wildfire_anti_virus_profile
+    - name: Show created wildfire_anti_virus_profile
       ansible.builtin.debug:
         var: create_result.wildfire_anti_virus_profile
 
-    - name: Gather information about a wildfire_anti_virus_profile object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update wildfire_anti_virus_profile
+      paloaltonetworks.scm.scm_wildfire_anti_virus_profile:
+        state: present
+        name: "ansible-test-wfav"
+        folder: "Prisma Access"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated wildfire_anti_virus_profile
+      ansible.builtin.debug:
+        var: update_result.wildfire_anti_virus_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get wildfire_anti_virus_profile by name
       paloaltonetworks.scm.scm_wildfire_anti_virus_profile:
         state: gathered
-        name: "example-wildfire_anti_virus_profile"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-wfav"
+        folder: "Prisma Access"
+      register: gathered_result
 
-    - name: Display gathered wildfire_anti_virus_profile
+    - name: Show gathered wildfire_anti_virus_profile
       ansible.builtin.debug:
-        var: gather_result.wildfire_anti_virus_profile
+        var: gathered_result.wildfire_anti_virus_profile
 
-    - name: List all wildfire_anti_virus_profiles in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get wildfire_anti_virus_profile by name (info module)
       paloaltonetworks.scm.scm_wildfire_anti_virus_profile_info:
-        folder: "Shared"
+        name: "ansible-test-wfav"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.wildfire_anti_virus_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get wildfire_anti_virus_profile by ID (info module)
+      paloaltonetworks.scm.scm_wildfire_anti_virus_profile_info:
+        id: "{{ gathered_result.wildfire_anti_virus_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.wildfire_anti_virus_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all wildfire_anti_virus_profiles
+      paloaltonetworks.scm.scm_wildfire_anti_virus_profile_info:
+        folder: "Prisma Access"
       register: list_result
 
-    - name: Display wildfire_anti_virus_profiles list
+    - name: Show wildfire_anti_virus_profiles count
       ansible.builtin.debug:
-        var: list_result.wildfire_anti_virus_profiles
+        msg: "Found {{ list_result.total }} wildfire_anti_virus_profiles"
 
-
-    - name: Delete the wildfire_anti_virus_profile object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete wildfire_anti_virus_profile
       paloaltonetworks.scm.scm_wildfire_anti_virus_profile:
         state: absent
-        name: "example-wildfire_anti_virus_profile"
-        folder: "Shared"
-
+        name: "ansible-test-wfav"
+        folder: "Prisma Access"

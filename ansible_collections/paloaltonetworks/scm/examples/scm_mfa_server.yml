@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_mfa_server
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_mfa_server.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_mfa_server.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_mfa_server' for full parameter docs.
 
 - name: Manage mfa_servers in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,79 @@
 
   tasks:
 
-    - name: Create a mfa_server object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create mfa_server
       paloaltonetworks.scm.scm_mfa_server:
         state: present
-        name: "example-mfa_server"
-        folder: "Shared"
+        name: "ansible-test-mfa_server"
+        folder: "All"
+        # mfa_cert_profile: <required>
       register: create_result
 
-    - name: Display created mfa_server
+    - name: Show created mfa_server
       ansible.builtin.debug:
         var: create_result.mfa_server
 
-    - name: Gather information about a mfa_server object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update mfa_server
+      paloaltonetworks.scm.scm_mfa_server:
+        state: present
+        name: "ansible-test-mfa_server"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated mfa_server
+      ansible.builtin.debug:
+        var: update_result.mfa_server
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get mfa_server by name
       paloaltonetworks.scm.scm_mfa_server:
         state: gathered
-        name: "example-mfa_server"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-mfa_server"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered mfa_server
+    - name: Show gathered mfa_server
       ansible.builtin.debug:
-        var: gather_result.mfa_server
+        var: gathered_result.mfa_server
 
-    - name: List all mfa_servers in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get mfa_server by name (info module)
       paloaltonetworks.scm.scm_mfa_server_info:
-        folder: "Shared"
+        name: "ansible-test-mfa_server"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.mfa_servers
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get mfa_server by ID (info module)
+      paloaltonetworks.scm.scm_mfa_server_info:
+        id: "{{ gathered_result.mfa_server.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.mfa_servers
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all mfa_servers
+      paloaltonetworks.scm.scm_mfa_server_info:
+        folder: "All"
       register: list_result
 
-    - name: Display mfa_servers list
+    - name: Show mfa_servers count
       ansible.builtin.debug:
-        var: list_result.mfa_servers
+        msg: "Found {{ list_result.total }} mfa_servers"
 
-
-    - name: Delete the mfa_server object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete mfa_server
       paloaltonetworks.scm.scm_mfa_server:
         state: absent
-        name: "example-mfa_server"
-        folder: "Shared"
+        name: "ansible-test-mfa_server"
+        folder: "All"
 

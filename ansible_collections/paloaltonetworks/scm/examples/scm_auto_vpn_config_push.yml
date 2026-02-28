@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_auto_vpn_config_push
 #
+# Demonstrates: create
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_auto_vpn_config_push.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_auto_vpn_config_push.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_auto_vpn_config_push' for full parameter docs.
 
 - name: Manage auto_vpn_config_push in Strata Cloud Manager
   hosts: localhost
@@ -17,24 +26,14 @@
 
   tasks:
 
-    - name: Create a auto_vpn_config_push object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create auto_vpn_config_push
       paloaltonetworks.scm.scm_auto_vpn_config_push:
         state: present
-        name: "example-auto_vpn_config_push"
+        name: "ansible-test-auto_vpn_config_push"
       register: create_result
 
-    - name: Display created auto_vpn_config_push
+    - name: Show created auto_vpn_config_push
       ansible.builtin.debug:
         var: create_result.auto_vpn_config_push
-
-    - name: Gather information about a auto_vpn_config_push object
-      paloaltonetworks.scm.scm_auto_vpn_config_push:
-        state: gathered
-        name: "example-auto_vpn_config_push"
-      register: gather_result
-
-    - name: Display gathered auto_vpn_config_push
-      ansible.builtin.debug:
-        var: gather_result.auto_vpn_config_push
-
 

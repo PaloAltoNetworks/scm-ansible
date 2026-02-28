@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_snippet
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_snippet.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_snippet.yml
+#
 
 - name: Manage snippets in Strata Cloud Manager
   hosts: localhost
@@ -17,37 +24,73 @@
 
   tasks:
 
-    - name: Create a snippet object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create snippet
       paloaltonetworks.scm.scm_snippet:
         state: present
-        name: "example-snippet"
+        name: "ansible-test-snippet"
+        description: "Test snippet"
       register: create_result
 
-    - name: Display created snippet
+    - name: Show created snippet
       ansible.builtin.debug:
         var: create_result.snippet
 
-    - name: Gather information about a snippet object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update snippet
+      paloaltonetworks.scm.scm_snippet:
+        state: present
+        name: "ansible-test-snippet"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated snippet
+      ansible.builtin.debug:
+        var: update_result.snippet
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get snippet by name
       paloaltonetworks.scm.scm_snippet:
         state: gathered
-        name: "example-snippet"
-      register: gather_result
+        name: "ansible-test-snippet"
+      register: gathered_result
 
-    - name: Display gathered snippet
+    - name: Show gathered snippet
       ansible.builtin.debug:
-        var: gather_result.snippet
+        var: gathered_result.snippet
 
-    - name: List all snippets in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get snippet by name (info module)
+      paloaltonetworks.scm.scm_snippet_info:
+        name: "ansible-test-snippet"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.snippets
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get snippet by ID (info module)
+      paloaltonetworks.scm.scm_snippet_info:
+        id: "{{ gathered_result.snippet.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.snippets
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all snippets
       paloaltonetworks.scm.scm_snippet_info:
       register: list_result
 
-    - name: Display snippets list
+    - name: Show snippets count
       ansible.builtin.debug:
-        var: list_result.snippets
+        msg: "Found {{ list_result.total }} snippets"
 
-
-    - name: Delete the snippet object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete snippet
       paloaltonetworks.scm.scm_snippet:
         state: absent
-        name: "example-snippet"
+        name: "ansible-test-snippet"
 

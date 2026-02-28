@@ -1,14 +1,23 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_vlan_interface
 #
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_vlan_interface.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_vlan_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_vlan_interface' for full parameter docs.
 
 - name: Manage vlan_interfaces in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +26,78 @@
 
   tasks:
 
-    - name: Create a vlan_interface object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create vlan_interface
       paloaltonetworks.scm.scm_vlan_interface:
         state: present
-        name: "example-vlan_interface"
-        folder: "Shared"
+        name: "ansible-test-vlan_interface"
+        folder: "All"
       register: create_result
 
-    - name: Display created vlan_interface
+    - name: Show created vlan_interface
       ansible.builtin.debug:
         var: create_result.vlan_interface
 
-    - name: Gather information about a vlan_interface object
+    # ── Update ──────────────────────────────────────────────
+    - name: Update vlan_interface
+      paloaltonetworks.scm.scm_vlan_interface:
+        state: present
+        name: "ansible-test-vlan_interface"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated vlan_interface
+      ansible.builtin.debug:
+        var: update_result.vlan_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get vlan_interface by name
       paloaltonetworks.scm.scm_vlan_interface:
         state: gathered
-        name: "example-vlan_interface"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-vlan_interface"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered vlan_interface
+    - name: Show gathered vlan_interface
       ansible.builtin.debug:
-        var: gather_result.vlan_interface
+        var: gathered_result.vlan_interface
 
-    - name: List all vlan_interfaces in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get vlan_interface by name (info module)
       paloaltonetworks.scm.scm_vlan_interface_info:
-        folder: "Shared"
+        name: "ansible-test-vlan_interface"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.vlan_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get vlan_interface by ID (info module)
+      paloaltonetworks.scm.scm_vlan_interface_info:
+        id: "{{ gathered_result.vlan_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.vlan_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all vlan_interfaces
+      paloaltonetworks.scm.scm_vlan_interface_info:
+        folder: "All"
       register: list_result
 
-    - name: Display vlan_interfaces list
+    - name: Show vlan_interfaces count
       ansible.builtin.debug:
-        var: list_result.vlan_interfaces
+        msg: "Found {{ list_result.total }} vlan_interfaces"
 
-
-    - name: Delete the vlan_interface object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete vlan_interface
       paloaltonetworks.scm.scm_vlan_interface:
         state: absent
-        name: "example-vlan_interface"
-        folder: "Shared"
+        name: "ansible-test-vlan_interface"
+        folder: "All"
 

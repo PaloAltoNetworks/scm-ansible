@@ -24,7 +24,7 @@ class TestKerberosServerProfilesLifecycle:
 
     def test_01_create(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-kerberos-{run_id}",
+            state="present", name=f"an-kerb-{run_id}",
             server=[{"name": "kdc1", "host": "10.0.0.50", "port": 88}],
             folder="All",
         ))
@@ -35,7 +35,7 @@ class TestKerberosServerProfilesLifecycle:
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
-            state="present", name=f"a-integ-kerberos-{run_id}",
+            state="present", name=f"an-kerb-{run_id}",
             server=[{"name": "kdc1", "host": "10.0.0.50", "port": 88}],
             folder="All",
         ))
@@ -43,7 +43,7 @@ class TestKerberosServerProfilesLifecycle:
 
     def test_03_gather(self, run_id):
         result = run_module(_params(
-            state="gathered", name=f"a-integ-kerberos-{run_id}",
+            state="gathered", name=f"an-kerb-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
@@ -51,7 +51,7 @@ class TestKerberosServerProfilesLifecycle:
 
     def test_04_delete(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-kerberos-{run_id}",
+            state="absent", name=f"an-kerb-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
@@ -59,7 +59,7 @@ class TestKerberosServerProfilesLifecycle:
 
     def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
-            state="absent", name=f"a-integ-kerberos-{run_id}",
+            state="absent", name=f"an-kerb-{run_id}",
             folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

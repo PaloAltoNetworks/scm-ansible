@@ -1,14 +1,21 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_auto_tag_action
 #
+# Demonstrates: create, get by name, list, delete
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
 #   export SCM_CLIENT_ID="your-client-id"
 #   export SCM_CLIENT_SECRET="your-client-secret"
 #   export SCM_TSG_ID="your-tsg-id"
 #
 # Usage:
-#   ansible-playbook examples/scm_auto_tag_action.yml
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_auto_tag_action.yml
+#
 
 - name: Manage auto_tag_actions in Strata Cloud Manager
   hosts: localhost
@@ -17,41 +24,64 @@
 
   tasks:
 
-    - name: Create a auto_tag_action object
+    # ── Create ──────────────────────────────────────────────
+    - name: Create auto_tag_action
       paloaltonetworks.scm.scm_auto_tag_action:
         state: present
-        name: "example-auto_tag_action"
-        folder: "Shared"
+        name: "ansible-test-auto_tag_action"
+        folder: "All"
+        log_type: "traffic"
+        filter: "All Logs"
+        actions:
+        - name: "test-action"
+          type: "tagging"
+          action: "add-tag"
+          target: "source-address"
+          tags:
+          - "test-tag"
       register: create_result
 
-    - name: Display created auto_tag_action
+    - name: Show created auto_tag_action
       ansible.builtin.debug:
         var: create_result.auto_tag_action
 
-    - name: Gather information about a auto_tag_action object
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get auto_tag_action by name
       paloaltonetworks.scm.scm_auto_tag_action:
         state: gathered
-        name: "example-auto_tag_action"
-        folder: "Shared"
-      register: gather_result
+        name: "ansible-test-auto_tag_action"
+        folder: "All"
+      register: gathered_result
 
-    - name: Display gathered auto_tag_action
+    - name: Show gathered auto_tag_action
       ansible.builtin.debug:
-        var: gather_result.auto_tag_action
+        var: gathered_result.auto_tag_action
 
-    - name: List all auto_tag_actions in a folder
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get auto_tag_action by name (info module)
       paloaltonetworks.scm.scm_auto_tag_action_info:
-        folder: "Shared"
+        name: "ansible-test-auto_tag_action"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.auto_tag_actions
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all auto_tag_actions
+      paloaltonetworks.scm.scm_auto_tag_action_info:
+        folder: "All"
       register: list_result
 
-    - name: Display auto_tag_actions list
+    - name: Show auto_tag_actions count
       ansible.builtin.debug:
-        var: list_result.auto_tag_actions
+        msg: "Found {{ list_result.total }} auto_tag_actions"
 
-
-    - name: Delete the auto_tag_action object
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete auto_tag_action
       paloaltonetworks.scm.scm_auto_tag_action:
         state: absent
-        name: "example-auto_tag_action"
-        folder: "Shared"
+        name: "ansible-test-auto_tag_action"
+        folder: "All"
 
