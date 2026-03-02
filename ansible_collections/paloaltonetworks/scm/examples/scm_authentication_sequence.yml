@@ -24,13 +24,24 @@
 
   tasks:
 
+    # ── Dependency: Authentication Profile ──────────────────
+    - name: Create dep authentication_profile
+      paloaltonetworks.scm.scm_authentication_profile:
+        state: present
+        name: "ansible-dep-auth-seq"
+        folder: "All"
+        allow_list: ["all"]
+        method:
+          local_database: {}
+      register: dep_profile
+
     # ── Create ──────────────────────────────────────────────
     - name: Create authentication_sequence
       paloaltonetworks.scm.scm_authentication_sequence:
         state: present
-        name: "ansible-test-authentication_sequence"
+        name: "ansible-test-auth-seq"
         folder: "All"
-        authentication_profiles: ["<Attribute(value=Name(id='TestAuthenticationSequencesLifecycle', ctx=Load()), attr='_profile_name', ctx=Load())>"]
+        authentication_profiles: ["ansible-dep-auth-seq"]
         use_domain_find_profile: false
       register: create_result
 
@@ -42,11 +53,10 @@
     - name: Update authentication_sequence
       paloaltonetworks.scm.scm_authentication_sequence:
         state: present
-        name: "ansible-test-authentication_sequence"
-        description: "Updated by Ansible"
+        name: "ansible-test-auth-seq"
         folder: "All"
-        authentication_profiles: ["<Attribute(value=Name(id='TestAuthenticationSequencesLifecycle', ctx=Load()), attr='_profile_name', ctx=Load())>"]
-        use_domain_find_profile: false
+        authentication_profiles: ["ansible-dep-auth-seq"]
+        use_domain_find_profile: true
       register: update_result
 
     - name: Show updated authentication_sequence
@@ -57,7 +67,7 @@
     - name: Get authentication_sequence by name
       paloaltonetworks.scm.scm_authentication_sequence:
         state: gathered
-        name: "ansible-test-authentication_sequence"
+        name: "ansible-test-auth-seq"
         folder: "All"
       register: gathered_result
 
@@ -68,7 +78,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get authentication_sequence by name (info module)
       paloaltonetworks.scm.scm_authentication_sequence_info:
-        name: "ansible-test-authentication_sequence"
+        name: "ansible-test-auth-seq"
         folder: "All"
       register: info_by_name
 
@@ -100,6 +110,12 @@
     - name: Delete authentication_sequence
       paloaltonetworks.scm.scm_authentication_sequence:
         state: absent
-        name: "ansible-test-authentication_sequence"
+        name: "ansible-test-auth-seq"
         folder: "All"
 
+    # ── Cleanup dep ──────────────────────────────────────────
+    - name: Delete dep authentication_profile
+      paloaltonetworks.scm.scm_authentication_profile:
+        state: absent
+        name: "ansible-dep-auth-seq"
+        folder: "All"

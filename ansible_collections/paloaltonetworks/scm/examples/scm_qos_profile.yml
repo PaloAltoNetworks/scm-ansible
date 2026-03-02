@@ -28,8 +28,8 @@
     - name: Create qos_profile
       paloaltonetworks.scm.scm_qos_profile:
         state: present
-        name: "ansible-test-qos_profile"
-        folder: "All"
+        name: "ansible-test-qos-prof"
+        folder: "Service Connections"
         class_bandwidth_type:
           mbps:
             var_class:
@@ -53,9 +53,8 @@
     - name: Update qos_profile
       paloaltonetworks.scm.scm_qos_profile:
         state: present
-        name: "ansible-test-qos_profile"
-        description: "Updated by Ansible"
-        folder: "All"
+        name: "ansible-test-qos-prof"
+        folder: "Service Connections"
         class_bandwidth_type:
           mbps:
             var_class:
@@ -64,11 +63,11 @@
             - name: "class2"
               priority: "real-time"
               class_bandwidth:
-                egress_guaranteed: 10
-                egress_max: 20
+                egress_guaranteed: 20
+                egress_max: 40
         aggregate_bandwidth:
-          egress_guaranteed: 300
-          egress_max: 1000
+          egress_guaranteed: 500
+          egress_max: 2000
       register: update_result
 
     - name: Show updated qos_profile
@@ -79,8 +78,8 @@
     - name: Get qos_profile by name
       paloaltonetworks.scm.scm_qos_profile:
         state: gathered
-        name: "ansible-test-qos_profile"
-        folder: "All"
+        name: "ansible-test-qos-prof"
+        folder: "Service Connections"
       register: gathered_result
 
     - name: Show gathered qos_profile
@@ -90,8 +89,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get qos_profile by name (info module)
       paloaltonetworks.scm.scm_qos_profile_info:
-        name: "ansible-test-qos_profile"
-        folder: "All"
+        name: "ansible-test-qos-prof"
+        folder: "Service Connections"
       register: info_by_name
 
     - name: Show info result
@@ -111,7 +110,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all qos_profiles
       paloaltonetworks.scm.scm_qos_profile_info:
-        folder: "All"
+        folder: "Service Connections"
       register: list_result
 
     - name: Show qos_profiles count
@@ -122,6 +121,5 @@
     - name: Delete qos_profile
       paloaltonetworks.scm.scm_qos_profile:
         state: absent
-        name: "ansible-test-qos_profile"
-        folder: "All"
-
+        name: "ansible-test-qos-prof"
+        folder: "Service Connections"

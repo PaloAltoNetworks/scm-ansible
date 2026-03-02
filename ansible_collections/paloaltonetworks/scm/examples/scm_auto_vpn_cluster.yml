@@ -30,7 +30,7 @@
     - name: Create auto_vpn_cluster
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: present
-        name: "ansible-test-auto_vpn_cluster"
+        name: "ansible-test-avpn"
       register: create_result
 
     - name: Show created auto_vpn_cluster
@@ -41,8 +41,7 @@
     - name: Update auto_vpn_cluster
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: present
-        name: "ansible-test-auto_vpn_cluster"
-        description: "Updated by Ansible"
+        name: "ansible-test-avpn"
       register: update_result
 
     - name: Show updated auto_vpn_cluster
@@ -53,7 +52,7 @@
     - name: Get auto_vpn_cluster by name
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: gathered
-        name: "ansible-test-auto_vpn_cluster"
+        name: "ansible-test-avpn"
       register: gathered_result
 
     - name: Show gathered auto_vpn_cluster
@@ -63,7 +62,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get auto_vpn_cluster by name (info module)
       paloaltonetworks.scm.scm_auto_vpn_cluster_info:
-        name: "ansible-test-auto_vpn_cluster"
+        name: "ansible-test-avpn"
       register: info_by_name
 
     - name: Show info result
@@ -93,5 +92,5 @@
     - name: Delete auto_vpn_cluster
       paloaltonetworks.scm.scm_auto_vpn_cluster:
         state: absent
-        name: "ansible-test-auto_vpn_cluster"
+        name: "ansible-test-avpn"
 

@@ -137,6 +137,7 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
+        position=dict(type='str', required=False, default='pre', choices=['pre', 'post']),
         action=dict(type='dict', required=True),
         description=dict(type='str', required=False),
         dscp_tos=dict(type='dict', required=False),
@@ -187,6 +188,7 @@ def main():
     object_name = module.params.get('name')
     object_id = module.params.get('id')
     container = get_container_params(module)
+    position = module.params.get('position', 'pre')
 
     # Attempt to find existing object
     existing_obj = None
@@ -203,7 +205,7 @@ def main():
 
     if existing_obj is None and object_name:
         try:
-            existing_obj = api.fetch_qos_rules(name=object_name, **container)
+            existing_obj = api.fetch_qos_rules(name=object_name, position=position, **container)
         except NotFoundError:
             pass
         except Exception as e:
@@ -238,10 +240,11 @@ def main():
             try:
                 from scm.network_services.models.qos_policy_rules import QosPolicyRules
                 model = QosPolicyRules(id='', **payload, **container)
-                resp = api.create_qo_s_policy_rules(qos_policy_rules=model)
+                resp = api.create_qo_s_policy_rules(position=position, qos_policy_rules=model)
                 result['qos_rule'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'qos_rule created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A qos_rule object with this name already exists')
                 return
@@ -275,8 +278,27 @@ def main():
                 result['changed'] = True
                 result['msg'] = 'qos_rule updated successfully'
             except Exception as e:
-                module.fail_json(msg='Failed to update qos_rule: {0}'.format(str(e)))
-                return
+                # Some APIs return a JSON list for update responses (SDK deserialization bug).
+                # Detect this pattern, parse manually, and continue.
+                err_str = str(e)
+                if 'input_type=list' in err_str and ('Input should be a valid dictionary' in err_str or 'model_type' in err_str):
+                    try:
+                        import json as _json
+                        _raw = api.update_qo_s_policy_rules_by_id_without_preload_content(id=update_id, qos_policy_rules=model)
+                        _data = _json.loads(_raw.data)
+                        if isinstance(_data, list) and _data:
+                            _data = _data[0]
+                        from scm.network_services.models.qos_policy_rules import QosPolicyRules
+                        _parsed = QosPolicyRules.from_dict(_data) if isinstance(_data, dict) else None
+                        result['qos_rule'] = to_result_data(_parsed) if _parsed else _data
+                        result['changed'] = True
+                        result['msg'] = 'qos_rule updated successfully'
+                    except Exception as e2:
+                        module.fail_json(msg='Failed to update qos_rule: {0}'.format(str(e)))
+                        return
+                else:
+                    module.fail_json(msg='Failed to update qos_rule: {0}'.format(str(e)))
+                    return
 
 
     # Handle absent state

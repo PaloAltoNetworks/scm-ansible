@@ -28,11 +28,14 @@
     - name: Create authentication_profile
       paloaltonetworks.scm.scm_authentication_profile:
         state: present
-        name: "ansible-test-authentication_profile"
+        name: "ansible-test-auth-prof"
         folder: "All"
         allow_list: ["all"]
         method:
           local_database: {}
+        lockout:
+          failed_attempts: 9
+          lockout_time: 5
       register: create_result
 
     - name: Show created authentication_profile
@@ -43,12 +46,14 @@
     - name: Update authentication_profile
       paloaltonetworks.scm.scm_authentication_profile:
         state: present
-        name: "ansible-test-authentication_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-auth-prof"
         folder: "All"
         allow_list: ["all"]
         method:
           local_database: {}
+        lockout:
+          failed_attempts: 5
+          lockout_time: 10
       register: update_result
 
     - name: Show updated authentication_profile
@@ -59,7 +64,7 @@
     - name: Get authentication_profile by name
       paloaltonetworks.scm.scm_authentication_profile:
         state: gathered
-        name: "ansible-test-authentication_profile"
+        name: "ansible-test-auth-prof"
         folder: "All"
       register: gathered_result
 
@@ -70,7 +75,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get authentication_profile by name (info module)
       paloaltonetworks.scm.scm_authentication_profile_info:
-        name: "ansible-test-authentication_profile"
+        name: "ansible-test-auth-prof"
         folder: "All"
       register: info_by_name
 
@@ -102,6 +107,5 @@
     - name: Delete authentication_profile
       paloaltonetworks.scm.scm_authentication_profile:
         state: absent
-        name: "ansible-test-authentication_profile"
+        name: "ansible-test-auth-prof"
         folder: "All"
-

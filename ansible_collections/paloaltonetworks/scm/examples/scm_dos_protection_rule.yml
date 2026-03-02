@@ -28,15 +28,16 @@
     - name: Create dos_protection_rule
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: present
-        name: "ansible-test-dos_protection_rule"
+        name: "ansible-test-dos-rule"
         folder: "All"
+        description: "Test DoS protection rule"
         action:
           protect: {}
         destination: ["any"]
-        from_: ["any"]
+        var_from: ["any"]
         service: ["any"]
         source: ["any"]
-        to_: ["any"]
+        to: ["any"]
       register: create_result
 
     - name: Show created dos_protection_rule
@@ -47,16 +48,16 @@
     - name: Update dos_protection_rule
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: present
-        name: "ansible-test-dos_protection_rule"
-        description: "Updated by Ansible"
+        name: "ansible-test-dos-rule"
         folder: "All"
+        description: "Updated DoS protection rule"
         action:
           protect: {}
         destination: ["any"]
-        from_: ["any"]
+        var_from: ["any"]
         service: ["any"]
         source: ["any"]
-        to_: ["any"]
+        to: ["any"]
       register: update_result
 
     - name: Show updated dos_protection_rule
@@ -67,8 +68,15 @@
     - name: Get dos_protection_rule by name
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: gathered
-        name: "ansible-test-dos_protection_rule"
+        name: "ansible-test-dos-rule"
         folder: "All"
+        action:
+          protect: {}
+        destination: ["any"]
+        var_from: ["any"]
+        service: ["any"]
+        source: ["any"]
+        to: ["any"]
       register: gathered_result
 
     - name: Show gathered dos_protection_rule
@@ -78,7 +86,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get dos_protection_rule by name (info module)
       paloaltonetworks.scm.scm_dos_protection_rule_info:
-        name: "ansible-test-dos_protection_rule"
+        name: "ansible-test-dos-rule"
         folder: "All"
       register: info_by_name
 
@@ -110,6 +118,12 @@
     - name: Delete dos_protection_rule
       paloaltonetworks.scm.scm_dos_protection_rule:
         state: absent
-        name: "ansible-test-dos_protection_rule"
+        name: "ansible-test-dos-rule"
         folder: "All"
-
+        action:
+          protect: {}
+        destination: ["any"]
+        var_from: ["any"]
+        service: ["any"]
+        source: ["any"]
+        to: ["any"]

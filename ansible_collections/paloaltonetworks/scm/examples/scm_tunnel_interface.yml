@@ -27,11 +27,14 @@
   tasks:
 
     # ── Create ──────────────────────────────────────────────
+    # NOTE: Tunnel interface names must start with '$' per API validation.
     - name: Create tunnel_interface
       paloaltonetworks.scm.scm_tunnel_interface:
         state: present
-        name: "ansible-test-tunnel_interface"
+        name: "$ansible-test-tunnel"
         folder: "All"
+        comment: "Managed by Ansible"
+        mtu: 1450
       register: create_result
 
     - name: Show created tunnel_interface
@@ -42,9 +45,10 @@
     - name: Update tunnel_interface
       paloaltonetworks.scm.scm_tunnel_interface:
         state: present
-        name: "ansible-test-tunnel_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-test-tunnel"
         folder: "All"
+        comment: "Updated by Ansible"
+        mtu: 1400
       register: update_result
 
     - name: Show updated tunnel_interface
@@ -55,7 +59,7 @@
     - name: Get tunnel_interface by name
       paloaltonetworks.scm.scm_tunnel_interface:
         state: gathered
-        name: "ansible-test-tunnel_interface"
+        name: "$ansible-test-tunnel"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +70,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get tunnel_interface by name (info module)
       paloaltonetworks.scm.scm_tunnel_interface_info:
-        name: "ansible-test-tunnel_interface"
+        name: "$ansible-test-tunnel"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +102,6 @@
     - name: Delete tunnel_interface
       paloaltonetworks.scm.scm_tunnel_interface:
         state: absent
-        name: "ansible-test-tunnel_interface"
+        name: "$ansible-test-tunnel"
         folder: "All"
 

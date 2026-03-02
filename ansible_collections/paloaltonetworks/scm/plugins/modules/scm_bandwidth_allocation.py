@@ -117,10 +117,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -191,6 +187,7 @@ def main():
                 result['bandwidth_allocation'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'bandwidth_allocation created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A bandwidth_allocation object with this name already exists')
                 return
@@ -231,7 +228,7 @@ def main():
         module.log('scm: deleting bandwidth_allocation')
         try:
             delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_bandwidth_allocations(id=delete_id)
+            api.delete_bandwidth_allocations(name=delete_id)
             result['changed'] = True
             result['msg'] = 'bandwidth_allocation deleted successfully'
         except NotFoundError:

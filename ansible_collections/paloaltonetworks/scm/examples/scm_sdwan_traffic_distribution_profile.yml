@@ -30,8 +30,9 @@
     - name: Create sdwan_traffic_distribution_profile
       paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
         state: present
-        name: "ansible-test-sdwan_traffic_distribution_profile"
+        name: "ansible-test-sdwan-tdp"
         folder: "All"
+        link_tags: []
       register: create_result
 
     - name: Show created sdwan_traffic_distribution_profile
@@ -42,9 +43,9 @@
     - name: Update sdwan_traffic_distribution_profile
       paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
         state: present
-        name: "ansible-test-sdwan_traffic_distribution_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-sdwan-tdp"
         folder: "All"
+        link_tags: []
       register: update_result
 
     - name: Show updated sdwan_traffic_distribution_profile
@@ -55,8 +56,9 @@
     - name: Get sdwan_traffic_distribution_profile by name
       paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
         state: gathered
-        name: "ansible-test-sdwan_traffic_distribution_profile"
+        name: "ansible-test-sdwan-tdp"
         folder: "All"
+        link_tags: []
       register: gathered_result
 
     - name: Show gathered sdwan_traffic_distribution_profile
@@ -66,7 +68,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get sdwan_traffic_distribution_profile by name (info module)
       paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile_info:
-        name: "ansible-test-sdwan_traffic_distribution_profile"
+        name: "ansible-test-sdwan-tdp"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +100,6 @@
     - name: Delete sdwan_traffic_distribution_profile
       paloaltonetworks.scm.scm_sdwan_traffic_distribution_profile:
         state: absent
-        name: "ansible-test-sdwan_traffic_distribution_profile"
+        name: "ansible-test-sdwan-tdp"
         folder: "All"
 

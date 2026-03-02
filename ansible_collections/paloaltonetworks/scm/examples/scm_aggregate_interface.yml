@@ -27,11 +27,16 @@
   tasks:
 
     # ── Create ──────────────────────────────────────────────
+    # NOTE: Aggregate interface names must start with "$" (platform requirement)
     - name: Create aggregate_interface
       paloaltonetworks.scm.scm_aggregate_interface:
         state: present
-        name: "ansible-test-aggregate_interface"
+        name: "$ansible-agg1"
         folder: "All"
+        comment: "Created by Ansible"
+        layer3:
+          ip:
+          - name: "192.0.2.1/24"
       register: create_result
 
     - name: Show created aggregate_interface
@@ -42,9 +47,12 @@
     - name: Update aggregate_interface
       paloaltonetworks.scm.scm_aggregate_interface:
         state: present
-        name: "ansible-test-aggregate_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-agg1"
         folder: "All"
+        comment: "Updated by Ansible"
+        layer3:
+          ip:
+          - name: "192.0.2.1/24"
       register: update_result
 
     - name: Show updated aggregate_interface
@@ -55,7 +63,7 @@
     - name: Get aggregate_interface by name
       paloaltonetworks.scm.scm_aggregate_interface:
         state: gathered
-        name: "ansible-test-aggregate_interface"
+        name: "$ansible-agg1"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +74,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get aggregate_interface by name (info module)
       paloaltonetworks.scm.scm_aggregate_interface_info:
-        name: "ansible-test-aggregate_interface"
+        name: "$ansible-agg1"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +106,6 @@
     - name: Delete aggregate_interface
       paloaltonetworks.scm.scm_aggregate_interface:
         state: absent
-        name: "ansible-test-aggregate_interface"
+        name: "$ansible-agg1"
         folder: "All"
 

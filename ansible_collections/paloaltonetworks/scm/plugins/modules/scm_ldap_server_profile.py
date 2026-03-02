@@ -278,6 +278,7 @@ def main():
                 result['ldap_server_profile'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'ldap_server_profile created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A ldap_server_profile object with this name already exists')
                 return

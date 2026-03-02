@@ -233,10 +233,11 @@ def main():
             try:
                 from scm.deployment_services.models.traffic_steering_rules import TrafficSteeringRules
                 model = TrafficSteeringRules(id='', **payload, **container)
-                resp = api.create_traffic_steering_rules(traffic_steering_rules=model)
+                resp = api.create_traffic_steering_rules(folder=container.get('folder'), traffic_steering_rules=model)
                 result['traffic_steering_rule'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'traffic_steering_rule created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A traffic_steering_rule object with this name already exists')
                 return
@@ -270,8 +271,27 @@ def main():
                 result['changed'] = True
                 result['msg'] = 'traffic_steering_rule updated successfully'
             except Exception as e:
-                module.fail_json(msg='Failed to update traffic_steering_rule: {0}'.format(str(e)))
-                return
+                # Some APIs return a JSON list for update responses (SDK deserialization bug).
+                # Detect this pattern, parse manually, and continue.
+                err_str = str(e)
+                if 'input_type=list' in err_str and ('Input should be a valid dictionary' in err_str or 'model_type' in err_str):
+                    try:
+                        import json as _json
+                        _raw = api.update_traffic_steering_rules_by_id_without_preload_content(id=update_id, traffic_steering_rules=model)
+                        _data = _json.loads(_raw.data)
+                        if isinstance(_data, list) and _data:
+                            _data = _data[0]
+                        from scm.deployment_services.models.traffic_steering_rules import TrafficSteeringRules
+                        _parsed = TrafficSteeringRules.from_dict(_data) if isinstance(_data, dict) else None
+                        result['traffic_steering_rule'] = to_result_data(_parsed) if _parsed else _data
+                        result['changed'] = True
+                        result['msg'] = 'traffic_steering_rule updated successfully'
+                    except Exception as e2:
+                        module.fail_json(msg='Failed to update traffic_steering_rule: {0}'.format(str(e)))
+                        return
+                else:
+                    module.fail_json(msg='Failed to update traffic_steering_rule: {0}'.format(str(e)))
+                    return
 
 
     # Handle absent state

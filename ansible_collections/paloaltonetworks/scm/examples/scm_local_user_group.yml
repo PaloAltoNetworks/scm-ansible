@@ -30,8 +30,8 @@
     - name: Create local_user_group
       paloaltonetworks.scm.scm_local_user_group:
         state: present
-        name: "ansible-test-local_user_group"
-        folder: "All"
+        name: "ansible-test-lusergrp"
+        folder: "Prisma Access"
       register: create_result
 
     - name: Show created local_user_group
@@ -42,9 +42,8 @@
     - name: Update local_user_group
       paloaltonetworks.scm.scm_local_user_group:
         state: present
-        name: "ansible-test-local_user_group"
-        description: "Updated by Ansible"
-        folder: "All"
+        name: "ansible-test-lusergrp"
+        folder: "Prisma Access"
       register: update_result
 
     - name: Show updated local_user_group
@@ -55,8 +54,8 @@
     - name: Get local_user_group by name
       paloaltonetworks.scm.scm_local_user_group:
         state: gathered
-        name: "ansible-test-local_user_group"
-        folder: "All"
+        name: "ansible-test-lusergrp"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered local_user_group
@@ -66,8 +65,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get local_user_group by name (info module)
       paloaltonetworks.scm.scm_local_user_group_info:
-        name: "ansible-test-local_user_group"
-        folder: "All"
+        name: "ansible-test-lusergrp"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -87,7 +86,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all local_user_groups
       paloaltonetworks.scm.scm_local_user_group_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show local_user_groups count
@@ -98,6 +97,6 @@
     - name: Delete local_user_group
       paloaltonetworks.scm.scm_local_user_group:
         state: absent
-        name: "ansible-test-local_user_group"
-        folder: "All"
+        name: "ansible-test-lusergrp"
+        folder: "Prisma Access"
 

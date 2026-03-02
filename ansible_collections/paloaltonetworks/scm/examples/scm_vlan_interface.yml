@@ -30,8 +30,10 @@
     - name: Create vlan_interface
       paloaltonetworks.scm.scm_vlan_interface:
         state: present
-        name: "ansible-test-vlan_interface"
+        name: "$ansible-test-vlan"
         folder: "All"
+        mtu: 1500
+        comment: "ansible test vlan interface"
       register: create_result
 
     - name: Show created vlan_interface
@@ -42,9 +44,10 @@
     - name: Update vlan_interface
       paloaltonetworks.scm.scm_vlan_interface:
         state: present
-        name: "ansible-test-vlan_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-test-vlan"
         folder: "All"
+        mtu: 1500
+        comment: "ansible test vlan interface updated"
       register: update_result
 
     - name: Show updated vlan_interface
@@ -55,7 +58,7 @@
     - name: Get vlan_interface by name
       paloaltonetworks.scm.scm_vlan_interface:
         state: gathered
-        name: "ansible-test-vlan_interface"
+        name: "$ansible-test-vlan"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +69,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get vlan_interface by name (info module)
       paloaltonetworks.scm.scm_vlan_interface_info:
-        name: "ansible-test-vlan_interface"
+        name: "$ansible-test-vlan"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +101,6 @@
     - name: Delete vlan_interface
       paloaltonetworks.scm.scm_vlan_interface:
         state: absent
-        name: "ansible-test-vlan_interface"
+        name: "$ansible-test-vlan"
         folder: "All"
 

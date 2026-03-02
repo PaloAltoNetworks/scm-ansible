@@ -3,7 +3,7 @@ __metaclass__ = type
 
 META_FIELDS = frozenset([
     'state', 'client_id', 'client_secret', 'tsg_id',
-    'id', 'folder', 'snippet', 'device',
+    'id', 'folder', 'snippet', 'device', 'position',
 ])
 
 
@@ -27,9 +27,29 @@ def get_container_params(module):
     return params
 
 
+def _sanitize_secrets(value):
+    """Recursively convert pydantic SecretStr values to plain strings.
+
+    Pydantic SecretStr is not JSON-serializable and does not compare equal
+    to plain strings, causing both serialization crashes and spurious updates.
+    """
+    try:
+        from pydantic import SecretStr
+        if isinstance(value, SecretStr):
+            return value.get_secret_value()
+    except ImportError:
+        pass
+    if isinstance(value, dict):
+        return {k: _sanitize_secrets(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_sanitize_secrets(v) for v in value]
+    return value
+
+
 def to_result_data(obj):
     """Convert SDK response object to dict, including the id field."""
     data = obj.to_dict() if hasattr(obj, 'to_dict') else {}
+    data = _sanitize_secrets(data)
     if hasattr(obj, 'id') and obj.id is not None:
         data['id'] = obj.id
     return data
@@ -57,8 +77,10 @@ def fields_differ(existing, payload):
     Handles list ordering for simple-value lists (tags, static members,
     source addresses, etc.) to avoid spurious updates when the API
     returns items in a different order than the user specified.
+    SecretStr fields are sanitized so they compare equal to plain strings.
     """
-    existing_dict = existing.to_dict() if hasattr(existing, 'to_dict') else {}
+    raw = existing.to_dict() if hasattr(existing, 'to_dict') else {}
+    existing_dict = _sanitize_secrets(raw)
     for key, value in payload.items():
         existing_value = existing_dict.get(key)
         if _normalize_value(existing_value) != _normalize_value(value):

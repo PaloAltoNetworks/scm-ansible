@@ -208,7 +208,7 @@ def main():
 
     if object_name:
         try:
-            obj = api.fetch_nat_rules(name=object_name, **container)
+            obj = api.fetch_nat_rules(name=object_name, position=module.params.get('position', 'pre'), **container)
             if obj:
                 result['nat_rules'] = [to_result_data(obj)]
                 result['total'] = 1
@@ -224,7 +224,6 @@ def main():
 
     list_kwargs = dict(container)
     list_kwargs['position'] = module.params.get('position', 'pre')
-
     gather_all = module.params.get('gather_all', False)
 
     if gather_all:

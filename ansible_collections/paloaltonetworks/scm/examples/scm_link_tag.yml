@@ -43,7 +43,6 @@
       paloaltonetworks.scm.scm_link_tag:
         state: present
         name: "ansible-test-link_tag"
-        description: "Updated by Ansible"
         folder: "All"
       register: update_result
 

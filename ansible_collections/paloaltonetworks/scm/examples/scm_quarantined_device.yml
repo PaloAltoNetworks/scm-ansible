@@ -16,8 +16,11 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_quarantined_device.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_quarantined_device' for full parameter docs.
+# NOTE: This resource uses host_id (not name) as the unique identifier.
+#       The module has known bugs:
+#         1. required_if references 'name' which is not in module_args (MODULE_BUG)
+#         2. delete calls api.delete_quarantined_devices(id=...) but SDK requires host_id (MODULE_BUG)
+#       Replace host_id with the actual device host ID from your environment.
 
 - name: Manage quarantined_devices in Strata Cloud Manager
   hosts: localhost
@@ -27,11 +30,12 @@
   tasks:
 
     # ── Create ──────────────────────────────────────────────
+    # NOTE: host_id is required. Use the actual host ID of the device to quarantine.
     - name: Create quarantined_device
       paloaltonetworks.scm.scm_quarantined_device:
         state: present
-        name: "ansible-test-quarantined_device"
-        # host_id: <required>
+        host_id: "your-device-host-id"
+        serial_number: "your-device-serial"
       register: create_result
 
     - name: Show created quarantined_device
@@ -48,8 +52,8 @@
         msg: "Found {{ list_result.total }} quarantined_devices"
 
     # ── Delete ──────────────────────────────────────────────
+    # NOTE: Delete uses host_id as the identifier (not name or id UUID)
     - name: Delete quarantined_device
       paloaltonetworks.scm.scm_quarantined_device:
         state: absent
-        name: "ansible-test-quarantined_device"
-
+        host_id: "your-device-host-id"

@@ -28,7 +28,7 @@
     - name: Create sdwan_error_correction_profile
       paloaltonetworks.scm.scm_sdwan_error_correction_profile:
         state: present
-        name: "ansible-test-sdwan_error_correction_profile"
+        name: "ansible-test-sdwan-ecp"
         folder: "All"
         activation_threshold: 2
         mode:
@@ -45,8 +45,7 @@
     - name: Update sdwan_error_correction_profile
       paloaltonetworks.scm.scm_sdwan_error_correction_profile:
         state: present
-        name: "ansible-test-sdwan_error_correction_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-sdwan-ecp"
         folder: "All"
         activation_threshold: 2
         mode:
@@ -63,8 +62,13 @@
     - name: Get sdwan_error_correction_profile by name
       paloaltonetworks.scm.scm_sdwan_error_correction_profile:
         state: gathered
-        name: "ansible-test-sdwan_error_correction_profile"
+        name: "ansible-test-sdwan-ecp"
         folder: "All"
+        activation_threshold: 3
+        mode:
+          forward_error_correction:
+            ratio: "10% (20:2)"
+            recovery_duration: 2000
       register: gathered_result
 
     - name: Show gathered sdwan_error_correction_profile
@@ -74,7 +78,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get sdwan_error_correction_profile by name (info module)
       paloaltonetworks.scm.scm_sdwan_error_correction_profile_info:
-        name: "ansible-test-sdwan_error_correction_profile"
+        name: "ansible-test-sdwan-ecp"
         folder: "All"
       register: info_by_name
 
@@ -106,6 +110,11 @@
     - name: Delete sdwan_error_correction_profile
       paloaltonetworks.scm.scm_sdwan_error_correction_profile:
         state: absent
-        name: "ansible-test-sdwan_error_correction_profile"
+        name: "ansible-test-sdwan-ecp"
         folder: "All"
+        activation_threshold: 3
+        mode:
+          forward_error_correction:
+            ratio: "10% (20:2)"
+            recovery_duration: 2000
 

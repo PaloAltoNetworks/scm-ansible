@@ -105,10 +105,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -179,6 +175,7 @@ def main():
                 result['subscribed_tenant'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'subscribed_tenant created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A subscribed_tenant object with this name already exists')
                 return
@@ -219,7 +216,7 @@ def main():
         module.log('scm: deleting subscribed_tenant')
         try:
             delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_subscribed_tenant_by_snipped_id(id=delete_id)
+            api.delete_subscribed_tenant_by_snipped_id(snippet_id=delete_id)
             result['changed'] = True
             result['msg'] = 'subscribed_tenant deleted successfully'
         except NotFoundError:

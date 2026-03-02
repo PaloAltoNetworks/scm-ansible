@@ -28,8 +28,8 @@
     - name: Create bgp_authentication_profile
       paloaltonetworks.scm.scm_bgp_authentication_profile:
         state: present
-        name: "ansible-test-bgp_authentication_profile"
-        folder: "All"
+        name: "ansible-test-bgp-auth"
+        folder: "Prisma Access"
         secret: "TestSecret123!"
       register: create_result
 
@@ -41,9 +41,8 @@
     - name: Update bgp_authentication_profile
       paloaltonetworks.scm.scm_bgp_authentication_profile:
         state: present
-        name: "ansible-test-bgp_authentication_profile"
-        description: "Updated by Ansible"
-        folder: "All"
+        name: "ansible-test-bgp-auth"
+        folder: "Prisma Access"
         secret: "TestSecret123!"
       register: update_result
 
@@ -55,8 +54,8 @@
     - name: Get bgp_authentication_profile by name
       paloaltonetworks.scm.scm_bgp_authentication_profile:
         state: gathered
-        name: "ansible-test-bgp_authentication_profile"
-        folder: "All"
+        name: "ansible-test-bgp-auth"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered bgp_authentication_profile
@@ -66,8 +65,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get bgp_authentication_profile by name (info module)
       paloaltonetworks.scm.scm_bgp_authentication_profile_info:
-        name: "ansible-test-bgp_authentication_profile"
-        folder: "All"
+        name: "ansible-test-bgp-auth"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -87,7 +86,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all bgp_authentication_profiles
       paloaltonetworks.scm.scm_bgp_authentication_profile_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show bgp_authentication_profiles count
@@ -98,6 +97,6 @@
     - name: Delete bgp_authentication_profile
       paloaltonetworks.scm.scm_bgp_authentication_profile:
         state: absent
-        name: "ansible-test-bgp_authentication_profile"
-        folder: "All"
+        name: "ansible-test-bgp-auth"
+        folder: "Prisma Access"
 

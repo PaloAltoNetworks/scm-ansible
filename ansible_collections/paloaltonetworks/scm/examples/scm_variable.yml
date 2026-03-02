@@ -28,7 +28,7 @@
     - name: Create variable
       paloaltonetworks.scm.scm_variable:
         state: present
-        name: "ansible-test-variable"
+        name: "$ansible-test-var"
         folder: "All"
         type: "ip-netmask"
         value: "10.0.0.0/24"
@@ -43,7 +43,7 @@
     - name: Update variable
       paloaltonetworks.scm.scm_variable:
         state: present
-        name: "ansible-test-variable"
+        name: "$ansible-test-var"
         description: "Updated by Ansible"
         folder: "All"
         type: "ip-netmask"
@@ -58,8 +58,10 @@
     - name: Get variable by name
       paloaltonetworks.scm.scm_variable:
         state: gathered
-        name: "ansible-test-variable"
+        name: "$ansible-test-var"
         folder: "All"
+        type: "ip-netmask"
+        value: "10.0.0.0/24"
       register: gathered_result
 
     - name: Show gathered variable
@@ -69,7 +71,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get variable by name (info module)
       paloaltonetworks.scm.scm_variable_info:
-        name: "ansible-test-variable"
+        name: "$ansible-test-var"
         folder: "All"
       register: info_by_name
 
@@ -101,6 +103,8 @@
     - name: Delete variable
       paloaltonetworks.scm.scm_variable:
         state: absent
-        name: "ansible-test-variable"
+        name: "$ansible-test-var"
         folder: "All"
+        type: "ip-netmask"
+        value: "10.0.0.0/24"
 

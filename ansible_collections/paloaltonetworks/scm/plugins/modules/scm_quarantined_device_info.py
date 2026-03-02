@@ -32,25 +32,6 @@ options:
             - Mutually exclusive with C(id).
         required: False
         type: str
-    limit:
-        description:
-            - Maximum number of results to return per page when listing resources.
-        required: False
-        type: int
-        default: 200
-    offset:
-        description:
-            - The starting offset for pagination when listing resources.
-        required: False
-        type: int
-        default: 0
-    gather_all:
-        description:
-            - If C(true), automatically paginate through all results.
-            - Overrides C(limit) and C(offset) when enabled.
-        required: False
-        type: bool
-        default: false
 '''
 
 EXAMPLES = r'''
@@ -98,9 +79,6 @@ def main():
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
         name=dict(type='str', required=False),
-        limit=dict(type='int', required=False, default=200),
-        offset=dict(type='int', required=False, default=0),
-        gather_all=dict(type='bool', required=False, default=False),
     )
 
     module = AnsibleModule(
@@ -147,45 +125,21 @@ def main():
 
     # Mode 3: List resources
 
-    list_kwargs = dict(container)
-
-    gather_all = module.params.get('gather_all', False)
-
-    if gather_all:
-        all_items = []
-        current_offset = 0
-        page_size = 200
-        while True:
-            list_kwargs['limit'] = page_size
-            list_kwargs['offset'] = current_offset
-            try:
-                response = api.list_quarantined_devices(**list_kwargs)
-            except Exception as e:
-                module.fail_json(msg='Error listing quarantined_devices: {0}'.format(str(e)))
-                return
-            if hasattr(response, 'data') and response.data:
-                all_items.extend(response.data)
-                if len(response.data) < page_size:
-                    break
-                current_offset += page_size
-            else:
-                break
-        result['quarantined_devices'] = [to_result_data(obj) for obj in all_items]
-        result['total'] = len(all_items)
+    list_kwargs = {}
+    try:
+        response = api.list_quarantined_devices(**list_kwargs)
+    except Exception as e:
+        module.fail_json(msg='Error listing quarantined_devices: {0}'.format(str(e)))
+        return
+    if hasattr(response, 'data') and response.data:
+        result['quarantined_devices'] = [to_result_data(obj) for obj in response.data]
+        result['total'] = len(response.data)
+    elif isinstance(response, list):
+        result['quarantined_devices'] = [to_result_data(obj) for obj in response]
+        result['total'] = len(response)
     else:
-        list_kwargs['limit'] = module.params.get('limit', 200)
-        list_kwargs['offset'] = module.params.get('offset', 0)
-        try:
-            response = api.list_quarantined_devices(**list_kwargs)
-        except Exception as e:
-            module.fail_json(msg='Error listing quarantined_devices: {0}'.format(str(e)))
-            return
-        if hasattr(response, 'data') and response.data:
-            result['quarantined_devices'] = [to_result_data(obj) for obj in response.data]
-            result['total'] = getattr(response, 'total', len(response.data))
-        elif isinstance(response, list):
-            result['quarantined_devices'] = [to_result_data(obj) for obj in response]
-            result['total'] = len(response)
+        result['quarantined_devices'] = []
+        result['total'] = 0
 
     module.exit_json(**result)
 

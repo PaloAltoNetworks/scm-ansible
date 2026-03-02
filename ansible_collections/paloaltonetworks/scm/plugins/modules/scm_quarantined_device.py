@@ -105,10 +105,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -179,6 +175,7 @@ def main():
                 result['quarantined_device'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'quarantined_device created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A quarantined_device object with this name already exists')
                 return
@@ -219,7 +216,7 @@ def main():
         module.log('scm: deleting quarantined_device')
         try:
             delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_quarantined_devices(id=delete_id)
+            api.delete_quarantined_devices(host_id=delete_id)
             result['changed'] = True
             result['msg'] = 'quarantined_device deleted successfully'
         except NotFoundError:

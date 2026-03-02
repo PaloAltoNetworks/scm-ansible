@@ -3,6 +3,22 @@
 #
 # Demonstrates: create, update, get by name, get by ID, list, delete
 #
+# INFRA_DEP: Service connections require deployment-specific infrastructure
+#   that must exist in your SCM tenant before running this playbook:
+#
+#   Required infrastructure (must be pre-created):
+#     - An IPSec tunnel (ipsec_tunnel field, required) — created in the
+#       "Service Connections" folder via IKE Crypto Profile + IKE Gateway +
+#       IPSec Tunnel chain
+#     - A valid cloud region (region field, required) — e.g. "us-central1-a",
+#       "us-east1-a", "us-west1-a", "eu-west1-a"
+#
+#   The folder for service connections is "Service Connections" (fixed).
+#
+#   Replace the placeholder values below with real values from your environment:
+#     - ipsec_tunnel: Name of your pre-created IPSec tunnel
+#     - region: The cloud region where your service connection terminates
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
 #
@@ -16,13 +32,18 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_service_connection.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_service_connection' for full parameter docs.
+# Run 'ansible-doc paloaltonetworks.scm.scm_service_connection' for full parameter docs.
 
 - name: Manage service_connections in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
+
+  vars:
+    # Replace with your actual pre-created IPSec tunnel name
+    ipsec_tunnel_name: "your-ipsec-tunnel-name"
+    # Replace with your actual cloud region
+    sc_region: "us-central1-a"
 
   tasks:
 
@@ -30,9 +51,14 @@
     - name: Create service_connection
       paloaltonetworks.scm.scm_service_connection:
         state: present
-        name: "ansible-test-service_connection"
-        # ipsec_tunnel: <required>
-        # region: <required>
+        name: "ansible-test-service-connection"
+        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
+        region: "{{ sc_region }}"
+        onboarding_type: "classic"
+        subnets:
+          - "10.0.0.0/24"
+          - "10.0.1.0/24"
+        source_nat: true
       register: create_result
 
     - name: Show created service_connection
@@ -43,8 +69,15 @@
     - name: Update service_connection
       paloaltonetworks.scm.scm_service_connection:
         state: present
-        name: "ansible-test-service_connection"
-        description: "Updated by Ansible"
+        name: "ansible-test-service-connection"
+        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
+        region: "{{ sc_region }}"
+        onboarding_type: "classic"
+        subnets:
+          - "10.0.0.0/24"
+          - "10.0.1.0/24"
+          - "192.168.0.0/16"
+        source_nat: true
       register: update_result
 
     - name: Show updated service_connection
@@ -55,7 +88,9 @@
     - name: Get service_connection by name
       paloaltonetworks.scm.scm_service_connection:
         state: gathered
-        name: "ansible-test-service_connection"
+        name: "ansible-test-service-connection"
+        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
+        region: "{{ sc_region }}"
       register: gathered_result
 
     - name: Show gathered service_connection
@@ -65,7 +100,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get service_connection by name (info module)
       paloaltonetworks.scm.scm_service_connection_info:
-        name: "ansible-test-service_connection"
+        name: "ansible-test-service-connection"
       register: info_by_name
 
     - name: Show info result
@@ -77,10 +112,12 @@
       paloaltonetworks.scm.scm_service_connection_info:
         id: "{{ gathered_result.service_connection.id }}"
       register: info_by_id
+      when: gathered_result.service_connection.id is defined
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.service_connections
+      when: gathered_result.service_connection.id is defined
 
     # ── List all ────────────────────────────────────────────
     - name: List all service_connections
@@ -95,5 +132,6 @@
     - name: Delete service_connection
       paloaltonetworks.scm.scm_service_connection:
         state: absent
-        name: "ansible-test-service_connection"
-
+        name: "ansible-test-service-connection"
+        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
+        region: "{{ sc_region }}"

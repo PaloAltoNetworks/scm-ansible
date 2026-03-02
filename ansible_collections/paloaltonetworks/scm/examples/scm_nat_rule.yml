@@ -28,13 +28,14 @@
     - name: Create nat_rule
       paloaltonetworks.scm.scm_nat_rule:
         state: present
-        name: "ansible-test-nat_rule"
+        name: "ansible-test-nat-rule"
         folder: "All"
-        from_: ["any"]
-        to_: ["untrust"]
+        description: "Test NAT rule for CRUD"
+        var_from: ["any"]
+        to: ["untrust"]
         source: ["any"]
         destination: ["any"]
-        service: "service-https"
+        service: "any"
         nat_type: "ipv4"
         destination_translation:
           translated_address: "10.1.1.10"
@@ -56,25 +57,19 @@
     - name: Update nat_rule
       paloaltonetworks.scm.scm_nat_rule:
         state: present
-        name: "ansible-test-nat_rule"
-        description: "Updated by Ansible"
+        name: "ansible-test-nat-rule"
         folder: "All"
-        from_: ["any"]
-        to_: ["untrust"]
+        description: "Updated NAT rule"
+        var_from: ["any"]
+        to: ["untrust"]
         source: ["any"]
         destination: ["any"]
-        service: "service-https"
+        service: "any"
         nat_type: "ipv4"
-        destination_translation:
-          translated_address: "10.1.1.10"
-          translated_port: 443
-          dns_rewrite:
-            direction: "reverse"
         source_translation:
           dynamic_ip_and_port:
             translated_address:
             - "10.1.1.20"
-            - "10.2.2.23"
       register: update_result
 
     - name: Show updated nat_rule
@@ -85,8 +80,13 @@
     - name: Get nat_rule by name
       paloaltonetworks.scm.scm_nat_rule:
         state: gathered
-        name: "ansible-test-nat_rule"
+        name: "ansible-test-nat-rule"
         folder: "All"
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "any"
       register: gathered_result
 
     - name: Show gathered nat_rule
@@ -96,7 +96,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get nat_rule by name (info module)
       paloaltonetworks.scm.scm_nat_rule_info:
-        name: "ansible-test-nat_rule"
+        name: "ansible-test-nat-rule"
         folder: "All"
       register: info_by_name
 
@@ -128,6 +128,10 @@
     - name: Delete nat_rule
       paloaltonetworks.scm.scm_nat_rule:
         state: absent
-        name: "ansible-test-nat_rule"
+        name: "ansible-test-nat-rule"
         folder: "All"
-
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "any"

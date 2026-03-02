@@ -28,7 +28,7 @@
     - name: Create route_community_list
       paloaltonetworks.scm.scm_route_community_list:
         state: present
-        name: "ansible-test-route_community_list"
+        name: "ansible-test-rt-comm"
         folder: "All"
         type:
           regular:
@@ -47,8 +47,7 @@
     - name: Update route_community_list
       paloaltonetworks.scm.scm_route_community_list:
         state: present
-        name: "ansible-test-route_community_list"
-        description: "Updated by Ansible"
+        name: "ansible-test-rt-comm"
         folder: "All"
         type:
           regular:
@@ -67,7 +66,7 @@
     - name: Get route_community_list by name
       paloaltonetworks.scm.scm_route_community_list:
         state: gathered
-        name: "ansible-test-route_community_list"
+        name: "ansible-test-rt-comm"
         folder: "All"
       register: gathered_result
 
@@ -78,7 +77,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get route_community_list by name (info module)
       paloaltonetworks.scm.scm_route_community_list_info:
-        name: "ansible-test-route_community_list"
+        name: "ansible-test-rt-comm"
         folder: "All"
       register: info_by_name
 
@@ -110,6 +109,6 @@
     - name: Delete route_community_list
       paloaltonetworks.scm.scm_route_community_list:
         state: absent
-        name: "ansible-test-route_community_list"
+        name: "ansible-test-rt-comm"
         folder: "All"
 

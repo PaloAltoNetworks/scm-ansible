@@ -28,7 +28,7 @@
     - name: Create sdwan_path_quality_profile
       paloaltonetworks.scm.scm_sdwan_path_quality_profile:
         state: present
-        name: "ansible-test-sdwan_path_quality_profile"
+        name: "ansible-test-sdwan-pqp"
         folder: "All"
         metric:
           jitter:
@@ -50,8 +50,7 @@
     - name: Update sdwan_path_quality_profile
       paloaltonetworks.scm.scm_sdwan_path_quality_profile:
         state: present
-        name: "ansible-test-sdwan_path_quality_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-sdwan-pqp"
         folder: "All"
         metric:
           jitter:
@@ -73,8 +72,18 @@
     - name: Get sdwan_path_quality_profile by name
       paloaltonetworks.scm.scm_sdwan_path_quality_profile:
         state: gathered
-        name: "ansible-test-sdwan_path_quality_profile"
+        name: "ansible-test-sdwan-pqp"
         folder: "All"
+        metric:
+          jitter:
+            threshold: 200
+            sensitivity: "high"
+          latency:
+            threshold: 150
+            sensitivity: "high"
+          pkt_loss:
+            threshold: 2
+            sensitivity: "high"
       register: gathered_result
 
     - name: Show gathered sdwan_path_quality_profile
@@ -84,7 +93,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get sdwan_path_quality_profile by name (info module)
       paloaltonetworks.scm.scm_sdwan_path_quality_profile_info:
-        name: "ansible-test-sdwan_path_quality_profile"
+        name: "ansible-test-sdwan-pqp"
         folder: "All"
       register: info_by_name
 
@@ -116,6 +125,16 @@
     - name: Delete sdwan_path_quality_profile
       paloaltonetworks.scm.scm_sdwan_path_quality_profile:
         state: absent
-        name: "ansible-test-sdwan_path_quality_profile"
+        name: "ansible-test-sdwan-pqp"
         folder: "All"
+        metric:
+          jitter:
+            threshold: 200
+            sensitivity: "high"
+          latency:
+            threshold: 150
+            sensitivity: "high"
+          pkt_loss:
+            threshold: 2
+            sensitivity: "high"
 

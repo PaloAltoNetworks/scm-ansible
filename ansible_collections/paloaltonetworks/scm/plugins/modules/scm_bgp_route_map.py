@@ -230,6 +230,7 @@ def main():
                 result['bgp_route_map'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'bgp_route_map created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A bgp_route_map object with this name already exists')
                 return
@@ -263,8 +264,27 @@ def main():
                 result['changed'] = True
                 result['msg'] = 'bgp_route_map updated successfully'
             except Exception as e:
-                module.fail_json(msg='Failed to update bgp_route_map: {0}'.format(str(e)))
-                return
+                # Some APIs return a JSON list for update responses (SDK deserialization bug).
+                # Detect this pattern, parse manually, and continue.
+                err_str = str(e)
+                if 'input_type=list' in err_str and ('Input should be a valid dictionary' in err_str or 'model_type' in err_str):
+                    try:
+                        import json as _json
+                        _raw = api.update_bgp_route_maps_by_id_without_preload_content(id=update_id, bgp_route_maps=model)
+                        _data = _json.loads(_raw.data)
+                        if isinstance(_data, list) and _data:
+                            _data = _data[0]
+                        from scm.network_services.models.bgp_route_maps import BgpRouteMaps
+                        _parsed = BgpRouteMaps.from_dict(_data) if isinstance(_data, dict) else None
+                        result['bgp_route_map'] = to_result_data(_parsed) if _parsed else _data
+                        result['changed'] = True
+                        result['msg'] = 'bgp_route_map updated successfully'
+                    except Exception as e2:
+                        module.fail_json(msg='Failed to update bgp_route_map: {0}'.format(str(e)))
+                        return
+                else:
+                    module.fail_json(msg='Failed to update bgp_route_map: {0}'.format(str(e)))
+                    return
 
 
     # Handle absent state

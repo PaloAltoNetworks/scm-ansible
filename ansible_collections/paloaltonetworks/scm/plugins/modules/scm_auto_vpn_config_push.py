@@ -99,10 +99,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -173,6 +169,7 @@ def main():
                 result['auto_vpn_config_push'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'auto_vpn_config_push created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A auto_vpn_config_push object with this name already exists')
                 return

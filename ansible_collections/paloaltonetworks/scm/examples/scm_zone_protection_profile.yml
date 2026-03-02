@@ -28,9 +28,11 @@
     - name: Create zone_protection_profile
       paloaltonetworks.scm.scm_zone_protection_profile:
         state: present
-        name: "ansible-test-zone_protection_profile"
+        name: "ansible-test-zoneprot"
         folder: "All"
         description: "Created by Ansible"
+        discard_icmp_embedded_error: true
+        icmp_frag_discard: true
       register: create_result
 
     - name: Show created zone_protection_profile
@@ -41,9 +43,11 @@
     - name: Update zone_protection_profile
       paloaltonetworks.scm.scm_zone_protection_profile:
         state: present
-        name: "ansible-test-zone_protection_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-zoneprot"
         folder: "All"
+        description: "Updated by Ansible"
+        discard_icmp_embedded_error: true
+        icmp_frag_discard: false
       register: update_result
 
     - name: Show updated zone_protection_profile
@@ -54,7 +58,7 @@
     - name: Get zone_protection_profile by name
       paloaltonetworks.scm.scm_zone_protection_profile:
         state: gathered
-        name: "ansible-test-zone_protection_profile"
+        name: "ansible-test-zoneprot"
         folder: "All"
       register: gathered_result
 
@@ -65,7 +69,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get zone_protection_profile by name (info module)
       paloaltonetworks.scm.scm_zone_protection_profile_info:
-        name: "ansible-test-zone_protection_profile"
+        name: "ansible-test-zoneprot"
         folder: "All"
       register: info_by_name
 
@@ -97,6 +101,5 @@
     - name: Delete zone_protection_profile
       paloaltonetworks.scm.scm_zone_protection_profile:
         state: absent
-        name: "ansible-test-zone_protection_profile"
+        name: "ansible-test-zoneprot"
         folder: "All"
-

@@ -5,6 +5,7 @@
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
+#   A certificate_profile must exist (e.g. "ansible-test-certprof" in "Shared")
 #
 # Authentication (pick one):
 #   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
@@ -16,8 +17,6 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_mfa_server.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_mfa_server' for full parameter docs.
 
 - name: Manage mfa_servers in Strata Cloud Manager
   hosts: localhost
@@ -30,9 +29,16 @@
     - name: Create mfa_server
       paloaltonetworks.scm.scm_mfa_server:
         state: present
-        name: "ansible-test-mfa_server"
+        name: "ansible-test-mfa"
         folder: "All"
-        # mfa_cert_profile: <required>
+        mfa_cert_profile: "ansible-test-certprof"
+        mfa_vendor_type:
+          duo_security_v2:
+            duo_api_host: "api-12345678.duosecurity.com"
+            duo_baseuri: "https://api-12345678.duosecurity.com"
+            duo_integration_key: "DIXXXXXXXXXXXXXXXXXX"
+            duo_secret_key: "1234567890abcdef"
+            duo_timeout: 30
       register: create_result
 
     - name: Show created mfa_server
@@ -43,9 +49,16 @@
     - name: Update mfa_server
       paloaltonetworks.scm.scm_mfa_server:
         state: present
-        name: "ansible-test-mfa_server"
-        description: "Updated by Ansible"
+        name: "ansible-test-mfa"
         folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"
+        mfa_vendor_type:
+          duo_security_v2:
+            duo_api_host: "api-99999999.duosecurity.com"
+            duo_baseuri: "https://api-99999999.duosecurity.com"
+            duo_integration_key: "DIXXXXXXXXXXXXXXXXXX"
+            duo_secret_key: "1234567890abcdef"
+            duo_timeout: 30
       register: update_result
 
     - name: Show updated mfa_server
@@ -56,8 +69,9 @@
     - name: Get mfa_server by name
       paloaltonetworks.scm.scm_mfa_server:
         state: gathered
-        name: "ansible-test-mfa_server"
+        name: "ansible-test-mfa"
         folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"
       register: gathered_result
 
     - name: Show gathered mfa_server
@@ -67,7 +81,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get mfa_server by name (info module)
       paloaltonetworks.scm.scm_mfa_server_info:
-        name: "ansible-test-mfa_server"
+        name: "ansible-test-mfa"
         folder: "All"
       register: info_by_name
 
@@ -99,6 +113,6 @@
     - name: Delete mfa_server
       paloaltonetworks.scm.scm_mfa_server:
         state: absent
-        name: "ansible-test-mfa_server"
+        name: "ansible-test-mfa"
         folder: "All"
-
+        mfa_cert_profile: "ansible-test-certprof"

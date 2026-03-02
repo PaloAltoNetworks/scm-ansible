@@ -1,7 +1,12 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_management_interface_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: get by ID, update, list
+#
+# NOTE: scm_management_interface_setting is a SINGLETON resource — it cannot be
+#       created or deleted via API. There is exactly one management interface
+#       settings object per folder. Manage it by fetching its ID first, then
+#       updating in place.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -16,65 +21,52 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_management_interface_setting.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_management_interface_setting' for full parameter docs.
+# Run 'ansible-doc paloaltonetworks.scm.scm_management_interface_setting' for full parameter docs.
 
-- name: Manage management_interface_settings in Strata Cloud Manager
+- name: Manage management_interface_setting in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create management_interface_setting
-      paloaltonetworks.scm.scm_management_interface_setting:
-        state: present
-        name: "ansible-test-management_interface_setting"
-        folder: "All"
-      register: create_result
+    # ── List to discover the existing singleton object ───────────
+    - name: List all management_interface_settings (singleton per folder)
+      paloaltonetworks.scm.scm_management_interface_setting_info:
+        folder: "Prisma Access"
+      register: list_result
 
-    - name: Show created management_interface_setting
+    - name: Show management_interface_settings list
       ansible.builtin.debug:
-        var: create_result.management_interface_setting
+        var: list_result.management_interface_settings
 
-    # ── Update ──────────────────────────────────────────────
-    - name: Update management_interface_setting
-      paloaltonetworks.scm.scm_management_interface_setting:
-        state: present
-        name: "ansible-test-management_interface_setting"
-        description: "Updated by Ansible"
-        folder: "All"
-      register: update_result
-
-    - name: Show updated management_interface_setting
-      ansible.builtin.debug:
-        var: update_result.management_interface_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
+    # ── Get by ID (info module) ─────────────────────────────────
     - name: Get management_interface_setting by ID (info module)
       paloaltonetworks.scm.scm_management_interface_setting_info:
-        id: "your-object-uuid-here"
+        id: "{{ list_result.management_interface_settings[0].id }}"
       register: info_by_id
+      when: list_result.management_interface_settings | length > 0
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.management_interface_settings
+      when: list_result.management_interface_settings | length > 0
 
-    # ── List all ────────────────────────────────────────────
-    - name: List all management_interface_settings
-      paloaltonetworks.scm.scm_management_interface_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show management_interface_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} management_interface_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete management_interface_setting
+    # ── Update (state=present with id) ──────────────────────────
+    # Update the singleton object using its server-assigned ID.
+    # The 'management_interface' field contains interface configuration.
+    - name: Update management_interface_setting by ID
       paloaltonetworks.scm.scm_management_interface_setting:
-        state: absent
-        name: "ansible-test-management_interface_setting"
-        folder: "All"
+        state: present
+        id: "{{ list_result.management_interface_settings[0].id }}"
+        folder: "Prisma Access"
+        # management_interface:
+        #   management_interface:
+        #     mgmt_type: "dhcp-client"
+      register: update_result
+      when: list_result.management_interface_settings | length > 0
 
+    - name: Show updated management_interface_setting
+      ansible.builtin.debug:
+        var: update_result.management_interface_setting
+      when: list_result.management_interface_settings | length > 0

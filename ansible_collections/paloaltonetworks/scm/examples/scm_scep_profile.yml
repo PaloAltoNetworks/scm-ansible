@@ -50,7 +50,6 @@
       paloaltonetworks.scm.scm_scep_profile:
         state: present
         name: "ansible-test-scep_profile"
-        description: "Updated by Ansible"
         folder: "All"
         scep_url: "https://scep.example.com/"
         ca_identity_name: "Default"
@@ -73,6 +72,15 @@
         state: gathered
         name: "ansible-test-scep_profile"
         folder: "All"
+        scep_url: "https://scep.example.com/"
+        ca_identity_name: "Default"
+        digest: "sha256"
+        subject: "CN=$USERNAME"
+        algorithm:
+          rsa:
+            rsa_nbits: "2048"
+        scep_challenge:
+          fixed: "mypassword123"
       register: gathered_result
 
     - name: Show gathered scep_profile
@@ -116,4 +124,13 @@
         state: absent
         name: "ansible-test-scep_profile"
         folder: "All"
+        scep_url: "https://scep.example.com/"
+        ca_identity_name: "Default"
+        digest: "sha256"
+        subject: "CN=$USERNAME"
+        algorithm:
+          rsa:
+            rsa_nbits: "2048"
+        scep_challenge:
+          fixed: "mypassword123"
 

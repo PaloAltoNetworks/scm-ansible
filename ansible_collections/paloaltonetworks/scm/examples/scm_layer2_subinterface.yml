@@ -16,7 +16,9 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_layer2_subinterface.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
+# NOTE: Layer 2 subinterfaces require a parent ethernet interface with layer2 mode.
+#       Subinterface names follow the convention: <parent_name>.<vlan_tag>
+#       Both parent interface names and subinterface names must start with '$'.
 #       Run 'ansible-doc paloaltonetworks.scm.scm_layer2_subinterface' for full parameter docs.
 
 - name: Manage layer2_subinterfaces in Strata Cloud Manager
@@ -26,13 +28,34 @@
 
   tasks:
 
+    # ── Create parent ethernet interface (Layer 2 mode) ──────
+    - name: Create parent L2 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-l2-parent"
+        folder: "All"
+        comment: "Parent interface for L2 subinterface test"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer2: {}
+      register: parent_result
+
+    - name: Show created parent interface
+      ansible.builtin.debug:
+        var: parent_result.ethernet_interface
+
     # ── Create ──────────────────────────────────────────────
+    # NOTE: Subinterface name must be <parent_interface_name>.<vlan_tag>
+    #       vlan_tag is required and is a string (e.g. "200")
     - name: Create layer2_subinterface
       paloaltonetworks.scm.scm_layer2_subinterface:
         state: present
-        name: "ansible-test-layer2_subinterface"
+        name: "$ansible-l2-parent.200"
         folder: "All"
-        # vlan_tag: <required>
+        parent_interface: "$ansible-l2-parent"
+        vlan_tag: "200"
+        comment: "Managed by Ansible"
       register: create_result
 
     - name: Show created layer2_subinterface
@@ -43,9 +66,11 @@
     - name: Update layer2_subinterface
       paloaltonetworks.scm.scm_layer2_subinterface:
         state: present
-        name: "ansible-test-layer2_subinterface"
-        description: "Updated by Ansible"
+        name: "$ansible-l2-parent.200"
         folder: "All"
+        parent_interface: "$ansible-l2-parent"
+        vlan_tag: "200"
+        comment: "Updated by Ansible"
       register: update_result
 
     - name: Show updated layer2_subinterface
@@ -53,11 +78,13 @@
         var: update_result.layer2_subinterface
 
     # ── Get by name (CRUD module, state=gathered) ───────────
+    # NOTE: vlan_tag is required by the module even for state=gathered (module behavior)
     - name: Get layer2_subinterface by name
       paloaltonetworks.scm.scm_layer2_subinterface:
         state: gathered
-        name: "ansible-test-layer2_subinterface"
+        name: "$ansible-l2-parent.200"
         folder: "All"
+        vlan_tag: "200"
       register: gathered_result
 
     - name: Show gathered layer2_subinterface
@@ -67,7 +94,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get layer2_subinterface by name (info module)
       paloaltonetworks.scm.scm_layer2_subinterface_info:
-        name: "ansible-test-layer2_subinterface"
+        name: "$ansible-l2-parent.200"
         folder: "All"
       register: info_by_name
 
@@ -96,9 +123,16 @@
         msg: "Found {{ list_result.total }} layer2_subinterfaces"
 
     # ── Delete ──────────────────────────────────────────────
+    # NOTE: vlan_tag is required by the module even for state=absent (module behavior)
     - name: Delete layer2_subinterface
       paloaltonetworks.scm.scm_layer2_subinterface:
         state: absent
-        name: "ansible-test-layer2_subinterface"
+        name: "$ansible-l2-parent.200"
         folder: "All"
+        vlan_tag: "200"
 
+    - name: Delete parent L2 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "$ansible-l2-parent"
+        folder: "All"

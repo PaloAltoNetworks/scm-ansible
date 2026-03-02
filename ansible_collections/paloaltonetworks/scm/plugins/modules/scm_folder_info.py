@@ -174,8 +174,7 @@ def main():
 
     # Mode 3: List resources
 
-    list_kwargs = dict(container)
-
+    list_kwargs = {}
     gather_all = module.params.get('gather_all', False)
 
     if gather_all:

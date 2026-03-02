@@ -16,7 +16,9 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_layer3_subinterface.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
+# NOTE: Layer 3 subinterfaces require a parent ethernet interface with layer3 mode.
+#       Subinterface names follow the convention: <parent_name>.<tag>
+#       Both parent interface names and subinterface names must start with '$'.
 #       Run 'ansible-doc paloaltonetworks.scm.scm_layer3_subinterface' for full parameter docs.
 
 - name: Manage layer3_subinterfaces in Strata Cloud Manager
@@ -26,12 +28,37 @@
 
   tasks:
 
+    # ── Create parent ethernet interface (Layer 3 mode) ──────
+    - name: Create parent L3 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-l3-parent"
+        folder: "All"
+        comment: "Parent interface for L3 subinterface test"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer3: {}
+      register: parent_result
+
+    - name: Show created parent interface
+      ansible.builtin.debug:
+        var: parent_result.ethernet_interface
+
     # ── Create ──────────────────────────────────────────────
+    # NOTE: Subinterface name must be <parent_interface_name>.<tag>
+    #       tag is an integer VLAN tag (e.g. 200)
     - name: Create layer3_subinterface
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: present
-        name: "ansible-test-layer3_subinterface"
+        name: "$ansible-l3-parent.200"
         folder: "All"
+        parent_interface: "$ansible-l3-parent"
+        tag: 200
+        comment: "Managed by Ansible"
+        mtu: 1500
+        ip:
+          - name: "192.168.10.1/24"
       register: create_result
 
     - name: Show created layer3_subinterface
@@ -42,9 +69,14 @@
     - name: Update layer3_subinterface
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: present
-        name: "ansible-test-layer3_subinterface"
-        description: "Updated by Ansible"
+        name: "$ansible-l3-parent.200"
         folder: "All"
+        parent_interface: "$ansible-l3-parent"
+        tag: 200
+        comment: "Updated by Ansible"
+        mtu: 1400
+        ip:
+          - name: "192.168.10.1/24"
       register: update_result
 
     - name: Show updated layer3_subinterface
@@ -55,7 +87,7 @@
     - name: Get layer3_subinterface by name
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: gathered
-        name: "ansible-test-layer3_subinterface"
+        name: "$ansible-l3-parent.200"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +98,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get layer3_subinterface by name (info module)
       paloaltonetworks.scm.scm_layer3_subinterface_info:
-        name: "ansible-test-layer3_subinterface"
+        name: "$ansible-l3-parent.200"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +130,11 @@
     - name: Delete layer3_subinterface
       paloaltonetworks.scm.scm_layer3_subinterface:
         state: absent
-        name: "ansible-test-layer3_subinterface"
+        name: "$ansible-l3-parent.200"
         folder: "All"
 
+    - name: Delete parent L3 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "$ansible-l3-parent"
+        folder: "All"

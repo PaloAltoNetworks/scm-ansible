@@ -48,11 +48,11 @@
         var: create_result.logical_router
 
     # ── Update ──────────────────────────────────────────────
+    # NOTE: logical_router module has no 'description' field; update routing_stack or vrf instead
     - name: Update logical_router
       paloaltonetworks.scm.scm_logical_router:
         state: present
         name: "ansible-test-logical_router"
-        description: "Updated by Ansible"
         folder: "All"
         routing_stack: "advanced"
         vrf:
@@ -62,9 +62,9 @@
               static_route:
               - name: "default-route"
                 destination: "0.0.0.0/0"
-                admin_dist: 10
+                admin_dist: 20
                 nexthop:
-                  ip_address: "198.18.1.1"
+                  ip_address: "198.18.1.254"
       register: update_result
 
     - name: Show updated logical_router

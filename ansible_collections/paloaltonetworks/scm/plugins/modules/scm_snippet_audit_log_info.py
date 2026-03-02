@@ -32,25 +32,6 @@ options:
             - Mutually exclusive with C(id).
         required: False
         type: str
-    limit:
-        description:
-            - Maximum number of results to return per page when listing resources.
-        required: False
-        type: int
-        default: 200
-    offset:
-        description:
-            - The starting offset for pagination when listing resources.
-        required: False
-        type: int
-        default: 0
-    gather_all:
-        description:
-            - If C(true), automatically paginate through all results.
-            - Overrides C(limit) and C(offset) when enabled.
-        required: False
-        type: bool
-        default: false
 '''
 
 EXAMPLES = r'''
@@ -98,9 +79,6 @@ def main():
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
         name=dict(type='str', required=False),
-        limit=dict(type='int', required=False, default=200),
-        offset=dict(type='int', required=False, default=0),
-        gather_all=dict(type='bool', required=False, default=False),
     )
 
     module = AnsibleModule(

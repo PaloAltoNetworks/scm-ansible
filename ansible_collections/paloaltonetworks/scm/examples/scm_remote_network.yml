@@ -6,6 +6,9 @@
 # Prerequisites:
 #   pip install scm-python ansible-core
 #
+# NOTE: This resource requires an existing IPsec tunnel and a valid SPN name
+#       in your deployment. Update ipsec_tunnel and spn_name to match your environment.
+#
 # Authentication (pick one):
 #   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
 #   -- or --
@@ -16,8 +19,6 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_remote_network.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_remote_network' for full parameter docs.
 
 - name: Manage remote_networks in Strata Cloud Manager
   hosts: localhost
@@ -30,10 +31,13 @@
     - name: Create remote_network
       paloaltonetworks.scm.scm_remote_network:
         state: present
-        name: "ansible-test-remote_network"
-        folder: "All"
-        # license_type: <required>
-        # region: <required>
+        name: "ansible-test-remotenet"
+        folder: "Remote Networks"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"
+        subnets:
+        - "192.168.100.0/24"
+        spn_name: "us-west-dakota"
       register: create_result
 
     - name: Show created remote_network
@@ -44,9 +48,14 @@
     - name: Update remote_network
       paloaltonetworks.scm.scm_remote_network:
         state: present
-        name: "ansible-test-remote_network"
-        description: "Updated by Ansible"
-        folder: "All"
+        name: "ansible-test-remotenet"
+        folder: "Remote Networks"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"
+        subnets:
+        - "192.168.100.0/24"
+        - "192.168.101.0/24"
+        spn_name: "us-west-dakota"
       register: update_result
 
     - name: Show updated remote_network
@@ -57,8 +66,10 @@
     - name: Get remote_network by name
       paloaltonetworks.scm.scm_remote_network:
         state: gathered
-        name: "ansible-test-remote_network"
-        folder: "All"
+        name: "ansible-test-remotenet"
+        folder: "Remote Networks"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"
       register: gathered_result
 
     - name: Show gathered remote_network
@@ -68,8 +79,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get remote_network by name (info module)
       paloaltonetworks.scm.scm_remote_network_info:
-        name: "ansible-test-remote_network"
-        folder: "All"
+        name: "ansible-test-remotenet"
+        folder: "Remote Networks"
       register: info_by_name
 
     - name: Show info result
@@ -89,7 +100,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all remote_networks
       paloaltonetworks.scm.scm_remote_network_info:
-        folder: "All"
+        folder: "Remote Networks"
       register: list_result
 
     - name: Show remote_networks count
@@ -100,6 +111,7 @@
     - name: Delete remote_network
       paloaltonetworks.scm.scm_remote_network:
         state: absent
-        name: "ansible-test-remote_network"
-        folder: "All"
-
+        name: "ansible-test-remotenet"
+        folder: "Remote Networks"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"

@@ -147,10 +147,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -230,6 +226,7 @@ def main():
                 result['snippet_audit_log'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'snippet_audit_log created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A snippet_audit_log object with this name already exists')
                 return

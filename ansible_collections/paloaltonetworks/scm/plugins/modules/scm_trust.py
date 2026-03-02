@@ -123,10 +123,6 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
-        ],
     )
 
     if not HAS_SCM:
@@ -197,6 +193,7 @@ def main():
                 result['trust'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'trust created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A trust object with this name already exists')
                 return
@@ -237,7 +234,7 @@ def main():
         module.log('scm: deleting trust')
         try:
             delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_trust(id=delete_id)
+            api.delete_trust(trustids=delete_id)
             result['changed'] = True
             result['msg'] = 'trust deleted successfully'
         except NotFoundError:

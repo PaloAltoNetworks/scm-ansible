@@ -3,6 +3,10 @@
 #
 # Demonstrates: create, list, delete
 #
+# NOTE: bandwidth_allocation uses global scope (no folder). Name must match
+#       an existing aggregated bandwidth region in your deployment.
+#       This resource does not support idempotent updates (create-once).
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
 #
@@ -16,8 +20,6 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_bandwidth_allocation.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_bandwidth_allocation' for full parameter docs.
 
 - name: Manage bandwidth_allocations in Strata Cloud Manager
   hosts: localhost
@@ -30,13 +32,23 @@
     - name: Create bandwidth_allocation
       paloaltonetworks.scm.scm_bandwidth_allocation:
         state: present
-        name: "ansible-test-bandwidth_allocation"
-        # allocated_bandwidth: <required>
+        name: "ansible-test-bw-alloc"
+        allocated_bandwidth: 100
       register: create_result
 
     - name: Show created bandwidth_allocation
       ansible.builtin.debug:
         var: create_result.bandwidth_allocation
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get bandwidth_allocation by name (info module)
+      paloaltonetworks.scm.scm_bandwidth_allocation_info:
+        name: "ansible-test-bw-alloc"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.bandwidth_allocations
 
     # ── List all ────────────────────────────────────────────
     - name: List all bandwidth_allocations
@@ -51,5 +63,5 @@
     - name: Delete bandwidth_allocation
       paloaltonetworks.scm.scm_bandwidth_allocation:
         state: absent
-        name: "ansible-test-bandwidth_allocation"
-
+        name: "ansible-test-bw-alloc"
+        allocated_bandwidth: 100

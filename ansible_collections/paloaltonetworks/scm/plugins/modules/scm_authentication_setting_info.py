@@ -50,25 +50,6 @@ options:
             - Mutually exclusive with C(folder) and C(snippet).
         required: False
         type: str
-    limit:
-        description:
-            - Maximum number of results to return per page when listing resources.
-        required: False
-        type: int
-        default: 200
-    offset:
-        description:
-            - The starting offset for pagination when listing resources.
-        required: False
-        type: int
-        default: 0
-    gather_all:
-        description:
-            - If C(true), automatically paginate through all results.
-            - Overrides C(limit) and C(offset) when enabled.
-        required: False
-        type: bool
-        default: false
 '''
 
 EXAMPLES = r'''
@@ -137,9 +118,6 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
-        limit=dict(type='int', required=False, default=200),
-        offset=dict(type='int', required=False, default=0),
-        gather_all=dict(type='bool', required=False, default=False),
     )
 
     module = AnsibleModule(
@@ -201,44 +179,20 @@ def main():
     # Mode 3: List resources
 
     list_kwargs = dict(container)
-
-    gather_all = module.params.get('gather_all', False)
-
-    if gather_all:
-        all_items = []
-        current_offset = 0
-        page_size = 200
-        while True:
-            list_kwargs['limit'] = page_size
-            list_kwargs['offset'] = current_offset
-            try:
-                response = api.list_authentication_settings(**list_kwargs)
-            except Exception as e:
-                module.fail_json(msg='Error listing authentication_settings: {0}'.format(str(e)))
-                return
-            if hasattr(response, 'data') and response.data:
-                all_items.extend(response.data)
-                if len(response.data) < page_size:
-                    break
-                current_offset += page_size
-            else:
-                break
-        result['authentication_settings'] = [to_result_data(obj) for obj in all_items]
-        result['total'] = len(all_items)
+    try:
+        response = api.list_authentication_settings(**list_kwargs)
+    except Exception as e:
+        module.fail_json(msg='Error listing authentication_settings: {0}'.format(str(e)))
+        return
+    if hasattr(response, 'data') and response.data:
+        result['authentication_settings'] = [to_result_data(obj) for obj in response.data]
+        result['total'] = len(response.data)
+    elif isinstance(response, list):
+        result['authentication_settings'] = [to_result_data(obj) for obj in response]
+        result['total'] = len(response)
     else:
-        list_kwargs['limit'] = module.params.get('limit', 200)
-        list_kwargs['offset'] = module.params.get('offset', 0)
-        try:
-            response = api.list_authentication_settings(**list_kwargs)
-        except Exception as e:
-            module.fail_json(msg='Error listing authentication_settings: {0}'.format(str(e)))
-            return
-        if hasattr(response, 'data') and response.data:
-            result['authentication_settings'] = [to_result_data(obj) for obj in response.data]
-            result['total'] = getattr(response, 'total', len(response.data))
-        elif isinstance(response, list):
-            result['authentication_settings'] = [to_result_data(obj) for obj in response]
-            result['total'] = len(response)
+        result['authentication_settings'] = []
+        result['total'] = 0
 
     module.exit_json(**result)
 

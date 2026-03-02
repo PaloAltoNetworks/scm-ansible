@@ -1,7 +1,10 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_session_timeouts_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: list (singleton), get by ID, update
+#
+# SINGLETON RESOURCE: session_timeouts_setting has no create or delete operations.
+# One instance exists per folder. Use list to discover the ID, then get/update.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,66 +18,51 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_session_timeouts_setting.yml
-#
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_session_timeouts_setting' for full parameter docs.
 
-- name: Manage session_timeouts_settings in Strata Cloud Manager
+- name: Manage session_timeouts_setting in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create session_timeouts_setting
-      paloaltonetworks.scm.scm_session_timeouts_setting:
-        state: present
-        name: "ansible-test-session_timeouts_setting"
-        folder: "All"
-      register: create_result
+    # ── List (discover singleton ID) ─────────────────────────
+    - name: List all session_timeouts_settings
+      paloaltonetworks.scm.scm_session_timeouts_setting_info:
+        folder: "Prisma Access"
+      register: list_result
 
-    - name: Show created session_timeouts_setting
+    - name: Show session_timeouts_settings list
       ansible.builtin.debug:
-        var: create_result.session_timeouts_setting
+        msg: "Found {{ list_result.total }} session_timeouts_setting(s)"
 
-    # ── Update ──────────────────────────────────────────────
-    - name: Update session_timeouts_setting
+    # ── Get by ID ────────────────────────────────────────────
+    - name: Get session_timeouts_setting by ID
+      paloaltonetworks.scm.scm_session_timeouts_setting_info:
+        id: "{{ list_result.session_timeouts_settings[0].id }}"
+      register: info_by_id
+      when: list_result.session_timeouts_settings | length > 0
+
+    - name: Show session_timeouts_setting detail
+      ansible.builtin.debug:
+        var: info_by_id.session_timeouts_settings
+      when: list_result.session_timeouts_settings | length > 0
+
+    # ── Update by ID ─────────────────────────────────────────
+    # No-op update: re-apply the existing configuration to verify idempotency
+    - name: Update session_timeouts_setting by ID
       paloaltonetworks.scm.scm_session_timeouts_setting:
         state: present
-        name: "ansible-test-session_timeouts_setting"
-        description: "Updated by Ansible"
-        folder: "All"
+        id: "{{ list_result.session_timeouts_settings[0].id }}"
+        folder: "Prisma Access"
+        # Optionally specify session_timeouts configuration:
+        # session_timeouts:
+        #   tcp: 3600
+        #   udp: 30
       register: update_result
+      when: list_result.session_timeouts_settings | length > 0
 
     - name: Show updated session_timeouts_setting
       ansible.builtin.debug:
         var: update_result.session_timeouts_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get session_timeouts_setting by ID (info module)
-      paloaltonetworks.scm.scm_session_timeouts_setting_info:
-        id: "your-object-uuid-here"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.session_timeouts_settings
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all session_timeouts_settings
-      paloaltonetworks.scm.scm_session_timeouts_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show session_timeouts_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} session_timeouts_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete session_timeouts_setting
-      paloaltonetworks.scm.scm_session_timeouts_setting:
-        state: absent
-        name: "ansible-test-session_timeouts_setting"
-        folder: "All"
-
+      when: list_result.session_timeouts_settings | length > 0

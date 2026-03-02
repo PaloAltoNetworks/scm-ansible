@@ -290,6 +290,7 @@ def main():
                 result['scep_profile'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'scep_profile created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A scep_profile object with this name already exists')
                 return
@@ -323,8 +324,27 @@ def main():
                 result['changed'] = True
                 result['msg'] = 'scep_profile updated successfully'
             except Exception as e:
-                module.fail_json(msg='Failed to update scep_profile: {0}'.format(str(e)))
-                return
+                # Some APIs return a JSON list for update responses (SDK deserialization bug).
+                # Detect this pattern, parse manually, and continue.
+                err_str = str(e)
+                if 'input_type=list' in err_str and ('Input should be a valid dictionary' in err_str or 'model_type' in err_str):
+                    try:
+                        import json as _json
+                        _raw = api.update_scep_profiles_by_id_without_preload_content(id=update_id, scep_profiles=model)
+                        _data = _json.loads(_raw.data)
+                        if isinstance(_data, list) and _data:
+                            _data = _data[0]
+                        from scm.identity_services.models.scep_profiles import ScepProfiles
+                        _parsed = ScepProfiles.from_dict(_data) if isinstance(_data, dict) else None
+                        result['scep_profile'] = to_result_data(_parsed) if _parsed else _data
+                        result['changed'] = True
+                        result['msg'] = 'scep_profile updated successfully'
+                    except Exception as e2:
+                        module.fail_json(msg='Failed to update scep_profile: {0}'.format(str(e)))
+                        return
+                else:
+                    module.fail_json(msg='Failed to update scep_profile: {0}'.format(str(e)))
+                    return
 
 
     # Handle absent state

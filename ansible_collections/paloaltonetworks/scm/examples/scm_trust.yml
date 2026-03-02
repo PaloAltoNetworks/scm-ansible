@@ -3,6 +3,14 @@
 #
 # Demonstrates: create, delete
 #
+# INFRA_DEP: This resource establishes a trust relationship between two tenants.
+#            It requires real tenant names and TSG IDs from your SCM environment.
+#            The psk (pre-shared key) is optional and used for mutual authentication.
+#
+# NOTE: trust has no name field. It is identified by ID (returned after creation).
+#       The resource links a donor_tenant_name to a recipient_tenant_name.
+#       Delete uses the record ID, not a name.
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
 #
@@ -15,31 +23,43 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_trust.yml
-#
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_trust' for full parameter docs.
 
 - name: Manage trusts in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
+  vars:
+    # Replace with actual tenant names from your SCM environment
+    donor_tenant: "donor-tenant-name"
+    recipient_tenant: "recipient-tenant-name"
+    donor_tsg_id: "1234567890"
+
   tasks:
 
     # ── Create ──────────────────────────────────────────────
-    - name: Create trust
+    # Establishes a trust relationship between two tenants.
+    # psk is optional; trust_id is a numeric identifier.
+    - name: Create trust relationship
       paloaltonetworks.scm.scm_trust:
         state: present
-        name: "ansible-test-trust"
+        donor_tenant_name: "{{ donor_tenant }}"
+        recipient_tenant_name: "{{ recipient_tenant }}"
+        tsg: "{{ donor_tsg_id }}"
       register: create_result
+      ignore_errors: true
 
     - name: Show created trust
       ansible.builtin.debug:
         var: create_result.trust
 
     # ── Delete ──────────────────────────────────────────────
-    - name: Delete trust
+    # Delete the trust by its ID returned from the create step.
+    - name: Delete trust by ID
       paloaltonetworks.scm.scm_trust:
         state: absent
-        name: "ansible-test-trust"
-
+        id: "{{ create_result.trust.id }}"
+      when:
+        - create_result is not failed
+        - create_result.trust.id is defined
+      ignore_errors: true

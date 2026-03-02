@@ -29,7 +29,6 @@
       paloaltonetworks.scm.scm_auto_tag_action:
         state: present
         name: "ansible-test-auto_tag_action"
-        folder: "All"
         log_type: "traffic"
         filter: "All Logs"
         actions:
@@ -50,7 +49,15 @@
       paloaltonetworks.scm.scm_auto_tag_action:
         state: gathered
         name: "ansible-test-auto_tag_action"
-        folder: "All"
+        log_type: "traffic"
+        filter: "All Logs"
+        actions:
+        - name: "test-action"
+          type: "tagging"
+          action: "add-tag"
+          target: "source-address"
+          tags:
+          - "test-tag"
       register: gathered_result
 
     - name: Show gathered auto_tag_action
@@ -61,7 +68,6 @@
     - name: Get auto_tag_action by name (info module)
       paloaltonetworks.scm.scm_auto_tag_action_info:
         name: "ansible-test-auto_tag_action"
-        folder: "All"
       register: info_by_name
 
     - name: Show info result
@@ -71,7 +77,6 @@
     # ── List all ────────────────────────────────────────────
     - name: List all auto_tag_actions
       paloaltonetworks.scm.scm_auto_tag_action_info:
-        folder: "All"
       register: list_result
 
     - name: Show auto_tag_actions count
@@ -83,5 +88,13 @@
       paloaltonetworks.scm.scm_auto_tag_action:
         state: absent
         name: "ansible-test-auto_tag_action"
-        folder: "All"
+        log_type: "traffic"
+        filter: "All Logs"
+        actions:
+        - name: "test-action"
+          type: "tagging"
+          action: "add-tag"
+          target: "source-address"
+          tags:
+          - "test-tag"
 

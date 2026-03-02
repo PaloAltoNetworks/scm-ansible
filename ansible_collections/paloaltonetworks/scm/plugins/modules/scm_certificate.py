@@ -208,6 +208,7 @@ def main():
         locality=dict(type='str', required=False),
         ocsp_responder_url=dict(type='str', required=False),
         signed_by=dict(type='str', required=True),
+        name=dict(type='str', required=False),
     )
 
     module = AnsibleModule(
@@ -215,10 +216,6 @@ def main():
         supports_check_mode=True,
         mutually_exclusive=[
             ['folder', 'snippet', 'device'],
-        ],
-        required_if=[
-            ['state', 'present', ['name'], False],
-            ['state', 'absent', ['name'], False],
         ],
     )
 
@@ -308,6 +305,7 @@ def main():
                 result['certificate'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'certificate created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A certificate object with this name already exists')
                 return

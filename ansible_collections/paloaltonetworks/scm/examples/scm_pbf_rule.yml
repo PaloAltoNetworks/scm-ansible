@@ -28,7 +28,7 @@
     - name: Create pbf_rule
       paloaltonetworks.scm.scm_pbf_rule:
         state: present
-        name: "ansible-test-pbf_rule"
+        name: "ansible-test-pbf"
         folder: "All"
         var_from:
           zone:
@@ -49,8 +49,7 @@
     - name: Update pbf_rule
       paloaltonetworks.scm.scm_pbf_rule:
         state: present
-        name: "ansible-test-pbf_rule"
-        description: "Updated by Ansible"
+        name: "ansible-test-pbf"
         folder: "All"
         var_from:
           zone:
@@ -71,8 +70,17 @@
     - name: Get pbf_rule by name
       paloaltonetworks.scm.scm_pbf_rule:
         state: gathered
-        name: "ansible-test-pbf_rule"
+        name: "ansible-test-pbf"
         folder: "All"
+        var_from:
+          zone:
+          - "trust"
+        source: ["192.168.10.0/24"]
+        destination: ["192.168.10.0/24"]
+        application: ["web-browsing"]
+        service: ["service-http"]
+        action:
+          discard: {}
       register: gathered_result
 
     - name: Show gathered pbf_rule
@@ -82,7 +90,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get pbf_rule by name (info module)
       paloaltonetworks.scm.scm_pbf_rule_info:
-        name: "ansible-test-pbf_rule"
+        name: "ansible-test-pbf"
         folder: "All"
       register: info_by_name
 
@@ -114,6 +122,15 @@
     - name: Delete pbf_rule
       paloaltonetworks.scm.scm_pbf_rule:
         state: absent
-        name: "ansible-test-pbf_rule"
+        name: "ansible-test-pbf"
         folder: "All"
+        var_from:
+          zone:
+          - "trust"
+        source: ["192.168.10.0/24"]
+        destination: ["192.168.10.0/24"]
+        application: ["web-browsing"]
+        service: ["service-http"]
+        action:
+          discard: {}
 

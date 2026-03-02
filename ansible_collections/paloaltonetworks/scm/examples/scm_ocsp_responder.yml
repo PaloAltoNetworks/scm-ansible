@@ -28,8 +28,8 @@
     - name: Create ocsp_responder
       paloaltonetworks.scm.scm_ocsp_responder:
         state: present
-        name: "ansible-test-ocsp_responder"
-        folder: "All"
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
         host_name: "ocsp.example.com"
       register: create_result
 
@@ -41,10 +41,9 @@
     - name: Update ocsp_responder
       paloaltonetworks.scm.scm_ocsp_responder:
         state: present
-        name: "ansible-test-ocsp_responder"
-        description: "Updated by Ansible"
-        folder: "All"
-        host_name: "ocsp.example.com"
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"
       register: update_result
 
     - name: Show updated ocsp_responder
@@ -55,8 +54,9 @@
     - name: Get ocsp_responder by name
       paloaltonetworks.scm.scm_ocsp_responder:
         state: gathered
-        name: "ansible-test-ocsp_responder"
-        folder: "All"
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"
       register: gathered_result
 
     - name: Show gathered ocsp_responder
@@ -66,8 +66,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get ocsp_responder by name (info module)
       paloaltonetworks.scm.scm_ocsp_responder_info:
-        name: "ansible-test-ocsp_responder"
-        folder: "All"
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -87,7 +87,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all ocsp_responders
       paloaltonetworks.scm.scm_ocsp_responder_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show ocsp_responders count
@@ -98,6 +98,6 @@
     - name: Delete ocsp_responder
       paloaltonetworks.scm.scm_ocsp_responder:
         state: absent
-        name: "ansible-test-ocsp_responder"
-        folder: "All"
-
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"

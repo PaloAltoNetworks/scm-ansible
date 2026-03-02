@@ -1,7 +1,15 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_vpn_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: list, get by ID, update
+#
+# SINGLETON: vpn_setting is a singleton resource per folder/container — there
+#            is exactly one VPN settings record per folder. It is NOT created or
+#            deleted by name. Instead, you list to find the existing ID, then
+#            get/update by that ID.
+#
+#            The module's state: present with an ID performs an update.
+#            The module does NOT support name-based lookup.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,9 +23,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_vpn_setting.yml
-#
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_vpn_setting' for full parameter docs.
 
 - name: Manage vpn_settings in Strata Cloud Manager
   hosts: localhost
@@ -26,55 +31,49 @@
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create vpn_setting
-      paloaltonetworks.scm.scm_vpn_setting:
-        state: present
-        name: "ansible-test-vpn_setting"
-        folder: "All"
-      register: create_result
-
-    - name: Show created vpn_setting
-      ansible.builtin.debug:
-        var: create_result.vpn_setting
-
-    # ── Update ──────────────────────────────────────────────
-    - name: Update vpn_setting
-      paloaltonetworks.scm.scm_vpn_setting:
-        state: present
-        name: "ansible-test-vpn_setting"
-        description: "Updated by Ansible"
-        folder: "All"
-      register: update_result
-
-    - name: Show updated vpn_setting
-      ansible.builtin.debug:
-        var: update_result.vpn_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get vpn_setting by ID (info module)
+    # ── List all ────────────────────────────────────────────
+    # Returns the singleton VPN settings record for the folder.
+    - name: List vpn_settings (singleton per folder)
       paloaltonetworks.scm.scm_vpn_setting_info:
-        id: "your-object-uuid-here"
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show vpn_settings list
+      ansible.builtin.debug:
+        var: list_result.vpn_settings
+
+    # ── Get by ID ───────────────────────────────────────────
+    - name: Get vpn_setting by ID
+      paloaltonetworks.scm.scm_vpn_setting_info:
+        id: "{{ list_result.vpn_settings[0].id }}"
       register: info_by_id
+      when: list_result.vpn_settings | length > 0
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.vpn_settings
+      when: list_result.vpn_settings | length > 0
 
-    # ── List all ────────────────────────────────────────────
-    - name: List all vpn_settings
-      paloaltonetworks.scm.scm_vpn_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show vpn_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} vpn_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete vpn_setting
+    # ── Update ──────────────────────────────────────────────
+    # Update the singleton VPN settings by ID using the existing values.
+    # The vpn dict supports ikev2 settings:
+    #   certificate_cache_size: 0-4000 (default: 500)
+    #   cookie_threshold: 0-65535 (default: 500)
+    #   max_half_opened_sa: 1-65535 (default: 65535)
+    - name: Update vpn_setting by ID
       paloaltonetworks.scm.scm_vpn_setting:
-        state: absent
-        name: "ansible-test-vpn_setting"
-        folder: "All"
+        state: present
+        id: "{{ list_result.vpn_settings[0].id }}"
+        folder: "Prisma Access"
+        vpn:
+          ikev2:
+            certificate_cache_size: "{{ list_result.vpn_settings[0].vpn.ikev2.certificate_cache_size | default(500) }}"
+            cookie_threshold: "{{ list_result.vpn_settings[0].vpn.ikev2.cookie_threshold | default(500) }}"
+            max_half_opened_sa: "{{ list_result.vpn_settings[0].vpn.ikev2.max_half_opened_sa | default(65535) }}"
+      register: update_result
+      when: list_result.vpn_settings | length > 0
 
+    - name: Show updated vpn_setting
+      ansible.builtin.debug:
+        var: update_result.vpn_setting
+      when: list_result.vpn_settings | length > 0

@@ -245,6 +245,7 @@ def main():
                 result['auto_tag_action'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'auto_tag_action created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A auto_tag_action object with this name already exists')
                 return
@@ -285,7 +286,7 @@ def main():
         module.log('scm: deleting auto_tag_action')
         try:
             delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_auto_tag_actions(id=delete_id)
+            api.delete_auto_tag_actions(name=delete_id)
             result['changed'] = True
             result['msg'] = 'auto_tag_action deleted successfully'
         except NotFoundError:

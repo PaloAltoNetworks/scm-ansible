@@ -42,7 +42,6 @@
       paloaltonetworks.scm.scm_site:
         state: present
         name: "ansible-test-site"
-        description: "Updated by Ansible"
       register: update_result
 
     - name: Show updated site

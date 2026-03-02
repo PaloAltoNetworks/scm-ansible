@@ -3,6 +3,13 @@
 #
 # Demonstrates: create, update, get by name, get by ID, list, delete
 #
+# NOTE: internal_dns_server is a deployment-services resource and does not use
+#       folder/snippet/device containers. The required fields are:
+#         - name      (string, required)
+#         - domain_name (list of strings, required)
+#         - primary   (string, IP address of primary DNS server, required)
+#         - secondary (string, IP address of secondary DNS server, optional)
+#
 # Prerequisites:
 #   pip install scm-python ansible-core
 #
@@ -28,9 +35,11 @@
     - name: Create internal_dns_server
       paloaltonetworks.scm.scm_internal_dns_server:
         state: present
-        name: "ansible-test-internal_dns_server"
-        domain_name: ["example.com"]
+        name: "ansible-test-internal-dns"
+        domain_name:
+          - "example.com"
         primary: "8.8.8.8"
+        secondary: "8.8.4.4"
       register: create_result
 
     - name: Show created internal_dns_server
@@ -41,10 +50,12 @@
     - name: Update internal_dns_server
       paloaltonetworks.scm.scm_internal_dns_server:
         state: present
-        name: "ansible-test-internal_dns_server"
-        description: "Updated by Ansible"
-        domain_name: ["example.com"]
+        name: "ansible-test-internal-dns"
+        domain_name:
+          - "example.com"
+          - "internal.example.com"
         primary: "8.8.8.8"
+        secondary: "1.1.1.1"
       register: update_result
 
     - name: Show updated internal_dns_server
@@ -55,7 +66,10 @@
     - name: Get internal_dns_server by name
       paloaltonetworks.scm.scm_internal_dns_server:
         state: gathered
-        name: "ansible-test-internal_dns_server"
+        name: "ansible-test-internal-dns"
+        domain_name:
+          - "example.com"
+        primary: "8.8.8.8"
       register: gathered_result
 
     - name: Show gathered internal_dns_server
@@ -65,7 +79,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get internal_dns_server by name (info module)
       paloaltonetworks.scm.scm_internal_dns_server_info:
-        name: "ansible-test-internal_dns_server"
+        name: "ansible-test-internal-dns"
       register: info_by_name
 
     - name: Show info result
@@ -77,10 +91,12 @@
       paloaltonetworks.scm.scm_internal_dns_server_info:
         id: "{{ gathered_result.internal_dns_server.id }}"
       register: info_by_id
+      when: gathered_result.internal_dns_server.id is defined
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.internal_dns_servers
+      when: gathered_result.internal_dns_server.id is defined
 
     # ── List all ────────────────────────────────────────────
     - name: List all internal_dns_servers
@@ -95,5 +111,7 @@
     - name: Delete internal_dns_server
       paloaltonetworks.scm.scm_internal_dns_server:
         state: absent
-        name: "ansible-test-internal_dns_server"
-
+        name: "ansible-test-internal-dns"
+        domain_name:
+          - "example.com"
+        primary: "8.8.8.8"

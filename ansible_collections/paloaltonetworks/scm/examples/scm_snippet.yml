@@ -30,23 +30,12 @@
         state: present
         name: "ansible-test-snippet"
         description: "Test snippet"
+        type: "custom"
       register: create_result
 
     - name: Show created snippet
       ansible.builtin.debug:
         var: create_result.snippet
-
-    # ── Update ──────────────────────────────────────────────
-    - name: Update snippet
-      paloaltonetworks.scm.scm_snippet:
-        state: present
-        name: "ansible-test-snippet"
-        description: "Updated by Ansible"
-      register: update_result
-
-    - name: Show updated snippet
-      ansible.builtin.debug:
-        var: update_result.snippet
 
     # ── Get by name (CRUD module, state=gathered) ───────────
     - name: Get snippet by name

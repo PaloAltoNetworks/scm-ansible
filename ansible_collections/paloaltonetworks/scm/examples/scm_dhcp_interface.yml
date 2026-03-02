@@ -16,7 +16,10 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_dhcp_interface.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
+# NOTE: A DHCP interface is a DHCP server/relay configuration that is bound
+#       to an existing ethernet interface by name. The 'name' field must match
+#       an existing ethernet interface name (which must start with '$').
+#       Either 'server' or 'relay' configuration must be provided.
 #       Run 'ansible-doc paloaltonetworks.scm.scm_dhcp_interface' for full parameter docs.
 
 - name: Manage dhcp_interfaces in Strata Cloud Manager
@@ -26,12 +29,36 @@
 
   tasks:
 
+    # ── Create prerequisite ethernet interface ───────────────
+    # DHCP interface 'name' must reference an existing ethernet interface.
+    - name: Create prerequisite ethernet interface for DHCP
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-dhcp-eth"
+        folder: "All"
+        comment: "Ethernet interface for DHCP test"
+        layer3: {}
+      register: eth_result
+
+    - name: Show created ethernet interface
+      ansible.builtin.debug:
+        var: eth_result.ethernet_interface
+
     # ── Create ──────────────────────────────────────────────
+    # The DHCP interface name must match the ethernet interface name.
+    # DHCP server mode requires either ip_pool or reserved configuration.
     - name: Create dhcp_interface
       paloaltonetworks.scm.scm_dhcp_interface:
         state: present
-        name: "ansible-test-dhcp_interface"
+        name: "$ansible-dhcp-eth"
         folder: "All"
+        server:
+          mode: "auto"
+          ip_pool:
+            - "192.168.100.10-192.168.100.50"
+          option:
+            gateway: "192.168.100.1"
+            subnet_mask: "255.255.255.0"
       register: create_result
 
     - name: Show created dhcp_interface
@@ -42,9 +69,15 @@
     - name: Update dhcp_interface
       paloaltonetworks.scm.scm_dhcp_interface:
         state: present
-        name: "ansible-test-dhcp_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-dhcp-eth"
         folder: "All"
+        server:
+          mode: "auto"
+          ip_pool:
+            - "192.168.100.10-192.168.100.100"
+          option:
+            gateway: "192.168.100.1"
+            subnet_mask: "255.255.255.0"
       register: update_result
 
     - name: Show updated dhcp_interface
@@ -55,7 +88,7 @@
     - name: Get dhcp_interface by name
       paloaltonetworks.scm.scm_dhcp_interface:
         state: gathered
-        name: "ansible-test-dhcp_interface"
+        name: "$ansible-dhcp-eth"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +99,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get dhcp_interface by name (info module)
       paloaltonetworks.scm.scm_dhcp_interface_info:
-        name: "ansible-test-dhcp_interface"
+        name: "$ansible-dhcp-eth"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +131,11 @@
     - name: Delete dhcp_interface
       paloaltonetworks.scm.scm_dhcp_interface:
         state: absent
-        name: "ansible-test-dhcp_interface"
+        name: "$ansible-dhcp-eth"
         folder: "All"
 
+    - name: Delete prerequisite ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "$ansible-dhcp-eth"
+        folder: "All"

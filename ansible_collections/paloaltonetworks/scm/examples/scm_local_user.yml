@@ -28,9 +28,10 @@
     - name: Create local_user
       paloaltonetworks.scm.scm_local_user:
         state: present
-        name: "ansible-test-local_user"
-        folder: "All"
+        name: "ansible-test-localuser"
+        folder: "Prisma Access"
         password: "TestPass123!"
+        disabled: false
       register: create_result
 
     - name: Show created local_user
@@ -41,10 +42,10 @@
     - name: Update local_user
       paloaltonetworks.scm.scm_local_user:
         state: present
-        name: "ansible-test-local_user"
-        description: "Updated by Ansible"
-        folder: "All"
-        password: "TestPass123!"
+        name: "ansible-test-localuser"
+        folder: "Prisma Access"
+        password: "NewPass456!"
+        disabled: false
       register: update_result
 
     - name: Show updated local_user
@@ -55,8 +56,9 @@
     - name: Get local_user by name
       paloaltonetworks.scm.scm_local_user:
         state: gathered
-        name: "ansible-test-local_user"
-        folder: "All"
+        name: "ansible-test-localuser"
+        folder: "Prisma Access"
+        password: "NewPass456!"
       register: gathered_result
 
     - name: Show gathered local_user
@@ -66,8 +68,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get local_user by name (info module)
       paloaltonetworks.scm.scm_local_user_info:
-        name: "ansible-test-local_user"
-        folder: "All"
+        name: "ansible-test-localuser"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -87,7 +89,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all local_users
       paloaltonetworks.scm.scm_local_user_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show local_users count
@@ -98,6 +100,6 @@
     - name: Delete local_user
       paloaltonetworks.scm.scm_local_user:
         state: absent
-        name: "ansible-test-local_user"
-        folder: "All"
-
+        name: "ansible-test-localuser"
+        folder: "Prisma Access"
+        password: "NewPass456!"

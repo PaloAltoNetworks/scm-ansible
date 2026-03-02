@@ -28,11 +28,17 @@
     - name: Create tls_service_profile
       paloaltonetworks.scm.scm_tls_service_profile:
         state: present
-        name: "ansible-test-tls_service_profile"
+        name: "ansible-test-tls-prof"
         folder: "All"
         certificate: "Forward-Trust-CA"
         protocol_settings:
+          min_version: "tls1-1"
+          max_version: "tls1-3"
           keyxchg_algo_rsa: true
+          keyxchg_algo_ecdhe: true
+          enc_algo_aes_128_gcm: true
+          enc_algo_aes_256_gcm: true
+          auth_algo_sha256: true
       register: create_result
 
     - name: Show created tls_service_profile
@@ -43,12 +49,16 @@
     - name: Update tls_service_profile
       paloaltonetworks.scm.scm_tls_service_profile:
         state: present
-        name: "ansible-test-tls_service_profile"
-        description: "Updated by Ansible"
+        name: "ansible-test-tls-prof"
         folder: "All"
         certificate: "Forward-Trust-CA"
         protocol_settings:
+          min_version: "tls1-2"
+          max_version: "tls1-3"
           keyxchg_algo_rsa: true
+          keyxchg_algo_ecdhe: true
+          enc_algo_aes_256_gcm: true
+          auth_algo_sha256: true
       register: update_result
 
     - name: Show updated tls_service_profile
@@ -59,8 +69,13 @@
     - name: Get tls_service_profile by name
       paloaltonetworks.scm.scm_tls_service_profile:
         state: gathered
-        name: "ansible-test-tls_service_profile"
+        name: "ansible-test-tls-prof"
         folder: "All"
+        certificate: "Forward-Trust-CA"
+        protocol_settings:
+          min_version: "tls1-2"
+          max_version: "tls1-3"
+          keyxchg_algo_rsa: true
       register: gathered_result
 
     - name: Show gathered tls_service_profile
@@ -70,7 +85,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get tls_service_profile by name (info module)
       paloaltonetworks.scm.scm_tls_service_profile_info:
-        name: "ansible-test-tls_service_profile"
+        name: "ansible-test-tls-prof"
         folder: "All"
       register: info_by_name
 
@@ -102,6 +117,10 @@
     - name: Delete tls_service_profile
       paloaltonetworks.scm.scm_tls_service_profile:
         state: absent
-        name: "ansible-test-tls_service_profile"
+        name: "ansible-test-tls-prof"
         folder: "All"
-
+        certificate: "Forward-Trust-CA"
+        protocol_settings:
+          min_version: "tls1-2"
+          max_version: "tls1-3"
+          keyxchg_algo_rsa: true

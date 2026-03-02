@@ -16,8 +16,6 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_security_zone.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_security_zone' for full parameter docs.
 
 - name: Manage security_zones in Strata Cloud Manager
   hosts: localhost
@@ -30,8 +28,10 @@
     - name: Create security_zone
       paloaltonetworks.scm.scm_security_zone:
         state: present
-        name: "ansible-test-security_zone"
+        name: "ansible-test-seczone"
         folder: "All"
+        enable_device_identification: true
+        enable_user_identification: true
       register: create_result
 
     - name: Show created security_zone
@@ -42,9 +42,10 @@
     - name: Update security_zone
       paloaltonetworks.scm.scm_security_zone:
         state: present
-        name: "ansible-test-security_zone"
-        description: "Updated by Ansible"
+        name: "ansible-test-seczone"
         folder: "All"
+        enable_device_identification: true
+        enable_user_identification: false
       register: update_result
 
     - name: Show updated security_zone
@@ -55,7 +56,7 @@
     - name: Get security_zone by name
       paloaltonetworks.scm.scm_security_zone:
         state: gathered
-        name: "ansible-test-security_zone"
+        name: "ansible-test-seczone"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +67,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get security_zone by name (info module)
       paloaltonetworks.scm.scm_security_zone_info:
-        name: "ansible-test-security_zone"
+        name: "ansible-test-seczone"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +99,5 @@
     - name: Delete security_zone
       paloaltonetworks.scm.scm_security_zone:
         state: absent
-        name: "ansible-test-security_zone"
+        name: "ansible-test-seczone"
         folder: "All"
-

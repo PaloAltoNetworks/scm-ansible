@@ -28,7 +28,7 @@
     - name: Create route_path_access_list
       paloaltonetworks.scm.scm_route_path_access_list:
         state: present
-        name: "ansible-test-route_path_access_list"
+        name: "ansible-test-rt-path"
         folder: "All"
         aspath_entry:
         - name: 10
@@ -44,8 +44,7 @@
     - name: Update route_path_access_list
       paloaltonetworks.scm.scm_route_path_access_list:
         state: present
-        name: "ansible-test-route_path_access_list"
-        description: "Updated by Ansible"
+        name: "ansible-test-rt-path"
         folder: "All"
         aspath_entry:
         - name: 10
@@ -61,7 +60,7 @@
     - name: Get route_path_access_list by name
       paloaltonetworks.scm.scm_route_path_access_list:
         state: gathered
-        name: "ansible-test-route_path_access_list"
+        name: "ansible-test-rt-path"
         folder: "All"
       register: gathered_result
 
@@ -72,7 +71,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get route_path_access_list by name (info module)
       paloaltonetworks.scm.scm_route_path_access_list_info:
-        name: "ansible-test-route_path_access_list"
+        name: "ansible-test-rt-path"
         folder: "All"
       register: info_by_name
 
@@ -104,6 +103,6 @@
     - name: Delete route_path_access_list
       paloaltonetworks.scm.scm_route_path_access_list:
         state: absent
-        name: "ansible-test-route_path_access_list"
+        name: "ansible-test-rt-path"
         folder: "All"
 

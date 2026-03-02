@@ -27,11 +27,18 @@
   tasks:
 
     # ── Create ──────────────────────────────────────────────
+    # NOTE: Ethernet interface names must start with '$' per API validation.
+    # A layer mode (layer2 or layer3) must be specified.
     - name: Create ethernet_interface
       paloaltonetworks.scm.scm_ethernet_interface:
         state: present
-        name: "ansible-test-ethernet_interface"
+        name: "$ansible-test-ethernet"
         folder: "All"
+        comment: "Managed by Ansible"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer2: {}
       register: create_result
 
     - name: Show created ethernet_interface
@@ -42,9 +49,13 @@
     - name: Update ethernet_interface
       paloaltonetworks.scm.scm_ethernet_interface:
         state: present
-        name: "ansible-test-ethernet_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-test-ethernet"
         folder: "All"
+        comment: "Updated by Ansible"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer2: {}
       register: update_result
 
     - name: Show updated ethernet_interface
@@ -55,7 +66,7 @@
     - name: Get ethernet_interface by name
       paloaltonetworks.scm.scm_ethernet_interface:
         state: gathered
-        name: "ansible-test-ethernet_interface"
+        name: "$ansible-test-ethernet"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +77,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get ethernet_interface by name (info module)
       paloaltonetworks.scm.scm_ethernet_interface_info:
-        name: "ansible-test-ethernet_interface"
+        name: "$ansible-test-ethernet"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +109,6 @@
     - name: Delete ethernet_interface
       paloaltonetworks.scm.scm_ethernet_interface:
         state: absent
-        name: "ansible-test-ethernet_interface"
+        name: "$ansible-test-ethernet"
         folder: "All"
 

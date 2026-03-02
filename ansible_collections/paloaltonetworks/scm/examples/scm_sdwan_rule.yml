@@ -16,7 +16,9 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_sdwan_rule.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
+# NOTE: SD-WAN rules require SD-WAN to be enabled in your SCM tenant and
+#       valid path_quality_profile and traffic_distribution_profile names.
+#       Update the profile names below to match profiles that exist in your environment.
 #       Run 'ansible-doc paloaltonetworks.scm.scm_sdwan_rule' for full parameter docs.
 
 - name: Manage sdwan_rules in Strata Cloud Manager
@@ -30,18 +32,19 @@
     - name: Create sdwan_rule
       paloaltonetworks.scm.scm_sdwan_rule:
         state: present
-        name: "ansible-test-sdwan_rule"
+        name: "ansible-test-sdwan-rule"
         folder: "All"
-        # action: <required>
-        # application: <required>
-        # destination: <required>
-        # path_quality_profile: <required>
-        # position: <required>
-        # service: <required>
-        # source: <required>
-        # source_user: <required>
-        # to: <required>
-        # var_from: <required>
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        source_user: ["any"]
+        destination: ["any"]
+        application: ["any"]
+        service: ["any"]
+        path_quality_profile: "Default Path Quality Profile"
+        action:
+          traffic_distribution_profile: "Default Traffic Distribution Profile"
       register: create_result
 
     - name: Show created sdwan_rule
@@ -52,9 +55,19 @@
     - name: Update sdwan_rule
       paloaltonetworks.scm.scm_sdwan_rule:
         state: present
-        name: "ansible-test-sdwan_rule"
-        description: "Updated by Ansible"
+        name: "ansible-test-sdwan-rule"
         folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        source_user: ["any"]
+        destination: ["any"]
+        application: ["any"]
+        service: ["any"]
+        path_quality_profile: "Default Path Quality Profile"
+        action:
+          traffic_distribution_profile: "Default Traffic Distribution Profile"
       register: update_result
 
     - name: Show updated sdwan_rule
@@ -65,8 +78,19 @@
     - name: Get sdwan_rule by name
       paloaltonetworks.scm.scm_sdwan_rule:
         state: gathered
-        name: "ansible-test-sdwan_rule"
+        name: "ansible-test-sdwan-rule"
         folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        source_user: ["any"]
+        destination: ["any"]
+        application: ["any"]
+        service: ["any"]
+        path_quality_profile: "Default Path Quality Profile"
+        action:
+          traffic_distribution_profile: "Default Traffic Distribution Profile"
       register: gathered_result
 
     - name: Show gathered sdwan_rule
@@ -76,7 +100,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get sdwan_rule by name (info module)
       paloaltonetworks.scm.scm_sdwan_rule_info:
-        name: "ansible-test-sdwan_rule"
+        name: "ansible-test-sdwan-rule"
         folder: "All"
       register: info_by_name
 
@@ -108,6 +132,17 @@
     - name: Delete sdwan_rule
       paloaltonetworks.scm.scm_sdwan_rule:
         state: absent
-        name: "ansible-test-sdwan_rule"
+        name: "ansible-test-sdwan-rule"
         folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        source_user: ["any"]
+        destination: ["any"]
+        application: ["any"]
+        service: ["any"]
+        path_quality_profile: "Default Path Quality Profile"
+        action:
+          traffic_distribution_profile: "Default Traffic Distribution Profile"
 

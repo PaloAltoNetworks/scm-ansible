@@ -1,7 +1,11 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_login_banner_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: get by ID, update, list
+#
+# NOTE: scm_login_banner_setting is a SINGLETON resource — it cannot be created
+#       or deleted via API. There is exactly one login banner settings object per
+#       folder. Manage it by fetching its ID first, then updating in place.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -16,65 +20,52 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_login_banner_setting.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_login_banner_setting' for full parameter docs.
+# Run 'ansible-doc paloaltonetworks.scm.scm_login_banner_setting' for full parameter docs.
 
-- name: Manage login_banner_settings in Strata Cloud Manager
+- name: Manage login_banner_setting in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create login_banner_setting
-      paloaltonetworks.scm.scm_login_banner_setting:
-        state: present
-        name: "ansible-test-login_banner_setting"
-        folder: "All"
-      register: create_result
+    # ── List to discover the existing singleton object ───────────
+    - name: List all login_banner_settings (singleton per folder)
+      paloaltonetworks.scm.scm_login_banner_setting_info:
+        folder: "Prisma Access"
+      register: list_result
 
-    - name: Show created login_banner_setting
+    - name: Show login_banner_settings list
       ansible.builtin.debug:
-        var: create_result.login_banner_setting
+        var: list_result.login_banner_settings
 
-    # ── Update ──────────────────────────────────────────────
-    - name: Update login_banner_setting
-      paloaltonetworks.scm.scm_login_banner_setting:
-        state: present
-        name: "ansible-test-login_banner_setting"
-        description: "Updated by Ansible"
-        folder: "All"
-      register: update_result
-
-    - name: Show updated login_banner_setting
-      ansible.builtin.debug:
-        var: update_result.login_banner_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
+    # ── Get by ID (info module) ─────────────────────────────────
     - name: Get login_banner_setting by ID (info module)
       paloaltonetworks.scm.scm_login_banner_setting_info:
-        id: "your-object-uuid-here"
+        id: "{{ list_result.login_banner_settings[0].id }}"
       register: info_by_id
+      when: list_result.login_banner_settings | length > 0
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.login_banner_settings
+      when: list_result.login_banner_settings | length > 0
 
-    # ── List all ────────────────────────────────────────────
-    - name: List all login_banner_settings
-      paloaltonetworks.scm.scm_login_banner_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show login_banner_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} login_banner_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete login_banner_setting
+    # ── Update (state=present with id) ──────────────────────────
+    # Update the singleton object using its server-assigned ID.
+    # The 'motd_and_banner' field contains the banner configuration.
+    - name: Update login_banner_setting by ID
       paloaltonetworks.scm.scm_login_banner_setting:
-        state: absent
-        name: "ansible-test-login_banner_setting"
-        folder: "All"
+        state: present
+        id: "{{ list_result.login_banner_settings[0].id }}"
+        folder: "Prisma Access"
+        # motd_and_banner:
+        #   message: "Authorized use only"
+        #   use_system_setting: true
+      register: update_result
+      when: list_result.login_banner_settings | length > 0
 
+    - name: Show updated login_banner_setting
+      ansible.builtin.debug:
+        var: update_result.login_banner_setting
+      when: list_result.login_banner_settings | length > 0

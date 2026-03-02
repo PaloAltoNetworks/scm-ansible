@@ -1,7 +1,15 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_tcp_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: list, get by ID, update
+#
+# SINGLETON: tcp_setting is a singleton resource per folder/container — there
+#            is exactly one TCP settings record per folder. It is NOT created or
+#            deleted by name. Instead, you list to find the existing ID, then
+#            get/update by that ID.
+#
+#            The module's state: present with an ID performs an update.
+#            The module does NOT support name-based lookup.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,9 +23,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_tcp_setting.yml
-#
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_tcp_setting' for full parameter docs.
 
 - name: Manage tcp_settings in Strata Cloud Manager
   hosts: localhost
@@ -26,55 +31,46 @@
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create tcp_setting
-      paloaltonetworks.scm.scm_tcp_setting:
-        state: present
-        name: "ansible-test-tcp_setting"
-        folder: "All"
-      register: create_result
-
-    - name: Show created tcp_setting
-      ansible.builtin.debug:
-        var: create_result.tcp_setting
-
-    # ── Update ──────────────────────────────────────────────
-    - name: Update tcp_setting
-      paloaltonetworks.scm.scm_tcp_setting:
-        state: present
-        name: "ansible-test-tcp_setting"
-        description: "Updated by Ansible"
-        folder: "All"
-      register: update_result
-
-    - name: Show updated tcp_setting
-      ansible.builtin.debug:
-        var: update_result.tcp_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get tcp_setting by ID (info module)
+    # ── List all ────────────────────────────────────────────
+    # Returns the singleton TCP settings record for the folder.
+    - name: List tcp_settings (singleton per folder)
       paloaltonetworks.scm.scm_tcp_setting_info:
-        id: "your-object-uuid-here"
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show tcp_settings list
+      ansible.builtin.debug:
+        var: list_result.tcp_settings
+
+    # ── Get by ID ───────────────────────────────────────────
+    - name: Get tcp_setting by ID
+      paloaltonetworks.scm.scm_tcp_setting_info:
+        id: "{{ list_result.tcp_settings[0].id }}"
       register: info_by_id
+      when: list_result.tcp_settings | length > 0
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.tcp_settings
+      when: list_result.tcp_settings | length > 0
 
-    # ── List all ────────────────────────────────────────────
-    - name: List all tcp_settings
-      paloaltonetworks.scm.scm_tcp_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show tcp_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} tcp_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete tcp_setting
+    # ── Update ──────────────────────────────────────────────
+    # Update the singleton TCP settings by ID. The tcp field contains all
+    # the TCP configuration options (allow_challenge_ack, asymmetric_path,
+    # bypass_exceed_oo_queue, check_timestamp_option, drop_zero_flag,
+    # strip_mptcp_option, tcp_retransmit_scan, urgent_data, siptcp_cleartext_proxy).
+    - name: Update tcp_setting by ID
       paloaltonetworks.scm.scm_tcp_setting:
-        state: absent
-        name: "ansible-test-tcp_setting"
-        folder: "All"
+        state: present
+        id: "{{ list_result.tcp_settings[0].id }}"
+        folder: "Prisma Access"
+        tcp:
+          drop_zero_flag: true
+          bypass_exceed_oo_queue: false
+      register: update_result
+      when: list_result.tcp_settings | length > 0
 
+    - name: Show updated tcp_setting
+      ansible.builtin.debug:
+        var: update_result.tcp_setting
+      when: list_result.tcp_settings | length > 0

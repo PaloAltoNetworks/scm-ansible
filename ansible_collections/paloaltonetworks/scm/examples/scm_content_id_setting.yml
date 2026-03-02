@@ -16,7 +16,8 @@
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_content_id_setting.yml
 #
-# NOTE: You may need to add required fields to the create/update tasks below.
+# NOTE: This module does not declare a 'name' field; objects are identified by ID.
+#       Lookup by name is not supported — use id: for update, gather, and delete operations.
 #       Run 'ansible-doc paloaltonetworks.scm.scm_content_id_setting' for full parameter docs.
 
 - name: Manage content_id_settings in Strata Cloud Manager
@@ -30,8 +31,10 @@
     - name: Create content_id_setting
       paloaltonetworks.scm.scm_content_id_setting:
         state: present
-        name: "ansible-test-content_id_setting"
         folder: "All"
+        content_id:
+          allow_list:
+            - "any"
       register: create_result
 
     - name: Show created content_id_setting
@@ -42,19 +45,33 @@
     - name: Update content_id_setting
       paloaltonetworks.scm.scm_content_id_setting:
         state: present
-        name: "ansible-test-content_id_setting"
-        description: "Updated by Ansible"
+        id: "{{ create_result.content_id_setting.id }}"
         folder: "All"
+        content_id:
+          allow_list:
+            - "any"
+          log_container: true
       register: update_result
 
     - name: Show updated content_id_setting
       ansible.builtin.debug:
         var: update_result.content_id_setting
 
+    # ── Get by ID (CRUD module, state=gathered) ─────────────
+    - name: Get content_id_setting by ID
+      paloaltonetworks.scm.scm_content_id_setting:
+        state: gathered
+        id: "{{ create_result.content_id_setting.id }}"
+      register: gathered_result
+
+    - name: Show gathered content_id_setting
+      ansible.builtin.debug:
+        var: gathered_result.content_id_setting
+
     # ── Get by ID (info module) ─────────────────────────────
     - name: Get content_id_setting by ID (info module)
       paloaltonetworks.scm.scm_content_id_setting_info:
-        id: "your-object-uuid-here"
+        id: "{{ create_result.content_id_setting.id }}"
       register: info_by_id
 
     - name: Show info-by-ID result
@@ -75,6 +92,5 @@
     - name: Delete content_id_setting
       paloaltonetworks.scm.scm_content_id_setting:
         state: absent
-        name: "ansible-test-content_id_setting"
-        folder: "All"
+        id: "{{ create_result.content_id_setting.id }}"
 

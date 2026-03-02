@@ -30,8 +30,8 @@
     - name: Create bgp_filtering_profile
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: present
-        name: "ansible-test-bgp_filtering_profile"
-        folder: "All"
+        name: "ansible-test-bgp-filter"
+        folder: "Prisma Access"
       register: create_result
 
     - name: Show created bgp_filtering_profile
@@ -42,9 +42,9 @@
     - name: Update bgp_filtering_profile
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: present
-        name: "ansible-test-bgp_filtering_profile"
+        name: "ansible-test-bgp-filter"
         description: "Updated by Ansible"
-        folder: "All"
+        folder: "Prisma Access"
       register: update_result
 
     - name: Show updated bgp_filtering_profile
@@ -55,8 +55,8 @@
     - name: Get bgp_filtering_profile by name
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: gathered
-        name: "ansible-test-bgp_filtering_profile"
-        folder: "All"
+        name: "ansible-test-bgp-filter"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered bgp_filtering_profile
@@ -66,8 +66,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get bgp_filtering_profile by name (info module)
       paloaltonetworks.scm.scm_bgp_filtering_profile_info:
-        name: "ansible-test-bgp_filtering_profile"
-        folder: "All"
+        name: "ansible-test-bgp-filter"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -87,7 +87,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all bgp_filtering_profiles
       paloaltonetworks.scm.scm_bgp_filtering_profile_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show bgp_filtering_profiles count
@@ -98,6 +98,6 @@
     - name: Delete bgp_filtering_profile
       paloaltonetworks.scm.scm_bgp_filtering_profile:
         state: absent
-        name: "ansible-test-bgp_filtering_profile"
-        folder: "All"
+        name: "ansible-test-bgp-filter"
+        folder: "Prisma Access"
 

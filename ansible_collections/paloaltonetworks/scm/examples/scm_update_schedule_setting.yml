@@ -1,7 +1,19 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_update_schedule_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# Demonstrates: list, get by ID, update
+#
+# SINGLETON: update_schedule_setting is a singleton resource per folder/container —
+#            there is exactly one update schedule settings record per folder. It is
+#            NOT created or deleted by name. Instead, you list to find the existing
+#            ID, then get/update by that ID.
+#
+#            The module's state: present with an ID performs an update.
+#            The module does NOT support name-based lookup.
+#
+# NOTE: The update_schedule dict MUST include all three required sub-sections:
+#       anti_virus, threats, and wildfire. Omitting any will cause a validation
+#       error. Use the list result to read the current state before updating.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,9 +27,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_update_schedule_setting.yml
-#
-# NOTE: You may need to add required fields to the create/update tasks below.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_update_schedule_setting' for full parameter docs.
 
 - name: Manage update_schedule_settings in Strata Cloud Manager
   hosts: localhost
@@ -26,55 +35,65 @@
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create update_schedule_setting
-      paloaltonetworks.scm.scm_update_schedule_setting:
-        state: present
-        name: "ansible-test-update_schedule_setting"
-        folder: "All"
-      register: create_result
-
-    - name: Show created update_schedule_setting
-      ansible.builtin.debug:
-        var: create_result.update_schedule_setting
-
-    # ── Update ──────────────────────────────────────────────
-    - name: Update update_schedule_setting
-      paloaltonetworks.scm.scm_update_schedule_setting:
-        state: present
-        name: "ansible-test-update_schedule_setting"
-        description: "Updated by Ansible"
-        folder: "All"
-      register: update_result
-
-    - name: Show updated update_schedule_setting
-      ansible.builtin.debug:
-        var: update_result.update_schedule_setting
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get update_schedule_setting by ID (info module)
+    # ── List all ────────────────────────────────────────────
+    # Returns the singleton update schedule settings record for the folder.
+    - name: List update_schedule_settings (singleton per folder)
       paloaltonetworks.scm.scm_update_schedule_setting_info:
-        id: "your-object-uuid-here"
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show update_schedule_settings list
+      ansible.builtin.debug:
+        var: list_result.update_schedule_settings
+
+    # ── Get by ID ───────────────────────────────────────────
+    - name: Get update_schedule_setting by ID
+      paloaltonetworks.scm.scm_update_schedule_setting_info:
+        id: "{{ list_result.update_schedule_settings[0].id }}"
       register: info_by_id
+      when: list_result.update_schedule_settings | length > 0
 
     - name: Show info-by-ID result
       ansible.builtin.debug:
         var: info_by_id.update_schedule_settings
+      when: list_result.update_schedule_settings | length > 0
 
-    # ── List all ────────────────────────────────────────────
-    - name: List all update_schedule_settings
-      paloaltonetworks.scm.scm_update_schedule_setting_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show update_schedule_settings count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} update_schedule_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete update_schedule_setting
+    # ── Update ──────────────────────────────────────────────
+    # Update the singleton update_schedule_settings by ID.
+    # All three sub-sections (anti_virus, threats, wildfire) are required.
+    # sync_to_peer and threshold are required fields within each section.
+    - name: Update update_schedule_setting by ID
       paloaltonetworks.scm.scm_update_schedule_setting:
-        state: absent
-        name: "ansible-test-update_schedule_setting"
-        folder: "All"
+        state: present
+        id: "{{ list_result.update_schedule_settings[0].id }}"
+        folder: "Prisma Access"
+        update_schedule:
+          anti_virus:
+            recurring:
+              hourly:
+                action: "download-only"
+                at: 30
+              sync_to_peer: false
+              threshold: 300
+          threats:
+            recurring:
+              hourly:
+                action: "download-only"
+                at: 30
+                disable_new_content: false
+              new_app_threshold: 300
+              sync_to_peer: false
+              threshold: 300
+          wildfire:
+            recurring:
+              every_hour:
+                action: "download-only"
+                at: 30
+                sync_to_peer: true
+      register: update_result
+      when: list_result.update_schedule_settings | length > 0
 
+    - name: Show updated update_schedule_setting
+      ansible.builtin.debug:
+        var: update_result.update_schedule_setting
+      when: list_result.update_schedule_settings | length > 0

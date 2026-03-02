@@ -28,8 +28,8 @@
     - name: Create bgp_address_family_profile
       paloaltonetworks.scm.scm_bgp_address_family_profile:
         state: present
-        name: "ansible-test-bgp_address_family_profile"
-        folder: "All"
+        name: "ansible-test-bgp-afp"
+        folder: "Prisma Access"
         ipv4:
           unicast:
             enable: true
@@ -43,9 +43,8 @@
     - name: Update bgp_address_family_profile
       paloaltonetworks.scm.scm_bgp_address_family_profile:
         state: present
-        name: "ansible-test-bgp_address_family_profile"
-        description: "Updated by Ansible"
-        folder: "All"
+        name: "ansible-test-bgp-afp"
+        folder: "Prisma Access"
         ipv4:
           unicast:
             enable: true
@@ -59,8 +58,8 @@
     - name: Get bgp_address_family_profile by name
       paloaltonetworks.scm.scm_bgp_address_family_profile:
         state: gathered
-        name: "ansible-test-bgp_address_family_profile"
-        folder: "All"
+        name: "ansible-test-bgp-afp"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered bgp_address_family_profile
@@ -70,8 +69,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get bgp_address_family_profile by name (info module)
       paloaltonetworks.scm.scm_bgp_address_family_profile_info:
-        name: "ansible-test-bgp_address_family_profile"
-        folder: "All"
+        name: "ansible-test-bgp-afp"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -91,7 +90,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all bgp_address_family_profiles
       paloaltonetworks.scm.scm_bgp_address_family_profile_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show bgp_address_family_profiles count
@@ -102,6 +101,6 @@
     - name: Delete bgp_address_family_profile
       paloaltonetworks.scm.scm_bgp_address_family_profile:
         state: absent
-        name: "ansible-test-bgp_address_family_profile"
-        folder: "All"
+        name: "ansible-test-bgp-afp"
+        folder: "Prisma Access"
 

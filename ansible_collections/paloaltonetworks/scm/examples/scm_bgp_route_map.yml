@@ -28,8 +28,8 @@
     - name: Create bgp_route_map
       paloaltonetworks.scm.scm_bgp_route_map:
         state: present
-        name: "ansible-test-bgp_route_map"
-        folder: "All"
+        name: "ansible-test-bgp-rmap"
+        folder: "Prisma Access"
         route_map:
         - action: "permit"
           name: 1
@@ -43,9 +43,9 @@
     - name: Update bgp_route_map
       paloaltonetworks.scm.scm_bgp_route_map:
         state: present
-        name: "ansible-test-bgp_route_map"
+        name: "ansible-test-bgp-rmap"
         description: "Updated by Ansible"
-        folder: "All"
+        folder: "Prisma Access"
         route_map:
         - action: "permit"
           name: 1
@@ -59,8 +59,8 @@
     - name: Get bgp_route_map by name
       paloaltonetworks.scm.scm_bgp_route_map:
         state: gathered
-        name: "ansible-test-bgp_route_map"
-        folder: "All"
+        name: "ansible-test-bgp-rmap"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered bgp_route_map
@@ -70,8 +70,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get bgp_route_map by name (info module)
       paloaltonetworks.scm.scm_bgp_route_map_info:
-        name: "ansible-test-bgp_route_map"
-        folder: "All"
+        name: "ansible-test-bgp-rmap"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -91,7 +91,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all bgp_route_maps
       paloaltonetworks.scm.scm_bgp_route_map_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show bgp_route_maps count
@@ -102,6 +102,6 @@
     - name: Delete bgp_route_map
       paloaltonetworks.scm.scm_bgp_route_map:
         state: absent
-        name: "ansible-test-bgp_route_map"
-        folder: "All"
+        name: "ansible-test-bgp-rmap"
+        folder: "Prisma Access"
 

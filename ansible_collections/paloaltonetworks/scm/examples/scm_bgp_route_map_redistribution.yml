@@ -28,8 +28,8 @@
     - name: Create bgp_route_map_redistribution
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: present
-        name: "ansible-test-bgp_route_map_redistribution"
-        folder: "All"
+        name: "ansible-test-bgp-rmr"
+        folder: "Prisma Access"
         description: "Test BGP route map redistribution"
       register: create_result
 
@@ -41,9 +41,9 @@
     - name: Update bgp_route_map_redistribution
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: present
-        name: "ansible-test-bgp_route_map_redistribution"
+        name: "ansible-test-bgp-rmr"
         description: "Updated by Ansible"
-        folder: "All"
+        folder: "Prisma Access"
       register: update_result
 
     - name: Show updated bgp_route_map_redistribution
@@ -54,8 +54,8 @@
     - name: Get bgp_route_map_redistribution by name
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: gathered
-        name: "ansible-test-bgp_route_map_redistribution"
-        folder: "All"
+        name: "ansible-test-bgp-rmr"
+        folder: "Prisma Access"
       register: gathered_result
 
     - name: Show gathered bgp_route_map_redistribution
@@ -65,8 +65,8 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get bgp_route_map_redistribution by name (info module)
       paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
-        name: "ansible-test-bgp_route_map_redistribution"
-        folder: "All"
+        name: "ansible-test-bgp-rmr"
+        folder: "Prisma Access"
       register: info_by_name
 
     - name: Show info result
@@ -86,7 +86,7 @@
     # ── List all ────────────────────────────────────────────
     - name: List all bgp_route_map_redistributions
       paloaltonetworks.scm.scm_bgp_route_map_redistribution_info:
-        folder: "All"
+        folder: "Prisma Access"
       register: list_result
 
     - name: Show bgp_route_map_redistributions count
@@ -97,6 +97,6 @@
     - name: Delete bgp_route_map_redistribution
       paloaltonetworks.scm.scm_bgp_route_map_redistribution:
         state: absent
-        name: "ansible-test-bgp_route_map_redistribution"
-        folder: "All"
+        name: "ansible-test-bgp-rmr"
+        folder: "Prisma Access"
 

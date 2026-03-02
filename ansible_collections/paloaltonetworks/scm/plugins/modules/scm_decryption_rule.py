@@ -217,6 +217,7 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
+        position=dict(type='str', required=False, default='pre', choices=['pre', 'post']),
         action=dict(type='str', required=True),
         category=dict(type='list', required=True),
         description=dict(type='str', required=False),
@@ -283,6 +284,7 @@ def main():
     object_name = module.params.get('name')
     object_id = module.params.get('id')
     container = get_container_params(module)
+    position = module.params.get('position', 'pre')
 
     # Attempt to find existing object
     existing_obj = None
@@ -299,7 +301,7 @@ def main():
 
     if existing_obj is None and object_name:
         try:
-            existing_obj = api.fetch_decryption_rules(name=object_name, **container)
+            existing_obj = api.fetch_decryption_rules(name=object_name, position=position, **container)
         except NotFoundError:
             pass
         except Exception as e:
@@ -334,10 +336,11 @@ def main():
             try:
                 from scm.security_services.models.decryption_rules import DecryptionRules
                 model = DecryptionRules(id='', **payload, **container)
-                resp = api.create_decryption_rules(decryption_rules=model)
+                resp = api.create_decryption_rules(position=position, decryption_rules=model)
                 result['decryption_rule'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'decryption_rule created successfully'
+
             except NameNotUniqueError:
                 module.fail_json(msg='A decryption_rule object with this name already exists')
                 return
@@ -371,8 +374,27 @@ def main():
                 result['changed'] = True
                 result['msg'] = 'decryption_rule updated successfully'
             except Exception as e:
-                module.fail_json(msg='Failed to update decryption_rule: {0}'.format(str(e)))
-                return
+                # Some APIs return a JSON list for update responses (SDK deserialization bug).
+                # Detect this pattern, parse manually, and continue.
+                err_str = str(e)
+                if 'input_type=list' in err_str and ('Input should be a valid dictionary' in err_str or 'model_type' in err_str):
+                    try:
+                        import json as _json
+                        _raw = api.update_decryption_rules_by_id_without_preload_content(id=update_id, decryption_rules=model)
+                        _data = _json.loads(_raw.data)
+                        if isinstance(_data, list) and _data:
+                            _data = _data[0]
+                        from scm.security_services.models.decryption_rules import DecryptionRules
+                        _parsed = DecryptionRules.from_dict(_data) if isinstance(_data, dict) else None
+                        result['decryption_rule'] = to_result_data(_parsed) if _parsed else _data
+                        result['changed'] = True
+                        result['msg'] = 'decryption_rule updated successfully'
+                    except Exception as e2:
+                        module.fail_json(msg='Failed to update decryption_rule: {0}'.format(str(e)))
+                        return
+                else:
+                    module.fail_json(msg='Failed to update decryption_rule: {0}'.format(str(e)))
+                    return
 
 
     # Handle absent state

@@ -30,8 +30,10 @@
     - name: Create loopback_interface
       paloaltonetworks.scm.scm_loopback_interface:
         state: present
-        name: "ansible-test-loopback_interface"
+        name: "$ansible-test-loopback"
         folder: "All"
+        mtu: 1500
+        comment: "ansible test loopback interface"
       register: create_result
 
     - name: Show created loopback_interface
@@ -42,9 +44,10 @@
     - name: Update loopback_interface
       paloaltonetworks.scm.scm_loopback_interface:
         state: present
-        name: "ansible-test-loopback_interface"
-        description: "Updated by Ansible"
+        name: "$ansible-test-loopback"
         folder: "All"
+        mtu: 1500
+        comment: "ansible test loopback interface updated"
       register: update_result
 
     - name: Show updated loopback_interface
@@ -55,7 +58,7 @@
     - name: Get loopback_interface by name
       paloaltonetworks.scm.scm_loopback_interface:
         state: gathered
-        name: "ansible-test-loopback_interface"
+        name: "$ansible-test-loopback"
         folder: "All"
       register: gathered_result
 
@@ -66,7 +69,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get loopback_interface by name (info module)
       paloaltonetworks.scm.scm_loopback_interface_info:
-        name: "ansible-test-loopback_interface"
+        name: "$ansible-test-loopback"
         folder: "All"
       register: info_by_name
 
@@ -98,6 +101,6 @@
     - name: Delete loopback_interface
       paloaltonetworks.scm.scm_loopback_interface:
         state: absent
-        name: "ansible-test-loopback_interface"
+        name: "$ansible-test-loopback"
         folder: "All"
 

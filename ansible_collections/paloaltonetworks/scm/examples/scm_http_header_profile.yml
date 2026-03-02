@@ -28,7 +28,7 @@
     - name: Create http_header_profile
       paloaltonetworks.scm.scm_http_header_profile:
         state: present
-        name: "ansible-test-http_header_profile"
+        name: "ansible-test-http-hdr"
         folder: "All"
         description: "Created by Ansible"
       register: create_result
@@ -41,7 +41,7 @@
     - name: Update http_header_profile
       paloaltonetworks.scm.scm_http_header_profile:
         state: present
-        name: "ansible-test-http_header_profile"
+        name: "ansible-test-http-hdr"
         description: "Updated by Ansible"
         folder: "All"
       register: update_result
@@ -54,7 +54,7 @@
     - name: Get http_header_profile by name
       paloaltonetworks.scm.scm_http_header_profile:
         state: gathered
-        name: "ansible-test-http_header_profile"
+        name: "ansible-test-http-hdr"
         folder: "All"
       register: gathered_result
 
@@ -65,7 +65,7 @@
     # ── Get by name (info module) ───────────────────────────
     - name: Get http_header_profile by name (info module)
       paloaltonetworks.scm.scm_http_header_profile_info:
-        name: "ansible-test-http_header_profile"
+        name: "ansible-test-http-hdr"
         folder: "All"
       register: info_by_name
 
@@ -97,6 +97,6 @@
     - name: Delete http_header_profile
       paloaltonetworks.scm.scm_http_header_profile:
         state: absent
-        name: "ansible-test-http_header_profile"
+        name: "ansible-test-http-hdr"
         folder: "All"
 

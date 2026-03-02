@@ -50,13 +50,6 @@ options:
             - Mutually exclusive with C(folder) and C(snippet).
         required: False
         type: str
-    position:
-        description:
-            - The position of the rules (pre or post).
-        required: False
-        type: str
-        default: pre
-        choices: ['pre', 'post']
     limit:
         description:
             - Maximum number of results to return per page when listing resources.
@@ -144,7 +137,6 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
-        position=dict(type='str', required=False, default='pre', choices=['pre', 'post']),
         limit=dict(type='int', required=False, default=200),
         offset=dict(type='int', required=False, default=0),
         gather_all=dict(type='bool', required=False, default=False),
@@ -223,8 +215,6 @@ def main():
     # Mode 3: List resources
 
     list_kwargs = dict(container)
-    list_kwargs['position'] = module.params.get('position', 'pre')
-
     gather_all = module.params.get('gather_all', False)
 
     if gather_all:

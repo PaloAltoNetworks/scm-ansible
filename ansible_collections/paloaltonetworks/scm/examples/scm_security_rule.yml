@@ -30,6 +30,8 @@
         state: present
         name: "ansible-test-secrule"
         folder: "Prisma Access"
+        position: "pre"
+        policy_type: "Security"
         action: "allow"
         var_from:
           - "any"
@@ -59,6 +61,8 @@
         state: present
         name: "ansible-test-secrule"
         folder: "Prisma Access"
+        position: "pre"
+        policy_type: "Security"
         description: "Updated by Ansible"
         action: "deny"
         var_from:
@@ -89,6 +93,7 @@
         state: gathered
         name: "ansible-test-secrule"
         folder: "Prisma Access"
+        position: "pre"
       register: gathered_result
 
     - name: Show gathered security_rule
@@ -100,6 +105,7 @@
       paloaltonetworks.scm.scm_security_rule_info:
         name: "ansible-test-secrule"
         folder: "Prisma Access"
+        position: "pre"
       register: info_by_name
 
     - name: Show info result
@@ -120,6 +126,7 @@
     - name: List all security_rules
       paloaltonetworks.scm.scm_security_rule_info:
         folder: "Prisma Access"
+        position: "pre"
       register: list_result
 
     - name: Show security_rules count
@@ -132,3 +139,4 @@
         state: absent
         name: "ansible-test-secrule"
         folder: "Prisma Access"
+        position: "pre"
