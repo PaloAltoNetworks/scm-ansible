@@ -22,10 +22,19 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Checkout scm-python SDK
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/scm-python
+          ref: develop
+          token: ${{ secrets.GH_PAT }}
+          path: scm-python
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install scm-python ansible-core
+          pip install -e ./scm-python
+          pip install ansible-core
 
       - name: Create SCM config file from secrets
         run: |
