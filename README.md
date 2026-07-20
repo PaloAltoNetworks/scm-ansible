@@ -4,7 +4,7 @@ Ansible collection for managing Palo Alto Networks **Strata Cloud Manager** (SCM
 
 This collection provides 240+ modules (122 CRUD + 120 read-only `_info` modules)
 that map 1:1 to the SCM API, enabling infrastructure-as-code management of
-security policies, network objects, and cloud-managed firewall configurations.
+security policies, network objects, and cloud-managed firewall configurations..
 
 ## Quick Start
 
