@@ -117,6 +117,10 @@ def main():
     module = AnsibleModule(
         argument_spec=module_args,
         supports_check_mode=True,
+        required_if=[
+            ['state', 'present', ['name'], False],
+            ['state', 'absent', ['name'], False],
+        ],
     )
 
     if not HAS_SCM:
@@ -154,6 +158,15 @@ def main():
     # Attempt to find existing object
     existing_obj = None
 
+
+    if existing_obj is None and object_name:
+        try:
+            existing_obj = api.fetch_bandwidth_allocations(name=object_name, **container)
+        except NotFoundError:
+            pass
+        except Exception as e:
+            module.fail_json(msg='Error looking up bandwidth_allocation by name: {0}'.format(str(e)))
+            return
 
     module.log('scm: bandwidth_allocation lookup -> {0}'.format('found' if existing_obj else 'not found'))
 

@@ -49,8 +49,14 @@ plugins/modules/scm_certificate_profile.py validate-modules:import-error
 plugins/modules/scm_certificate_profile_info.py validate-modules:import-error
 plugins/modules/scm_certificate.py validate-modules:import-error
 plugins/modules/scm_certificate_info.py validate-modules:import-error
+plugins/modules/scm_config_match_list.py validate-modules:import-error
+plugins/modules/scm_config_match_list_info.py validate-modules:import-error
 plugins/modules/scm_content_id_setting.py validate-modules:import-error
 plugins/modules/scm_content_id_setting_info.py validate-modules:import-error
+plugins/modules/scm_data_filtering.py validate-modules:import-error
+plugins/modules/scm_data_filtering_info.py validate-modules:import-error
+plugins/modules/scm_data_object.py validate-modules:import-error
+plugins/modules/scm_data_object_info.py validate-modules:import-error
 plugins/modules/scm_decryption_exclusion.py validate-modules:import-error
 plugins/modules/scm_decryption_exclusion_info.py validate-modules:import-error
 plugins/modules/scm_decryption_profile.py validate-modules:import-error
@@ -81,10 +87,14 @@ plugins/modules/scm_folder.py validate-modules:import-error
 plugins/modules/scm_folder_info.py validate-modules:import-error
 plugins/modules/scm_general_setting.py validate-modules:import-error
 plugins/modules/scm_general_setting_info.py validate-modules:import-error
+plugins/modules/scm_globalprotect_match_list.py validate-modules:import-error
+plugins/modules/scm_globalprotect_match_list_info.py validate-modules:import-error
 plugins/modules/scm_hip_object.py validate-modules:import-error
 plugins/modules/scm_hip_object_info.py validate-modules:import-error
 plugins/modules/scm_hip_profile.py validate-modules:import-error
 plugins/modules/scm_hip_profile_info.py validate-modules:import-error
+plugins/modules/scm_hipmatch_match_list.py validate-modules:import-error
+plugins/modules/scm_hipmatch_match_list_info.py validate-modules:import-error
 plugins/modules/scm_http_header_profile.py validate-modules:import-error
 plugins/modules/scm_http_header_profile_info.py validate-modules:import-error
 plugins/modules/scm_http_server_profile.py validate-modules:import-error
@@ -101,6 +111,8 @@ plugins/modules/scm_ipsec_crypto_profile.py validate-modules:import-error
 plugins/modules/scm_ipsec_crypto_profile_info.py validate-modules:import-error
 plugins/modules/scm_ipsec_tunnel.py validate-modules:import-error
 plugins/modules/scm_ipsec_tunnel_info.py validate-modules:import-error
+plugins/modules/scm_iptag_match_list.py validate-modules:import-error
+plugins/modules/scm_iptag_match_list_info.py validate-modules:import-error
 plugins/modules/scm_kerberos_server_profile.py validate-modules:import-error
 plugins/modules/scm_kerberos_server_profile_info.py validate-modules:import-error
 plugins/modules/scm_label.py validate-modules:import-error
@@ -207,6 +219,8 @@ plugins/modules/scm_subscribed_tenant.py validate-modules:import-error
 plugins/modules/scm_subscribed_tenant_info.py validate-modules:import-error
 plugins/modules/scm_syslog_server_profile.py validate-modules:import-error
 plugins/modules/scm_syslog_server_profile_info.py validate-modules:import-error
+plugins/modules/scm_system_match_list.py validate-modules:import-error
+plugins/modules/scm_system_match_list_info.py validate-modules:import-error
 plugins/modules/scm_tacacs_server_profile.py validate-modules:import-error
 plugins/modules/scm_tacacs_server_profile_info.py validate-modules:import-error
 plugins/modules/scm_tag.py validate-modules:import-error
@@ -226,6 +240,8 @@ plugins/modules/scm_url_access_profile.py validate-modules:import-error
 plugins/modules/scm_url_access_profile_info.py validate-modules:import-error
 plugins/modules/scm_url_category.py validate-modules:import-error
 plugins/modules/scm_url_category_info.py validate-modules:import-error
+plugins/modules/scm_userid_match_list.py validate-modules:import-error
+plugins/modules/scm_userid_match_list_info.py validate-modules:import-error
 plugins/modules/scm_variable.py validate-modules:import-error
 plugins/modules/scm_variable_info.py validate-modules:import-error
 plugins/modules/scm_vlan_interface.py validate-modules:import-error

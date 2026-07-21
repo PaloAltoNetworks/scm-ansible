@@ -145,6 +145,20 @@ def main():
 
     # Mode 2: Fetch by name
 
+    if object_name:
+        try:
+            obj = api.fetch_bandwidth_allocations(name=object_name, **container)
+            if obj:
+                result['bandwidth_allocations'] = [to_result_data(obj)]
+                result['total'] = 1
+        except NotFoundError:
+            pass
+        except Exception as e:
+            module.fail_json(msg='Error retrieving bandwidth_allocation by name: {0}'.format(str(e)))
+            return
+        module.exit_json(**result)
+        return
+
     # Mode 3: List resources
 
     list_kwargs = {}

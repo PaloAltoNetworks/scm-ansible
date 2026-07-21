@@ -75,6 +75,10 @@ options:
         description: 'Loopback Interface name'
         required: True
         type: str
+    netflow_profile:
+        description: 'Name of Netflow Profile to assign to Interface'
+        required: False
+        type: str
 '''
 
 EXAMPLES = r'''
@@ -134,6 +138,7 @@ PARAM_TO_FIELD = {
     'ipv6': 'ipv6',
     'mtu': 'mtu',
     'name': 'name',
+    'netflow_profile': 'netflow_profile',
 }
 
 
@@ -154,6 +159,7 @@ def main():
         ipv6=dict(type='dict', required=False),
         mtu=dict(type='int', required=False),
         name=dict(type='str', required=True),
+        netflow_profile=dict(type='str', required=False),
     )
 
     module = AnsibleModule(

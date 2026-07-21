@@ -33,10 +33,6 @@ options:
         description: 'No description available.'
         required: False
         type: str
-    bgp_peer:
-        description: 'No description available.'
-        required: False
-        type: dict
     ipsec_tunnel:
         description: 'No description available.'
         required: True
@@ -68,6 +64,10 @@ options:
     region:
         description: 'No description available.'
         required: True
+        type: str
+    region_tag:
+        description: 'No description available.'
+        required: False
         type: str
     secondary_ipsec_tunnel:
         description: 'No description available.'
@@ -131,7 +131,6 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 PARAM_TO_FIELD = {
     'backup_sc': 'backup_sc',
-    'bgp_peer': 'bgp_peer',
     'ipsec_tunnel': 'ipsec_tunnel',
     'name': 'name',
     'nat_pool': 'nat_pool',
@@ -140,6 +139,7 @@ PARAM_TO_FIELD = {
     'protocol': 'protocol',
     'qos': 'qos',
     'region': 'region',
+    'region_tag': 'region_tag',
     'secondary_ipsec_tunnel': 'secondary_ipsec_tunnel',
     'source_nat': 'source_nat',
     'subnets': 'subnets',
@@ -154,7 +154,6 @@ def main():
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
         backup_sc=dict(type='str', required=False),
-        bgp_peer=dict(type='dict', required=False),
         ipsec_tunnel=dict(type='str', required=True),
         name=dict(type='str', required=True),
         nat_pool=dict(type='str', required=False),
@@ -163,6 +162,7 @@ def main():
         protocol=dict(type='dict', required=False),
         qos=dict(type='dict', required=False),
         region=dict(type='str', required=True),
+        region_tag=dict(type='str', required=False),
         secondary_ipsec_tunnel=dict(type='str', required=False),
         source_nat=dict(type='bool', required=False),
         subnets=dict(type='list', required=False),

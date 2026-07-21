@@ -25,7 +25,6 @@ class TestLogicalRoutersLifecycle:
     def test_01_create(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-lrouter-{run_id}",
-            routing_stack="advanced",
             vrf=[{
                 "name": "default",
                 "routing_table": {
@@ -49,7 +48,6 @@ class TestLogicalRoutersLifecycle:
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-lrouter-{run_id}",
-            routing_stack="advanced",
             vrf=[{
                 "name": "default",
                 "routing_table": {

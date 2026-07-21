@@ -83,6 +83,10 @@ options:
         description: 'L3 sub-interface name'
         required: True
         type: str
+    netflow_profile:
+        description: 'Name of Netflow Profile to assign to Interface'
+        required: False
+        type: str
     vlan_tag:
         description: 'VLAN tag'
         required: False
@@ -148,6 +152,7 @@ PARAM_TO_FIELD = {
     'ip': 'ip',
     'mtu': 'mtu',
     'name': 'name',
+    'netflow_profile': 'netflow_profile',
     'vlan_tag': 'vlan_tag',
 }
 
@@ -171,6 +176,7 @@ def main():
         ip=dict(type='list', required=False),
         mtu=dict(type='int', required=False),
         name=dict(type='str', required=True),
+        netflow_profile=dict(type='str', required=False),
         vlan_tag=dict(type='str', required=False),
     )
 

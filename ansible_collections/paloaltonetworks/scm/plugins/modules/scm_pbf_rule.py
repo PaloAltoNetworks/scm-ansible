@@ -71,6 +71,14 @@ options:
         description: 'PBF rule name'
         required: False
         type: str
+    negate_destination:
+        description: 'Negate destination address'
+        required: False
+        type: bool
+    negate_source:
+        description: 'Negate source address'
+        required: False
+        type: bool
     schedule:
         description: 'Schedule'
         required: False
@@ -153,6 +161,8 @@ PARAM_TO_FIELD = {
     'destination': 'destination',
     'enforce_symmetric_return': 'enforce_symmetric_return',
     'name': 'name',
+    'negate_destination': 'negate_destination',
+    'negate_source': 'negate_source',
     'schedule': 'schedule',
     'service': 'service',
     'source': 'source',
@@ -178,6 +188,8 @@ def main():
         destination=dict(type='list', required=False),
         enforce_symmetric_return=dict(type='dict', required=False),
         name=dict(type='str', required=False),
+        negate_destination=dict(type='bool', required=False),
+        negate_source=dict(type='bool', required=False),
         schedule=dict(type='str', required=False),
         service=dict(type='list', required=False),
         source=dict(type='list', required=False),

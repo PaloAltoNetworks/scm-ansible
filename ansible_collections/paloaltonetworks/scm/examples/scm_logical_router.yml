@@ -30,7 +30,6 @@
         state: present
         name: "ansible-test-logical_router"
         folder: "All"
-        routing_stack: "advanced"
         vrf:
         - name: "default"
           routing_table:
@@ -54,7 +53,6 @@
         state: present
         name: "ansible-test-logical_router"
         folder: "All"
-        routing_stack: "advanced"
         vrf:
         - name: "default"
           routing_table:

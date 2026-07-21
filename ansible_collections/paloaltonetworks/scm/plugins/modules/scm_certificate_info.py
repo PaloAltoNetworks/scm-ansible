@@ -183,19 +183,6 @@ def main():
 
     # Mode 1: Get by ID
 
-    if object_id:
-        try:
-            obj = api.get_certificates_by_id(id=object_id)
-            result['certificates'] = [to_result_data(obj)]
-            result['total'] = 1
-        except NotFoundError:
-            pass
-        except Exception as e:
-            module.fail_json(msg='Error retrieving certificate by id: {0}'.format(str(e)))
-            return
-        module.exit_json(**result)
-        return
-
     # Mode 2: Fetch by name
 
     if object_name:

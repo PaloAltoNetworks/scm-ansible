@@ -254,15 +254,6 @@ def main():
     # Attempt to find existing object
     existing_obj = None
 
-    if object_id:
-        try:
-            existing_obj = api.get_certificates_by_id(id=object_id)
-        except NotFoundError:
-            pass
-        except Exception as e:
-            module.fail_json(msg='Error looking up certificate by id: {0}'.format(str(e)))
-            return
-
 
     if existing_obj is None and object_name:
         try:

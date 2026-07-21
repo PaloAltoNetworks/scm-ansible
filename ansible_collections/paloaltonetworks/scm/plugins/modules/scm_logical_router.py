@@ -51,10 +51,6 @@ options:
         description: 'No description available.'
         required: True
         type: str
-    routing_stack:
-        description: 'No description available.'
-        required: False
-        type: str
     vrf:
         description: 'No description available.'
         required: False
@@ -112,7 +108,6 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 PARAM_TO_FIELD = {
     'name': 'name',
-    'routing_stack': 'routing_stack',
     'vrf': 'vrf',
 }
 
@@ -128,7 +123,6 @@ def main():
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
         name=dict(type='str', required=True),
-        routing_stack=dict(type='str', required=False),
         vrf=dict(type='list', required=False),
     )
 

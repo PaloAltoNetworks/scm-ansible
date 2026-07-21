@@ -190,7 +190,7 @@ def main():
 
     # Get the API instance
     try:
-        api = client.objects.AutoTagActionsApi(client.objects.api_client)
+        api = client.security_services.AutoTagActionsApi(client.security_services.api_client)
     except Exception as e:
         module.fail_json(msg='Failed to initialize API client for auto_tag_action: {0}'.format(str(e)))
         return
@@ -239,7 +239,7 @@ def main():
 
             module.log('scm: creating auto_tag_action')
             try:
-                from scm.objects.models.auto_tag_actions import AutoTagActions
+                from scm.security_services.models.auto_tag_actions import AutoTagActions
                 model = AutoTagActions(id='', **payload, **container)
                 resp = api.create_auto_tag_actions(auto_tag_actions=model)
                 result['auto_tag_action'] = to_result_data(resp)

@@ -172,7 +172,7 @@ def main():
 
     # Get the API instance
     try:
-        api = client.objects.AutoTagActionsApi(client.objects.api_client)
+        api = client.security_services.AutoTagActionsApi(client.security_services.api_client)
     except Exception as e:
         module.fail_json(msg='Failed to initialize API client for auto_tag_actions: {0}'.format(str(e)))
         return
