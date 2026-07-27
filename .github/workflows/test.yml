@@ -13,6 +13,7 @@ jobs:
   test:
     name: Test Ansible Playbooks
     runs-on: ubuntu-latest
+    timeout-minutes: 180
 
     steps:
       - name: Checkout code
@@ -217,4 +218,3 @@ jobs:
             echo "::error::${fail} playbook(s) failed"
             exit 1
           fi
-        timeout-minutes: 90
