@@ -99,6 +99,10 @@ options:
         description: 'Is the security rule disabled?'
         required: False
         type: bool
+    var_from:
+        description: 'The source security zone(s)'
+        required: False
+        type: list
     log_end:
         description: 'Log at session end?'
         required: False
@@ -175,10 +179,6 @@ options:
         description: 'The destination security zone(s)'
         required: False
         type: list
-    var_from:
-        description: 'The source security zone(s)'
-        required: False
-        type: list
 '''
 
 EXAMPLES = r'''
@@ -244,6 +244,7 @@ PARAM_TO_FIELD = {
     'destination_hip': 'destination_hip',
     'devices': 'devices',
     'disabled': 'disabled',
+    'var_from': 'from',
     'log_end': 'log_end',
     'log_setting': 'log_setting',
     'log_settings': 'log_settings',
@@ -263,7 +264,6 @@ PARAM_TO_FIELD = {
     'tag': 'tag',
     'tenant_restrictions': 'tenant_restrictions',
     'to': 'to',
-    'var_from': 'var_from',
 }
 
 
@@ -291,6 +291,7 @@ def main():
         destination_hip=dict(type='list', required=False),
         devices=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
+        var_from=dict(type='list', required=False),
         log_end=dict(type='bool', required=False),
         log_setting=dict(type='str', required=False),
         log_settings=dict(type='dict', required=False),
@@ -310,7 +311,6 @@ def main():
         tag=dict(type='list', required=False),
         tenant_restrictions=dict(type='list', required=False),
         to=dict(type='list', required=False),
-        var_from=dict(type='list', required=False),
     )
 
     module = AnsibleModule(

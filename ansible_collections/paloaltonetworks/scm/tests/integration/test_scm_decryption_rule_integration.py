@@ -14,11 +14,11 @@ run_module = make_runner(scm_decryption_rule, "scm_decryption_rule")
 
 _FIELDS = dict(
     action=None, category=None, description=None, destination=None,
-    destination_hip=None, disabled=None, from_=None, log_fail=None,
+    destination_hip=None, disabled=None, var_from=None, log_fail=None,
     log_setting=None, log_success=None, name=None,
     negate_destination=None, negate_source=None, position=None, profile=None,
     service=None, source=None, source_hip=None, source_user=None,
-    tag=None, to_=None, type=None,
+    tag=None, to=None, type=None,
 )
 
 
@@ -36,11 +36,11 @@ class TestDecryptionRulesLifecycle:
             action="no-decrypt",
             category=["any"],
             destination=["any"],
-            from_=["any"],
+            var_from=["any"],
             service=["service-https"],
             source=["any"],
             source_user=["any"],
-            to_=["any"],
+            to=["any"],
             type={"ssl_forward_proxy": {}},
             log_success=True,
             folder=TARGET_FOLDER,
@@ -57,11 +57,11 @@ class TestDecryptionRulesLifecycle:
             action="no-decrypt",
             category=["any"],
             destination=["any"],
-            from_=["any"],
+            var_from=["any"],
             service=["service-https"],
             source=["any"],
             source_user=["any"],
-            to_=["any"],
+            to=["any"],
             type={"ssl_forward_proxy": {}},
             log_success=True,
             folder=TARGET_FOLDER,

@@ -14,11 +14,11 @@ run_module = make_runner(scm_security_rule, "scm_security_rule")
 
 _FIELDS = dict(
     action=None, application=None, category=None, description=None,
-    destination=None, destination_hip=None, disabled=None, from_=None,
+    destination=None, destination_hip=None, disabled=None, var_from=None,
     log_setting=None, name=None, negate_destination=None,
     negate_source=None, policy_type=None, position=None, profile_setting=None,
     service=None, source=None, source_hip=None, source_user=None, tag=None,
-    to_=None,
+    to=None,
 )
 
 
@@ -38,11 +38,11 @@ class TestSecurityRulesLifecycle:
             application=["any"],
             category=["any"],
             destination=["any"],
-            from_=["any"],
+            var_from=["any"],
             service=["any"],
             source=["any"],
             source_user=["any"],
-            to_=["any"],
+            to=["any"],
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -59,11 +59,11 @@ class TestSecurityRulesLifecycle:
             application=["any"],
             category=["any"],
             destination=["any"],
-            from_=["any"],
+            var_from=["any"],
             service=["any"],
             source=["any"],
             source_user=["any"],
-            to_=["any"],
+            to=["any"],
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

@@ -14,9 +14,9 @@ run_module = make_runner(scm_application_override_rule, "scm_application_overrid
 
 _FIELDS = dict(
     application=None, description=None, destination=None,
-    disabled=None, from_=None, group_tag=None, name=None,
+    disabled=None, var_from=None, group_tag=None, name=None,
     negate_destination=None, negate_source=None, port=None,
-    protocol=None, source=None, tag=None, to_=None,
+    position=None, protocol=None, source=None, tag=None, to=None,
 )
 
 
@@ -24,20 +24,21 @@ def _params(**overrides):
     return build_params({**_FIELDS, **overrides})
 
 
-@pytest.mark.skip(reason="application_override_rules requires position parameter and complex rule setup")
 class TestApplicationOverrideRulesLifecycle:
     _created_id = None
 
     def test_01_create(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-appoverrule-{run_id}",
+            position="pre",
             application="web-browsing",
             destination=["any"],
-            from_=["any"],
-            port="8080",
+            var_from=["any"],
+            port="21",
             protocol="tcp",
             source=["any"],
-            to_=["any"],
+            to=["any"],
+            description="Test app override rule for Ansible testing",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -45,17 +46,44 @@ class TestApplicationOverrideRulesLifecycle:
         assert result["changed"] is True
         TestApplicationOverrideRulesLifecycle._created_id = result["application_override_rule"]["id"]
 
-    def test_02_delete(self, run_id):
+    def test_02_create_idempotent(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-appoverrule-{run_id}",
+            position="pre",
+            application="web-browsing",
+            destination=["any"],
+            var_from=["any"],
+            port="21",
+            protocol="tcp",
+            source=["any"],
+            to=["any"],
+            description="Test app override rule for Ansible testing",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+
+    def test_03_gather(self, run_id):
+        result = run_module(_params(
+            state="gathered", name=f"an-appoverrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
+        assert "found" in result["msg"]
+
+    def test_04_delete(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-appoverrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
 
-    def test_03_delete_idempotent(self, run_id):
+    def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-appoverrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

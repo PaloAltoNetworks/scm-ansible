@@ -71,6 +71,10 @@ options:
         description: 'Error correction profile'
         required: False
         type: str
+    var_from:
+        description: 'List of source zones'
+        required: True
+        type: list
     name:
         description: 'Rule name'
         required: True
@@ -113,10 +117,6 @@ options:
         type: list
     to:
         description: 'List of destination zones'
-        required: True
-        type: list
-    var_from:
-        description: 'List of source zones'
         required: True
         type: list
 '''
@@ -177,6 +177,7 @@ PARAM_TO_FIELD = {
     'destination': 'destination',
     'disabled': 'disabled',
     'error_correction_profile': 'error_correction_profile',
+    'var_from': 'from',
     'name': 'name',
     'negate_destination': 'negate_destination',
     'negate_source': 'negate_source',
@@ -188,7 +189,6 @@ PARAM_TO_FIELD = {
     'source_user': 'source_user',
     'tag': 'tag',
     'to': 'to',
-    'var_from': 'var_from',
 }
 
 
@@ -208,6 +208,7 @@ def main():
         destination=dict(type='list', required=True),
         disabled=dict(type='bool', required=False),
         error_correction_profile=dict(type='str', required=False),
+        var_from=dict(type='list', required=True),
         name=dict(type='str', required=True),
         negate_destination=dict(type='bool', required=False),
         negate_source=dict(type='bool', required=False),
@@ -219,7 +220,6 @@ def main():
         source_user=dict(type='list', required=True),
         tag=dict(type='list', required=False),
         to=dict(type='list', required=True),
-        var_from=dict(type='list', required=True),
     )
 
     module = AnsibleModule(

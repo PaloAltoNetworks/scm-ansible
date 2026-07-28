@@ -14,7 +14,7 @@ run_module = make_runner(scm_qos_rule, "scm_qos_rule")
 
 _FIELDS = dict(
     action=None, application=None, description=None,
-    dscp_tos=None, name=None, schedule=None, source=None,
+    dscp_tos=None, name=None, position=None, schedule=None, source=None,
 )
 
 
@@ -22,30 +22,54 @@ def _params(**overrides):
     return build_params({**_FIELDS, **overrides})
 
 
-@pytest.mark.skip(reason="requires position parameter and action/schedule setup")
 class TestQoSRulesLifecycle:
     _created_id = None
 
     def test_01_create(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-qosrule-{run_id}",
+            position="pre",
+            action={"class": "1"},
+            description="Test QoS rule for Ansible testing",
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
+        TestQoSRulesLifecycle._created_id = result["qos_rule"]["id"]
 
-    def test_02_delete(self, run_id):
+    def test_02_create_idempotent(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-qosrule-{run_id}",
+            position="pre",
+            action={"class": "1"},
+            description="Test QoS rule for Ansible testing",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+
+    def test_03_gather(self, run_id):
+        result = run_module(_params(
+            state="gathered", name=f"an-qosrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
+        assert "found" in result["msg"]
+
+    def test_04_delete(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-qosrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
 
-    def test_03_delete_idempotent(self, run_id):
+    def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-qosrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

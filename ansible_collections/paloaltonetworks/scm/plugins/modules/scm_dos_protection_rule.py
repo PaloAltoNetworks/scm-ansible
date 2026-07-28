@@ -63,6 +63,10 @@ options:
         description: 'Rule disabled?'
         required: False
         type: bool
+    var_from:
+        description: 'List of source zones'
+        required: False
+        type: list
     log_setting:
         description: 'Log forwarding profile name'
         required: False
@@ -101,10 +105,6 @@ options:
         type: list
     to:
         description: 'List of destination zones'
-        required: False
-        type: list
-    var_from:
-        description: 'List of source zones'
         required: False
         type: list
 '''
@@ -163,6 +163,7 @@ PARAM_TO_FIELD = {
     'description': 'description',
     'destination': 'destination',
     'disabled': 'disabled',
+    'var_from': 'from',
     'log_setting': 'log_setting',
     'name': 'name',
     'position': 'position',
@@ -173,7 +174,6 @@ PARAM_TO_FIELD = {
     'source_user': 'source_user',
     'tag': 'tag',
     'to': 'to',
-    'var_from': 'var_from',
 }
 
 
@@ -191,6 +191,7 @@ def main():
         description=dict(type='str', required=False),
         destination=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
+        var_from=dict(type='list', required=False),
         log_setting=dict(type='str', required=False),
         name=dict(type='str', required=True),
         position=dict(type='str', required=False),
@@ -201,7 +202,6 @@ def main():
         source_user=dict(type='list', required=False),
         tag=dict(type='list', required=False),
         to=dict(type='list', required=False),
-        var_from=dict(type='list', required=False),
     )
 
     module = AnsibleModule(

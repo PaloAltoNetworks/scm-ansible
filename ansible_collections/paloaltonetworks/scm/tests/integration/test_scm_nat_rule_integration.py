@@ -15,9 +15,9 @@ run_module = make_runner(scm_nat_rule, "scm_nat_rule")
 _FIELDS = dict(
     active_active_device_binding=None, description=None,
     destination=None, destination_translation=None,
-    disabled=None, from_=None, name=None, nat_type=None,
+    disabled=None, var_from=None, name=None, nat_type=None,
     position=None, service=None, source=None, source_translation=None,
-    tag=None, to_=None,
+    tag=None, to=None,
 )
 
 
@@ -32,8 +32,8 @@ class TestNatRulesLifecycle:
         result = run_module(_params(
             state="present", name=f"an-natrule-{run_id}",
             position="pre",
-            from_=["any"],
-            to_=["untrust"],
+            var_from=["any"],
+            to=["untrust"],
             source=["any"],
             destination=["any"],
             service="service-https",
@@ -51,8 +51,8 @@ class TestNatRulesLifecycle:
         result = run_module(_params(
             state="present", name=f"an-natrule-{run_id}",
             position="pre",
-            from_=["any"],
-            to_=["untrust"],
+            var_from=["any"],
+            to=["untrust"],
             source=["any"],
             destination=["any"],
             service="service-https",

@@ -71,6 +71,10 @@ options:
         description: 'Is the authentication rule disabled?'
         required: False
         type: bool
+    var_from:
+        description: 'The source security zones'
+        required: True
+        type: list
     group_tag:
         description: 'No description available.'
         required: False
@@ -125,10 +129,6 @@ options:
         type: int
     to:
         description: 'The destination security zones'
-        required: True
-        type: list
-    var_from:
-        description: 'The source security zones'
         required: True
         type: list
 '''
@@ -189,6 +189,7 @@ PARAM_TO_FIELD = {
     'destination': 'destination',
     'destination_hip': 'destination_hip',
     'disabled': 'disabled',
+    'var_from': 'from',
     'group_tag': 'group_tag',
     'hip_profiles': 'hip_profiles',
     'log_authentication_timeout': 'log_authentication_timeout',
@@ -203,7 +204,6 @@ PARAM_TO_FIELD = {
     'tag': 'tag',
     'timeout': 'timeout',
     'to': 'to',
-    'var_from': 'var_from',
 }
 
 
@@ -224,6 +224,7 @@ def main():
         destination=dict(type='list', required=True),
         destination_hip=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
+        var_from=dict(type='list', required=True),
         group_tag=dict(type='str', required=False),
         hip_profiles=dict(type='list', required=False),
         log_authentication_timeout=dict(type='bool', required=False),
@@ -238,7 +239,6 @@ def main():
         tag=dict(type='list', required=False),
         timeout=dict(type='int', required=False),
         to=dict(type='list', required=True),
-        var_from=dict(type='list', required=True),
     )
 
     module = AnsibleModule(

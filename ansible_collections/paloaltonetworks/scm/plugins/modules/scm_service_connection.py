@@ -130,7 +130,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 
 PARAM_TO_FIELD = {
-    'backup_sc': 'backup_sc',
+    'backup_sc': 'backup_SC',
     'ipsec_tunnel': 'ipsec_tunnel',
     'name': 'name',
     'nat_pool': 'nat_pool',

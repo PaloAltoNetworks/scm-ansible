@@ -174,7 +174,7 @@ PARAM_TO_FIELD = {
     'email': 'email',
     'hostname': 'hostname',
     'ip': 'ip',
-    'is_block_private_key': 'is_block_private_key',
+    'is_block_private_key': 'is_block_privateKey',
     'is_certificate_authority': 'is_certificate_authority',
     'locality': 'locality',
     'ocsp_responder_url': 'ocsp_responder_url',
