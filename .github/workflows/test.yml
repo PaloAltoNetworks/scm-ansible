@@ -140,17 +140,40 @@ jobs:
                           outcome = test.get('outcome', 'failed')
                           f.write(f"### `{test_name}` ({duration:.2f}s) [{outcome}]\n\n")
 
+                          # Extract error details from multiple possible locations
                           call = test.get('call', {})
                           setup = test.get('setup', {})
-                          longrepr = call.get('longrepr', '') or setup.get('longrepr', '')
+                          teardown = test.get('teardown', {})
 
-                          if longrepr:
-                              f.write("<details>\n<summary>Error Details</summary>\n\n")
-                              f.write("```\n")
-                              lines = longrepr.split('\n')
-                              f.write('\n'.join(lines[-30:]))
-                              f.write("\n```\n")
-                              f.write("</details>\n\n")
+                          # Try longrepr first (main error message)
+                          longrepr = call.get('longrepr', '') or setup.get('longrepr', '') or teardown.get('longrepr', '')
+
+                          # Also check crash info for location details
+                          crash = call.get('crash', {}) or setup.get('crash', {})
+                          crash_msg = ''
+                          if crash:
+                              crash_msg = f"File: {crash.get('path', '')}:{crash.get('lineno', '')}\n{crash.get('message', '')}"
+
+                          # Check traceback for additional context
+                          traceback = call.get('traceback', []) or setup.get('traceback', [])
+                          tb_msg = ''
+                          if traceback and isinstance(traceback, list):
+                              tb_entries = []
+                              for tb in traceback[-5:]:  # Last 5 traceback entries
+                                  if isinstance(tb, dict):
+                                      tb_entries.append(f"  {tb.get('path', '')}:{tb.get('lineno', '')} in {tb.get('name', '')}")
+                                      if tb.get('message'):
+                                          tb_entries.append(f"    {tb.get('message', '')}")
+                              tb_msg = '\n'.join(tb_entries)
+
+                          error_output = longrepr or crash_msg or tb_msg or 'No error details captured'
+
+                          # Show errors prominently (not collapsed)
+                          f.write("**Error:**\n```\n")
+                          lines = error_output.split('\n')
+                          # Show last 40 lines to capture assertion and context
+                          f.write('\n'.join(lines[-40:]))
+                          f.write("\n```\n\n")
                           f.write("---\n\n")
 
                   # Passed tests (collapsed)

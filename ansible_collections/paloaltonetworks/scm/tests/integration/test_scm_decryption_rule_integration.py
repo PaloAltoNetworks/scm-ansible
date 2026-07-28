@@ -16,7 +16,7 @@ _FIELDS = dict(
     action=None, category=None, description=None, destination=None,
     destination_hip=None, disabled=None, from_=None, log_fail=None,
     log_setting=None, log_success=None, name=None,
-    negate_destination=None, negate_source=None, profile=None,
+    negate_destination=None, negate_source=None, position=None, profile=None,
     service=None, source=None, source_hip=None, source_user=None,
     tag=None, to_=None, type=None,
 )
@@ -26,22 +26,23 @@ def _params(**overrides):
     return build_params({**_FIELDS, **overrides})
 
 
-@pytest.mark.skip(reason="decryption_rules requires position parameter and complex rule setup")
 class TestDecryptionRulesLifecycle:
     _created_id = None
 
     def test_01_create(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-decrule-{run_id}",
+            position="pre",
             action="no-decrypt",
             category=["any"],
             destination=["any"],
             from_=["any"],
-            service=["any"],
+            service=["service-https"],
             source=["any"],
             source_user=["any"],
             to_=["any"],
             type={"ssl_forward_proxy": {}},
+            log_success=True,
             folder=TARGET_FOLDER,
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
@@ -49,17 +50,46 @@ class TestDecryptionRulesLifecycle:
         assert result["changed"] is True
         TestDecryptionRulesLifecycle._created_id = result["decryption_rule"]["id"]
 
-    def test_02_delete(self, run_id):
+    def test_02_create_idempotent(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-decrule-{run_id}",
+            position="pre",
+            action="no-decrypt",
+            category=["any"],
+            destination=["any"],
+            from_=["any"],
+            service=["service-https"],
+            source=["any"],
+            source_user=["any"],
+            to_=["any"],
+            type={"ssl_forward_proxy": {}},
+            log_success=True,
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+
+    def test_03_gather(self, run_id):
+        result = run_module(_params(
+            state="gathered", name=f"an-decrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
+        assert "found" in result["msg"]
+
+    def test_04_delete(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-decrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
 
-    def test_03_delete_idempotent(self, run_id):
+    def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-decrule-{run_id}",
+            position="pre",
             folder=TARGET_FOLDER,
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"

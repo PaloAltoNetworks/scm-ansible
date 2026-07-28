@@ -80,6 +80,9 @@ jobs:
           echo "=========================================="
           echo ""
 
+          # Store error details for summary
+          declare -A error_details
+
           for pb in "${PLAYBOOKS[@]}"; do
             output=$(ansible-playbook "examples/${pb}.yml" 2>&1)
             exit_code=$?
@@ -92,7 +95,10 @@ jobs:
             else
               echo "${pb} :: FAIL"
               # Print the last error line for quick diagnosis
-              echo "$output" | grep -E "fatal:|ERROR|failed=" | tail -3 | sed 's/^/  /'
+              error_lines=$(echo "$output" | grep -E "fatal:|ERROR|failed=|msg:" | tail -10)
+              echo "$error_lines" | sed 's/^/  /'
+              # Store error for summary (escape for markdown)
+              error_details["${pb}"]="$error_lines"
               results+=("FAIL|${pb}")
               ((fail++))
             fi
@@ -115,13 +121,37 @@ jobs:
               status="${r%%|*}"
               name="${r##*|}"
               if [ "$status" = "PASS" ]; then
-                echo "| \`${name}\` | PASS |"
+                echo "| \`${name}\` | ✅ PASS |"
               else
-                echo "| \`${name}\` | FAIL |"
+                echo "| \`${name}\` | ❌ FAIL |"
               fi
             done
             echo ""
             echo "**Total: ${pass} passed, ${fail} failed**"
+            echo ""
+
+            # Add error details section for failed playbooks
+            if [ $fail -gt 0 ]; then
+              echo "## Error Details"
+              echo ""
+              for r in "${results[@]}"; do
+                status="${r%%|*}"
+                name="${r##*|}"
+                if [ "$status" = "FAIL" ]; then
+                  echo "### \`${name}\`"
+                  echo ""
+                  echo "\`\`\`"
+                  # Output stored error details
+                  if [ -n "${error_details[$name]}" ]; then
+                    echo "${error_details[$name]}"
+                  else
+                    echo "No error details captured"
+                  fi
+                  echo "\`\`\`"
+                  echo ""
+                fi
+              done
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
           # Fail the job if any playbook failed
