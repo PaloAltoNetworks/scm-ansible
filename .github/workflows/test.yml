@@ -57,6 +57,7 @@ jobs:
           SCM_TSG_ID: ${{ secrets.SCM_TSG_ID }}
           SCM_HOST: ${{ secrets.SCM_HOST }}
           SCM_AUTH_URL: ${{ secrets.SCM_AUTH_URL }}
+          PYTHONPATH: ${{ github.workspace }}
           PYTHONWARNINGS: ignore
         run: |
           set +e
