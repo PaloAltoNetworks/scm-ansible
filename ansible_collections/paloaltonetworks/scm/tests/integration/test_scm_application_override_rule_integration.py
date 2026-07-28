@@ -34,17 +34,18 @@ class TestApplicationOverrideRulesLifecycle:
             application="web-browsing",
             destination=["any"],
             var_from=["any"],
-            port="21",
+            port="8080",
             protocol="tcp",
             source=["any"],
             to=["any"],
             description="Test app override rule for Ansible testing",
-            folder=TARGET_FOLDER,
+            folder="All",  # Use "All" folder for app override rules per SDK tests
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
-        TestApplicationOverrideRulesLifecycle._created_id = result["application_override_rule"]["id"]
+        # Store ID if present (may not be returned by SDK due to readOnly exclusion)
+        TestApplicationOverrideRulesLifecycle._created_id = result["application_override_rule"].get("id")
 
     def test_02_create_idempotent(self, run_id):
         result = run_module(_params(
@@ -53,12 +54,12 @@ class TestApplicationOverrideRulesLifecycle:
             application="web-browsing",
             destination=["any"],
             var_from=["any"],
-            port="21",
+            port="8080",
             protocol="tcp",
             source=["any"],
             to=["any"],
             description="Test app override rule for Ansible testing",
-            folder=TARGET_FOLDER,
+            folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
 
@@ -66,7 +67,7 @@ class TestApplicationOverrideRulesLifecycle:
         result = run_module(_params(
             state="gathered", name=f"an-appoverrule-{run_id}",
             position="pre",
-            folder=TARGET_FOLDER,
+            folder="All",
         ))
         assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
         assert "found" in result["msg"]
@@ -75,7 +76,7 @@ class TestApplicationOverrideRulesLifecycle:
         result = run_module(_params(
             state="absent", name=f"an-appoverrule-{run_id}",
             position="pre",
-            folder=TARGET_FOLDER,
+            folder="All",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
@@ -84,7 +85,7 @@ class TestApplicationOverrideRulesLifecycle:
         result = run_module(_params(
             state="absent", name=f"an-appoverrule-{run_id}",
             position="pre",
-            folder=TARGET_FOLDER,
+            folder="All",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
         assert result["changed"] is False

@@ -234,13 +234,18 @@ def main():
 
 
     # Fallback: No fetch method available - use list + client-side filter by threatname
+    # Use raw JSON parsing to avoid Pydantic validation issues with partial list responses
     if existing_obj is None and object_name:
         try:
-            list_resp = api.list_anti_spyware_signatures(**container, limit=5000)
-            if hasattr(list_resp, 'data') and list_resp.data:
-                for item in list_resp.data:
-                    if hasattr(item, 'threatname') and item.threatname == object_name:
-                        existing_obj = item
+            import json as _json
+            _raw = api.list_anti_spyware_signatures_without_preload_content(**container, limit=5000)
+            _data = _json.loads(_raw.data)
+            if 'data' in _data and _data['data']:
+                for item in _data['data']:
+                    if item.get('threatname') == object_name:
+                        # Create model instance from matched dict for downstream use
+                        from scm.security_services.models.anti_spyware_signatures import AntiSpywareSignatures
+                        existing_obj = AntiSpywareSignatures.from_dict(item)
                         break
         except Exception as e:
             module.fail_json(msg='Error looking up anti_spyware_signature by threatname: {0}'.format(str(e)))
