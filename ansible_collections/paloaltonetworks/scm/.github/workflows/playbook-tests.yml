@@ -60,116 +60,15 @@ jobs:
           COLLECTION_DIR="${{ github.workspace }}/ansible_collections/paloaltonetworks/scm"
           cd "$COLLECTION_DIR"
 
-          PLAYBOOKS=(
-            scm_address
-            scm_address_group
-            scm_aggregate_interface
-            scm_anti_spyware_profile
-            scm_anti_spyware_signature
-            scm_application
-            scm_application_filter
-            scm_application_group
-            scm_application_override_rule
-            scm_authentication_portal
-            scm_authentication_profile
-            scm_authentication_rule
-            scm_authentication_sequence
-            scm_authentication_setting
-            scm_auto_tag_action
-            scm_auto_vpn_cluster
-            scm_auto_vpn_config_push
-            scm_bgp_address_family_profile
-            scm_bgp_authentication_profile
-            scm_bgp_filtering_profile
-            scm_bgp_redistribution_profile
-            scm_bgp_route_map
-            scm_bgp_route_map_redistribution
-            scm_certificate
-            scm_certificate_profile
-            scm_content_id_setting
-            scm_decryption_exclusion
-            scm_decryption_profile
-            scm_decryption_rule
-            scm_device_redistribution_collector_setting
-            scm_dhcp_interface
-            scm_dns_proxy
-            scm_dns_security_profile
-            scm_dos_protection_profile
-            scm_dynamic_user_group
-            scm_ethernet_interface
-            scm_external_dynamic_list
-            scm_file_blocking_profile
-            scm_general_setting
-            scm_hip_object
-            scm_hip_profile
-            scm_http_header_profile
-            scm_http_server_profile
-            scm_ike_crypto_profile
-            scm_ike_gateway
-            scm_interface_management_profile
-            scm_internal_dns_server
-            scm_ipsec_crypto_profile
-            scm_ipsec_tunnel
-            scm_kerberos_server_profile
-            scm_label
-            scm_layer2_subinterface
-            scm_layer3_subinterface
-            scm_ldap_server_profile
-            scm_link_tag
-            scm_lldp_profile
-            scm_local_user
-            scm_local_user_group
-            scm_log_forwarding_profile
-            scm_logical_router
-            scm_login_banner_setting
-            scm_loopback_interface
-            scm_management_interface_setting
-            scm_mfa_server
-            scm_nat_rule
-            scm_ocsp_responder
-            scm_ospf_authentication_profile
-            scm_pbf_rule
-            scm_profile_group
-            scm_qos_profile
-            scm_qos_rule
-            scm_quarantined_device
-            scm_radius_server_profile
-            scm_region
-            scm_route_community_list
-            scm_route_path_access_list
-            scm_saml_server_profile
-            scm_schedule
-            scm_scep_profile
-            scm_sdwan_error_correction_profile
-            scm_sdwan_path_quality_profile
-            scm_sdwan_saas_quality_profile
-            scm_security_rule
-            scm_security_zone
-            scm_service
-            scm_service_group
-            scm_service_route_setting
-            scm_service_setting
-            scm_session_setting
-            scm_session_timeouts_setting
-            scm_snippet
-            scm_syslog_server_profile
-            scm_tacacs_server_profile
-            scm_tag
-            scm_tcp_setting
-            scm_tls_service_profile
-            scm_traffic_steering_rule
-            scm_tunnel_interface
-            scm_update_schedule_setting
-            scm_url_access_profile
-            scm_url_category
-            scm_variable
-            scm_vlan_interface
-            scm_vpn_setting
-            scm_vulnerability_protection_profile
-            scm_vulnerability_protection_signature
-            scm_wildfire_anti_virus_profile
-            scm_zone_protection_profile
-          )
+          # Dynamically discover all playbooks from examples directory
+          PLAYBOOKS=()
+          for pb_file in examples/scm_*.yml; do
+            [ -f "$pb_file" ] || continue
+            pb_name=$(basename "$pb_file" .yml)
+            PLAYBOOKS+=("$pb_name")
+          done
+
+          echo "Discovered ${#PLAYBOOKS[@]} playbooks"
 
           pass=0
           fail=0
