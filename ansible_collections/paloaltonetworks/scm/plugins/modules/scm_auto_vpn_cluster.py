@@ -188,7 +188,7 @@ def main():
 
     if existing_obj is None and object_name:
         try:
-            existing_obj = api.fetch_auto_vpn_clusters(name=object_name, **container)
+            existing_obj = api.fetch_auto_vpn_clusters(name=object_name)
         except NotFoundError:
             pass
         except Exception as e:
