@@ -199,7 +199,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up mfa_server by name: {0}'.format(str(e)))
             return
-
     module.log('scm: mfa_server lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

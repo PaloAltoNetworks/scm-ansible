@@ -194,7 +194,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up auto_vpn_cluster by name: {0}'.format(str(e)))
             return
-
     module.log('scm: auto_vpn_cluster lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

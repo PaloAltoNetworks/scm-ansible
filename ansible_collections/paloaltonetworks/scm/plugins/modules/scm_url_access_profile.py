@@ -275,7 +275,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up url_access_profile by name: {0}'.format(str(e)))
             return
-
     module.log('scm: url_access_profile lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

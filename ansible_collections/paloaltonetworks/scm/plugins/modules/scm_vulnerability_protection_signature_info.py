@@ -178,7 +178,7 @@ def main():
         return
 
     object_id = module.params.get('id')
-    object_name = module.params.get('name')
+    object_name = module.params.get('threatname')
     container = get_container_params(module)
 
     # Mode 1: Get by ID
@@ -196,7 +196,7 @@ def main():
         module.exit_json(**result)
         return
 
-    # Mode 2: Fetch by name
+    # Mode 2: Fetch by threatname
 
     # Mode 3: List resources
 

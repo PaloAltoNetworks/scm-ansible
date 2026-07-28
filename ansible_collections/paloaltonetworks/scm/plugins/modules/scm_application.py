@@ -347,7 +347,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up application by name: {0}'.format(str(e)))
             return
-
     module.log('scm: application lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state
