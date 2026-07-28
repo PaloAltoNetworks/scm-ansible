@@ -1,4 +1,8 @@
-name: Run Example Playbooks
+name: Module Tests (Fast)
+
+# Automated pytest-based testing for fast CI feedback
+# Runs on every push/PR - tests module logic without playbook overhead
+# See docs/CI_CD_STRATEGY.md for rationale
 
 on:
   push:
@@ -10,31 +14,23 @@ on:
 
 jobs:
   test:
-    name: Test Ansible Playbooks
+    name: Pytest Module Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Checkout scm-python SDK
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.repository_owner }}/scm-python
-          ref: develop
-          token: ${{ secrets.GH_PAT }}
-          path: scm-python
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e ./scm-python
-          pip install ansible-core
+          pip install git+https://github.com/PaloAltoNetworks/scm-python@develop
+          pip install pytest pytest-json-report
 
       - name: Create SCM config file from secrets
         run: |
@@ -52,176 +48,85 @@ jobs:
           }
           EOF
 
-      - name: Run example playbooks
+      - name: Run pytest module tests
         env:
           SCM_CONFIG_FILE: ${{ github.workspace }}/config/scm-config.json
-          ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}
+          SCM_CLIENT_ID: ${{ secrets.SCM_CLIENT_ID }}
+          SCM_CLIENT_SECRET: ${{ secrets.SCM_CLIENT_SECRET }}
+          SCM_SCOPE: ${{ secrets.SCM_SCOPE }}
+          SCM_TSG_ID: ${{ secrets.SCM_TSG_ID }}
+          SCM_HOST: ${{ secrets.SCM_HOST }}
+          SCM_AUTH_URL: ${{ secrets.SCM_AUTH_URL }}
+          PYTHONWARNINGS: ignore
         run: |
           set +e
 
-          COLLECTION_DIR="${{ github.workspace }}/ansible_collections/paloaltonetworks/scm"
-          cd "$COLLECTION_DIR"
+          cd ansible_collections/paloaltonetworks/scm
+          pytest tests/integration/ -v --json-report --json-report-file=test-report.json
+          exit_code=$?
 
-          PLAYBOOKS=(
-            scm_address
-            scm_address_group
-            scm_aggregate_interface
-            scm_anti_spyware_profile
-            scm_anti_spyware_signature
-            scm_application
-            scm_application_filter
-            scm_application_group
-            scm_application_override_rule
-            scm_authentication_portal
-            scm_authentication_profile
-            scm_authentication_rule
-            scm_authentication_sequence
-            scm_authentication_setting
-            scm_auto_tag_action
-            scm_auto_vpn_cluster
-            scm_auto_vpn_config_push
-            scm_bgp_address_family_profile
-            scm_bgp_authentication_profile
-            scm_bgp_filtering_profile
-            scm_bgp_redistribution_profile
-            scm_bgp_route_map
-            scm_bgp_route_map_redistribution
-            scm_certificate
-            scm_certificate_profile
-            scm_content_id_setting
-            scm_decryption_exclusion
-            scm_decryption_profile
-            scm_decryption_rule
-            scm_device_redistribution_collector_setting
-            scm_dhcp_interface
-            scm_dns_proxy
-            scm_dns_security_profile
-            scm_dos_protection_profile
-            scm_dynamic_user_group
-            scm_ethernet_interface
-            scm_external_dynamic_list
-            scm_file_blocking_profile
-            scm_general_setting
-            scm_hip_object
-            scm_hip_profile
-            scm_http_header_profile
-            scm_http_server_profile
-            scm_ike_crypto_profile
-            scm_ike_gateway
-            scm_interface_management_profile
-            scm_internal_dns_server
-            scm_ipsec_crypto_profile
-            scm_ipsec_tunnel
-            scm_kerberos_server_profile
-            scm_label
-            scm_layer2_subinterface
-            scm_layer3_subinterface
-            scm_ldap_server_profile
-            scm_link_tag
-            scm_lldp_profile
-            scm_local_user
-            scm_local_user_group
-            scm_log_forwarding_profile
-            scm_logical_router
-            scm_login_banner_setting
-            scm_loopback_interface
-            scm_management_interface_setting
-            scm_mfa_server
-            scm_nat_rule
-            scm_ocsp_responder
-            scm_ospf_authentication_profile
-            scm_pbf_rule
-            scm_profile_group
-            scm_qos_profile
-            scm_qos_rule
-            scm_quarantined_device
-            scm_radius_server_profile
-            scm_region
-            scm_route_community_list
-            scm_route_path_access_list
-            scm_saml_server_profile
-            scm_schedule
-            scm_scep_profile
-            scm_sdwan_error_correction_profile
-            scm_sdwan_path_quality_profile
-            scm_sdwan_saas_quality_profile
-            scm_security_rule
-            scm_security_zone
-            scm_service
-            scm_service_group
-            scm_service_route_setting
-            scm_service_setting
-            scm_session_setting
-            scm_session_timeouts_setting
-            scm_snippet
-            scm_syslog_server_profile
-            scm_tacacs_server_profile
-            scm_tag
-            scm_tcp_setting
-            scm_tls_service_profile
-            scm_traffic_steering_rule
-            scm_tunnel_interface
-            scm_update_schedule_setting
-            scm_url_access_profile
-            scm_url_category
-            scm_variable
-            scm_vlan_interface
-            scm_vpn_setting
-            scm_vulnerability_protection_profile
-            scm_vulnerability_protection_signature
-            scm_wildfire_anti_virus_profile
-            scm_zone_protection_profile
-          )
+          # Parse JSON report and create summary
+          cat > parse_pytest.py << 'PYTHON'
+          import json
+          import sys
+          import os
 
-          pass=0
-          fail=0
-          results=()
+          try:
+              with open('test-report.json', 'r') as f:
+                  report = json.load(f)
+          except FileNotFoundError:
+              print("No test report found")
+              sys.exit(0)
 
-          for pb in "${PLAYBOOKS[@]}"; do
-            output=$(ansible-playbook "examples/${pb}.yml" 2>&1)
-            exit_code=$?
+          tests = report.get('tests', [])
 
-            # PASS if exit code 0 and PLAY RECAP shows no failures
-            if [ $exit_code -eq 0 ] && echo "$output" | grep -qE "^PLAY RECAP" && ! echo "$output" | grep -qE "failed=[1-9]"; then
-              echo "${pb} :: PASS"
-              results+=("PASS|${pb}")
-              ((pass++))
-            else
-              echo "${pb} :: FAIL"
-              # Print the last error line for quick diagnosis
-              echo "$output" | grep -E "fatal:|ERROR|failed=" | tail -3 | sed 's/^/  /'
-              results+=("FAIL|${pb}")
-              ((fail++))
-            fi
-          done
+          passed = [t for t in tests if t.get('outcome') == 'passed']
+          failed = [t for t in tests if t.get('outcome') == 'failed']
+          skipped = [t for t in tests if t.get('outcome') == 'skipped']
+          errored = [t for t in tests if t.get('outcome') == 'error']
 
-          echo ""
-          echo "=================================="
-          echo "SUMMARY: ${pass} PASS, ${fail} FAIL"
-          echo "=================================="
+          # Print summary to console
+          print(f"\n{'='*60}")
+          print(f"Pytest Module Test Results")
+          print(f"{'='*60}")
+          print(f"Passed: {len(passed)}")
+          print(f"Failed: {len(failed)}")
+          print(f"Errors: {len(errored)}")
+          print(f"Skipped: {len(skipped)}")
+          print(f"{'='*60}\n")
 
-          # Write GitHub step summary
-          {
-            echo "## Ansible Playbook Test Results"
-            echo ""
-            echo "| Playbook | Result |"
-            echo "|----------|--------|"
-            for r in "${results[@]}"; do
-              status="${r%%|*}"
-              name="${r##*|}"
-              if [ "$status" = "PASS" ]; then
-                echo "| \`${name}\` | ✅ PASS |"
-              else
-                echo "| \`${name}\` | ❌ FAIL |"
-              fi
-            done
-            echo ""
-            echo "**Total: ${pass} passed, ${fail} failed**"
-          } >> "$GITHUB_STEP_SUMMARY"
+          # Write to GITHUB_STEP_SUMMARY
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'w') as f:
+                  f.write("## Pytest Module Test Results\n\n")
+                  f.write(f"| Status | Count |\n")
+                  f.write(f"|--------|-------|\n")
+                  f.write(f"| Passed | {len(passed)} |\n")
+                  f.write(f"| Failed | {len(failed)} |\n")
+                  f.write(f"| Errors | {len(errored)} |\n")
+                  f.write(f"| Skipped | {len(skipped)} |\n\n")
 
-          # Fail the job if any regression (previously-passing test now fails)
-          if [ $fail -gt 0 ]; then
-            echo "::error::${fail} playbook(s) failed"
-            exit 1
+                  if failed or errored:
+                      f.write("### Failed Tests\n\n")
+                      for test in failed + errored:
+                          test_name = test.get('nodeid', 'Unknown')
+                          duration = test.get('duration', 0)
+                          f.write(f"- `{test_name}` ({duration:.2f}s)\n")
+                      f.write("\n")
+
+                  if passed:
+                      f.write("<details><summary>Passed Tests</summary>\n\n")
+                      for test in passed:
+                          test_name = test.get('nodeid', 'Unknown')
+                          f.write(f"- `{test_name}`\n")
+                      f.write("\n</details>\n")
+          PYTHON
+
+          python3 parse_pytest.py
+
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::Pytest tests failed"
+            exit $exit_code
           fi
-        timeout-minutes: 90
+        timeout-minutes: 45
