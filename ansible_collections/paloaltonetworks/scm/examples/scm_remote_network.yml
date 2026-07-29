@@ -188,3 +188,9 @@
         state: absent
         name: "{{ crypto_name }}"
         folder: "{{ folder }}"
+        hash:
+          - "sha256"
+        dh_group:
+          - "group14"
+        encryption:
+          - "aes-256-cbc"
