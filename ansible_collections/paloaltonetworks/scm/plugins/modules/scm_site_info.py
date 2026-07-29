@@ -32,6 +32,12 @@ options:
             - Mutually exclusive with C(id).
         required: False
         type: str
+    folder:
+        description:
+            - The folder in which to look for resources.
+            - Mutually exclusive with C(snippet) and C(device).
+        required: False
+        type: str
     limit:
         description:
             - Maximum number of results to return per page when listing resources.
@@ -98,6 +104,7 @@ def main():
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
         name=dict(type='str', required=False),
+        folder=dict(type='str', required=False),
         limit=dict(type='int', required=False, default=200),
         offset=dict(type='int', required=False, default=0),
         gather_all=dict(type='bool', required=False, default=False),

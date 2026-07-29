@@ -63,6 +63,10 @@ options:
         description: 'No description available.'
         required: False
         type: bool
+    var_continue:
+        description: 'No description available.'
+        required: False
+        type: list
     credential_enforcement:
         description: 'No description available.'
         required: False
@@ -107,10 +111,6 @@ options:
         description: 'No description available.'
         required: False
         type: bool
-    var_continue:
-        description: 'No description available.'
-        required: False
-        type: list
 '''
 
 EXAMPLES = r'''
@@ -167,6 +167,7 @@ PARAM_TO_FIELD = {
     'allow': 'allow',
     'block': 'block',
     'cloud_inline_cat': 'cloud_inline_cat',
+    'var_continue': 'continue',
     'credential_enforcement': 'credential_enforcement',
     'description': 'description',
     'local_inline_cat': 'local_inline_cat',
@@ -178,7 +179,6 @@ PARAM_TO_FIELD = {
     'name': 'name',
     'redirect': 'redirect',
     'safe_search_enforcement': 'safe_search_enforcement',
-    'var_continue': 'var_continue',
 }
 
 
@@ -196,6 +196,7 @@ def main():
         allow=dict(type='list', required=False),
         block=dict(type='list', required=False),
         cloud_inline_cat=dict(type='bool', required=False),
+        var_continue=dict(type='list', required=False),
         credential_enforcement=dict(type='dict', required=False),
         description=dict(type='str', required=False),
         local_inline_cat=dict(type='bool', required=False),
@@ -207,7 +208,6 @@ def main():
         name=dict(type='str', required=True),
         redirect=dict(type='list', required=False),
         safe_search_enforcement=dict(type='bool', required=False),
-        var_continue=dict(type='list', required=False),
     )
 
     module = AnsibleModule(
@@ -275,7 +275,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up url_access_profile by name: {0}'.format(str(e)))
             return
-
     module.log('scm: url_access_profile lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

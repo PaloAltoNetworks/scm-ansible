@@ -29,6 +29,12 @@ options:
             - Not required for creation (assigned by the server).
         required: False
         type: str
+    folder:
+        description:
+            - The folder in which to look for the resource (required for lookup operations).
+            - Mutually exclusive with C(snippet) and C(device).
+        required: False
+        type: str
     backup_sc:
         description: 'No description available.'
         required: False
@@ -130,7 +136,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 
 PARAM_TO_FIELD = {
-    'backup_sc': 'backup_sc',
+    'backup_sc': 'backup_SC',
     'ipsec_tunnel': 'ipsec_tunnel',
     'name': 'name',
     'nat_pool': 'nat_pool',
@@ -153,6 +159,7 @@ def main():
         client_secret=dict(type='str', no_log=True, required=False),
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
+        folder=dict(type='str', required=False),
         backup_sc=dict(type='str', required=False),
         ipsec_tunnel=dict(type='str', required=True),
         name=dict(type='str', required=True),
@@ -230,7 +237,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up service_connection by name: {0}'.format(str(e)))
             return
-
     module.log('scm: service_connection lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

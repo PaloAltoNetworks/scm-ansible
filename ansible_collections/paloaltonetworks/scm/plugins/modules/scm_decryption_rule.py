@@ -71,6 +71,10 @@ options:
         description: 'Is the rule disabled?'
         required: False
         type: bool
+    var_from:
+        description: 'The source security zone'
+        required: True
+        type: list
     log_fail:
         description: 'Log failed decryption events?'
         required: False
@@ -127,10 +131,6 @@ options:
         description: 'No description available.'
         required: False
         type: dict
-    var_from:
-        description: 'The source security zone'
-        required: True
-        type: list
 '''
 
 EXAMPLES = r'''
@@ -189,6 +189,7 @@ PARAM_TO_FIELD = {
     'destination': 'destination',
     'destination_hip': 'destination_hip',
     'disabled': 'disabled',
+    'var_from': 'from',
     'log_fail': 'log_fail',
     'log_setting': 'log_setting',
     'log_success': 'log_success',
@@ -203,7 +204,6 @@ PARAM_TO_FIELD = {
     'tag': 'tag',
     'to': 'to',
     'type': 'type',
-    'var_from': 'var_from',
 }
 
 
@@ -224,6 +224,7 @@ def main():
         destination=dict(type='list', required=True),
         destination_hip=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
+        var_from=dict(type='list', required=True),
         log_fail=dict(type='bool', required=False),
         log_setting=dict(type='str', required=False),
         log_success=dict(type='bool', required=False),
@@ -238,7 +239,6 @@ def main():
         tag=dict(type='list', required=False),
         to=dict(type='list', required=True),
         type=dict(type='dict', required=False),
-        var_from=dict(type='list', required=True),
     )
 
     module = AnsibleModule(
@@ -307,7 +307,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up decryption_rule by name: {0}'.format(str(e)))
             return
-
     module.log('scm: decryption_rule lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

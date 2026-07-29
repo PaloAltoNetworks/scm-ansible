@@ -188,13 +188,12 @@ def main():
 
     if existing_obj is None and object_name:
         try:
-            existing_obj = api.fetch_auto_vpn_clusters(name=object_name, **container)
+            existing_obj = api.fetch_auto_vpn_clusters(name=object_name)
         except NotFoundError:
             pass
         except Exception as e:
             module.fail_json(msg='Error looking up auto_vpn_cluster by name: {0}'.format(str(e)))
             return
-
     module.log('scm: auto_vpn_cluster lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

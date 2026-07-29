@@ -63,6 +63,10 @@ options:
         description: 'No description available.'
         required: False
         type: bool
+    var_from:
+        description: 'No description available.'
+        required: False
+        type: list
     group_tag:
         description: 'No description available.'
         required: False
@@ -96,10 +100,6 @@ options:
         required: False
         type: list
     to:
-        description: 'No description available.'
-        required: False
-        type: list
-    var_from:
         description: 'No description available.'
         required: False
         type: list
@@ -159,6 +159,7 @@ PARAM_TO_FIELD = {
     'description': 'description',
     'destination': 'destination',
     'disabled': 'disabled',
+    'var_from': 'from',
     'group_tag': 'group_tag',
     'name': 'name',
     'negate_destination': 'negate_destination',
@@ -168,7 +169,6 @@ PARAM_TO_FIELD = {
     'source': 'source',
     'tag': 'tag',
     'to': 'to',
-    'var_from': 'var_from',
 }
 
 
@@ -187,6 +187,7 @@ def main():
         description=dict(type='str', required=False),
         destination=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
+        var_from=dict(type='list', required=False),
         group_tag=dict(type='str', required=False),
         name=dict(type='str', required=True),
         negate_destination=dict(type='bool', required=False),
@@ -196,7 +197,6 @@ def main():
         source=dict(type='list', required=False),
         tag=dict(type='list', required=False),
         to=dict(type='list', required=False),
-        var_from=dict(type='list', required=False),
     )
 
     module = AnsibleModule(
@@ -265,7 +265,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up application_override_rule by name: {0}'.format(str(e)))
             return
-
     module.log('scm: application_override_rule lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

@@ -170,13 +170,12 @@ def main():
 
     if existing_obj is None and object_name:
         try:
-            existing_obj = api.fetch_internal_dns_servers(name=object_name, **container)
+            existing_obj = api.fetch_internal_dns_servers(name=object_name)
         except NotFoundError:
             pass
         except Exception as e:
             module.fail_json(msg='Error looking up internal_dns_server by name: {0}'.format(str(e)))
             return
-
     module.log('scm: internal_dns_server lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

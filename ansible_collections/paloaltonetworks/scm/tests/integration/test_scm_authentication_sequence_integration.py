@@ -41,7 +41,7 @@ class TestAuthenticationSequencesLifecycle:
 
     def test_00_setup_auth_profile(self, run_id):
         """Create prerequisite authentication profile."""
-        TestAuthenticationSequencesLifecycle._profile_name = f"an-authseq-{run_id}"
+        TestAuthenticationSequencesLifecycle._profile_name = f"an-authprof-{run_id}"
         result = run_auth_profile(_profile_params(
             state="present",
             name=TestAuthenticationSequencesLifecycle._profile_name,

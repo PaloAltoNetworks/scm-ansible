@@ -67,6 +67,10 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+    var_from:
+        description: 'No description available.'
+        required: False
+        type: dict
     name:
         description: 'PBF rule name'
         required: False
@@ -99,10 +103,6 @@ options:
         description: 'Tags'
         required: False
         type: list
-    var_from:
-        description: 'No description available.'
-        required: False
-        type: dict
 '''
 
 EXAMPLES = r'''
@@ -160,6 +160,7 @@ PARAM_TO_FIELD = {
     'description': 'description',
     'destination': 'destination',
     'enforce_symmetric_return': 'enforce_symmetric_return',
+    'var_from': 'from',
     'name': 'name',
     'negate_destination': 'negate_destination',
     'negate_source': 'negate_source',
@@ -168,7 +169,6 @@ PARAM_TO_FIELD = {
     'source': 'source',
     'source_user': 'source_user',
     'tag': 'tag',
-    'var_from': 'var_from',
 }
 
 
@@ -187,6 +187,7 @@ def main():
         description=dict(type='str', required=False),
         destination=dict(type='list', required=False),
         enforce_symmetric_return=dict(type='dict', required=False),
+        var_from=dict(type='dict', required=False),
         name=dict(type='str', required=False),
         negate_destination=dict(type='bool', required=False),
         negate_source=dict(type='bool', required=False),
@@ -195,7 +196,6 @@ def main():
         source=dict(type='list', required=False),
         source_user=dict(type='list', required=False),
         tag=dict(type='list', required=False),
-        var_from=dict(type='dict', required=False),
     )
 
     module = AnsibleModule(
@@ -263,7 +263,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up pbf_rule by name: {0}'.format(str(e)))
             return
-
     module.log('scm: pbf_rule lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

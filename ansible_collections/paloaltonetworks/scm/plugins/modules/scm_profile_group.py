@@ -239,7 +239,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up profile_group by name: {0}'.format(str(e)))
             return
-
     module.log('scm: profile_group lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

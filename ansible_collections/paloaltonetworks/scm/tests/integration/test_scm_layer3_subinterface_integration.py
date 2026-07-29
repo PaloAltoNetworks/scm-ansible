@@ -1,56 +1,98 @@
-"""Integration tests for scm_layer3_subinterface — full CRUD lifecycle."""
+"""Integration tests for scm_layer3_subinterface — full CRUD lifecycle with parent interface."""
 
 import json
 import logging
 
 import pytest
 
-from helpers import TARGET_FOLDER, build_params, make_runner
+from helpers import build_params, make_runner
 
+from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_ethernet_interface
 from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_layer3_subinterface
 
 logger = logging.getLogger(__name__)
-run_module = make_runner(scm_layer3_subinterface, "scm_layer3_subinterface")
+run_ethernet = make_runner(scm_ethernet_interface, "scm_ethernet_interface")
+run_layer3_subinterface = make_runner(scm_layer3_subinterface, "scm_layer3_subinterface")
 
-_FIELDS = dict(
-    adjust_tcp_mss=None, arp=None, bonjour=None,
-    comment=None, ddns_config=None, decrypt_mirror=None,
-    df_ignore=None, interface_management_profile=None,
-    ip=None, ipv6=None, mtu=None, name=None,
-    ndp_proxy=None, netflow_profile=None, tag=None,
-    untagged_sub_interface=None,
-)
+FOLDER = "All"
 
 
-def _params(**overrides):
-    return build_params({**_FIELDS, **overrides})
-
-
-@pytest.mark.skip(reason="requires real device hardware and parent interface")
 class TestLayer3SubinterfacesLifecycle:
-    _created_id = None
+    """Test Layer3 Subinterface with parent ethernet interface."""
+
+    @pytest.fixture(autouse=True)
+    def setup_parent_interface(self, run_id):
+        """Create a Layer3 parent ethernet interface before tests."""
+        parent_name = f"$an-l3parent-{run_id}"
+
+        # Create Layer3 parent ethernet interface
+        parent_result = run_ethernet(build_params({
+            "state": "present",
+            "name": parent_name,
+            "folder": FOLDER,
+            "comment": "L3 parent interface for subinterface test",
+            "link_duplex": "full",
+            "link_speed": "auto",
+            "link_state": "up",
+            "layer3": {},
+        }))
+        if parent_result.get("failed"):
+            pytest.skip(f"Cannot create L3 parent interface: {parent_result.get('msg')}")
+
+        self.parent_name = parent_name
+
+        yield
+
+        # Cleanup parent interface
+        run_ethernet(build_params({
+            "state": "absent",
+            "name": parent_name,
+            "folder": FOLDER,
+        }))
 
     def test_01_create(self, run_id):
-        result = run_module(_params(
-            state="present", name=f"an-l3subif-{run_id}",
-            folder=TARGET_FOLDER,
-        ))
+        """Create layer3 subinterface using the parent ethernet interface."""
+        vlan_tag = 400
+        subif_name = f"{self.parent_name}.{vlan_tag}"
+
+        result = run_layer3_subinterface(build_params({
+            "state": "present",
+            "name": subif_name,
+            "folder": FOLDER,
+            "parent_interface": self.parent_name,
+            "tag": vlan_tag,
+            "mtu": 1400,
+            "comment": "Test L3 subinterface",
+            "ip": [{"name": "192.168.10.1/24"}],
+        }))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
 
     def test_02_delete(self, run_id):
-        result = run_module(_params(
-            state="absent", name=f"an-l3subif-{run_id}",
-            folder=TARGET_FOLDER,
-        ))
+        """Delete the layer3 subinterface."""
+        vlan_tag = 400
+        subif_name = f"{self.parent_name}.{vlan_tag}"
+
+        result = run_layer3_subinterface(build_params({
+            "state": "absent",
+            "name": subif_name,
+            "folder": FOLDER,
+        }))
+        logger.info(f"DELETE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
 
     def test_03_delete_idempotent(self, run_id):
-        result = run_module(_params(
-            state="absent", name=f"an-l3subif-{run_id}",
-            folder=TARGET_FOLDER,
-        ))
+        """Delete again - should be idempotent."""
+        vlan_tag = 400
+        subif_name = f"{self.parent_name}.{vlan_tag}"
+
+        result = run_layer3_subinterface(build_params({
+            "state": "absent",
+            "name": subif_name,
+            "folder": FOLDER,
+        }))
+        logger.info(f"IDEMPOTENT: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
         assert result["changed"] is False

@@ -71,6 +71,10 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+    var_from:
+        description: 'Source zone(s) of the original packet'
+        required: True
+        type: list
     name:
         description: 'NAT rule name'
         required: True
@@ -103,10 +107,6 @@ options:
         description: 'Destination interface of the original packet'
         required: False
         type: str
-    var_from:
-        description: 'Source zone(s) of the original packet'
-        required: True
-        type: list
 '''
 
 EXAMPLES = r'''
@@ -165,6 +165,7 @@ PARAM_TO_FIELD = {
     'destination_translation': 'destination_translation',
     'disabled': 'disabled',
     'dynamic_destination_translation': 'dynamic_destination_translation',
+    'var_from': 'from',
     'name': 'name',
     'nat_type': 'nat_type',
     'service': 'service',
@@ -173,7 +174,6 @@ PARAM_TO_FIELD = {
     'tag': 'tag',
     'to': 'to',
     'to_interface': 'to_interface',
-    'var_from': 'var_from',
 }
 
 
@@ -194,6 +194,7 @@ def main():
         destination_translation=dict(type='dict', required=False),
         disabled=dict(type='bool', required=False),
         dynamic_destination_translation=dict(type='dict', required=False),
+        var_from=dict(type='list', required=True),
         name=dict(type='str', required=True),
         nat_type=dict(type='str', required=False),
         service=dict(type='str', required=True),
@@ -202,7 +203,6 @@ def main():
         tag=dict(type='list', required=False),
         to=dict(type='list', required=True),
         to_interface=dict(type='str', required=False),
-        var_from=dict(type='list', required=True),
     )
 
     module = AnsibleModule(
@@ -271,7 +271,6 @@ def main():
         except Exception as e:
             module.fail_json(msg='Error looking up nat_rule by name: {0}'.format(str(e)))
             return
-
     module.log('scm: nat_rule lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state

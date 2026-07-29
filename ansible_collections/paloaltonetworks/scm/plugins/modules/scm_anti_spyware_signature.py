@@ -216,7 +216,7 @@ def main():
         return
 
     state = module.params['state']
-    object_name = module.params.get('name')
+    object_name = module.params.get('threatname')
     object_id = module.params.get('id')
     container = get_container_params(module)
 
@@ -232,6 +232,24 @@ def main():
             module.fail_json(msg='Error looking up anti_spyware_signature by id: {0}'.format(str(e)))
             return
 
+
+    # Fallback: No fetch method available - use list + client-side filter by threatname
+    # Use raw JSON parsing to avoid Pydantic validation issues with partial list responses
+    if existing_obj is None and object_name:
+        try:
+            import json as _json
+            _raw = api.list_anti_spyware_signatures_without_preload_content(**container, limit=5000)
+            _data = _json.loads(_raw.data)
+            if 'data' in _data and _data['data']:
+                for item in _data['data']:
+                    if item.get('threatname') == object_name:
+                        # Create model instance from matched dict for downstream use
+                        from scm.security_services.models.anti_spyware_signatures import AntiSpywareSignatures
+                        existing_obj = AntiSpywareSignatures.from_dict(item)
+                        break
+        except Exception as e:
+            module.fail_json(msg='Error looking up anti_spyware_signature by threatname: {0}'.format(str(e)))
+            return
 
     module.log('scm: anti_spyware_signature lookup -> {0}'.format('found' if existing_obj else 'not found'))
 

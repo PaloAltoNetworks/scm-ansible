@@ -22,32 +22,52 @@ def _params(**overrides):
     return build_params({**_FIELDS, **overrides})
 
 
-@pytest.mark.skip(reason="requires position parameter for rules")
 class TestTrafficSteeringRulesLifecycle:
     _created_id = None
 
     def test_01_create(self, run_id):
         result = run_module(_params(
             state="present", name=f"an-tsr-{run_id}",
-            folder=TARGET_FOLDER,
+            action={"no-pbf": {}},
+            service=["any"],
+            source=["any"],
+            folder="Service Connections",
         ))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
-        TestTrafficSteeringRulesLifecycle._created_id = result.get("data", {}).get("id")
+        TestTrafficSteeringRulesLifecycle._created_id = result["traffic_steering_rule"]["id"]
 
-    def test_02_delete(self, run_id):
+    def test_02_create_idempotent(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-tsr-{run_id}",
+            action={"no-pbf": {}},
+            service=["any"],
+            source=["any"],
+            folder="Service Connections",
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+
+    def test_03_gather(self, run_id):
+        result = run_module(_params(
+            state="gathered", name=f"an-tsr-{run_id}",
+            folder="Service Connections",
+        ))
+        assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
+        assert "found" in result["msg"]
+
+    def test_04_delete(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-tsr-{run_id}",
-            folder=TARGET_FOLDER,
+            folder="Service Connections",
         ))
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
 
-    def test_03_delete_idempotent(self, run_id):
+    def test_05_delete_idempotent(self, run_id):
         result = run_module(_params(
             state="absent", name=f"an-tsr-{run_id}",
-            folder=TARGET_FOLDER,
+            folder="Service Connections",
         ))
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
         assert result["changed"] is False
