@@ -1,0 +1,212 @@
+name: Module Tests (Fast)
+
+# Automated pytest-based testing for fast CI feedback
+# Runs on every push/PR - tests module logic without playbook overhead
+# See docs/CI_CD_STRATEGY.md for rationale
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    name: Pytest Module Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install git+https://github.com/PaloAltoNetworks/scm-python@develop
+          pip install pytest pytest-json-report
+
+      - name: Create SCM config file from secrets
+        run: |
+          mkdir -p config
+          cat > config/scm-config.json << EOF
+          {
+            "auth_url": "${{ secrets.SCM_AUTH_URL }}",
+            "client_id": "${{ secrets.SCM_CLIENT_ID }}",
+            "client_secret": "${{ secrets.SCM_CLIENT_SECRET }}",
+            "host": "${{ secrets.SCM_HOST }}",
+            "protocol": "${{ secrets.SCM_PROTOCOL }}",
+            "scope": "${{ secrets.SCM_SCOPE }}",
+            "logging": "quiet",
+            "skip_verify_certificate": ${{ secrets.SCM_SKIP_VERIFY_CERTIFICATE }}
+          }
+          EOF
+
+      - name: Run pytest module tests
+        env:
+          SCM_CONFIG_FILE: ${{ github.workspace }}/config/scm-config.json
+          SCM_CLIENT_ID: ${{ secrets.SCM_CLIENT_ID }}
+          SCM_CLIENT_SECRET: ${{ secrets.SCM_CLIENT_SECRET }}
+          SCM_SCOPE: ${{ secrets.SCM_SCOPE }}
+          SCM_TSG_ID: ${{ secrets.SCM_TSG_ID }}
+          SCM_HOST: ${{ secrets.SCM_HOST }}
+          SCM_AUTH_URL: ${{ secrets.SCM_AUTH_URL }}
+          PYTHONPATH: ${{ github.workspace }}
+          PYTHONWARNINGS: ignore
+        run: |
+          set +e
+
+          cd ansible_collections/paloaltonetworks/scm
+          pytest tests/integration/ -v --json-report --json-report-file=test-report.json
+          exit_code=$?
+
+          # Parse JSON report and create summary
+          cat > parse_pytest.py << 'PYTHON'
+          import json
+          import sys
+          import os
+          from collections import defaultdict
+
+          try:
+              with open('test-report.json', 'r') as f:
+                  report = json.load(f)
+          except FileNotFoundError:
+              print("No test report found")
+              sys.exit(0)
+
+          tests = report.get('tests', [])
+
+          passed = [t for t in tests if t.get('outcome') == 'passed']
+          failed = [t for t in tests if t.get('outcome') == 'failed']
+          skipped = [t for t in tests if t.get('outcome') == 'skipped']
+          errored = [t for t in tests if t.get('outcome') == 'error']
+
+          # Group tests by module for per-module breakdown
+          by_module = defaultdict(lambda: {'passed': [], 'failed': [], 'skipped': [], 'errored': []})
+          for t in tests:
+              nodeid = t.get('nodeid', '')
+              # Extract module name from test_scm_<module>_integration.py
+              parts = nodeid.split('::')[0].replace('tests/integration/test_', '').replace('_integration.py', '')
+              module = parts if parts else 'unknown'
+              outcome = t.get('outcome', 'unknown')
+              if outcome in by_module[module]:
+                  by_module[module][outcome].append(t)
+
+          # Print summary to console
+          print(f"\n{'='*60}")
+          print(f"Pytest Module Test Results")
+          print(f"{'='*60}")
+          print(f"Passed: {len(passed)}")
+          print(f"Failed: {len(failed)}")
+          print(f"Errors: {len(errored)}")
+          print(f"Skipped: {len(skipped)}")
+          print(f"{'='*60}\n")
+
+          # Write to GITHUB_STEP_SUMMARY
+          summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary_path:
+              with open(summary_path, 'w') as f:
+                  # Header
+                  total = len(passed) + len(failed) + len(errored) + len(skipped)
+                  overall_status = "All Passing" if len(failed) == 0 and len(errored) == 0 else f"{len(failed)} Failures"
+                  f.write("# Test Summary\n\n")
+                  f.write(f"**{len(passed)} passed, {len(failed)} failed, {len(errored)} errors, {len(skipped)} skipped** ({total} total)\n\n")
+
+                  # Results by module table
+                  f.write("## Results by Module\n\n")
+                  f.write("| Module | Passed | Failed | Errors | Skipped | Status |\n")
+                  f.write("|--------|--------|--------|--------|---------|--------|\n")
+
+                  for module in sorted(by_module.keys()):
+                      m = by_module[module]
+                      p, fa, e, s = len(m['passed']), len(m['failed']), len(m['errored']), len(m['skipped'])
+                      status = "PASS" if fa == 0 and e == 0 else "FAIL"
+                      f.write(f"| `{module}` | {p} | {fa} | {e} | {s} | {status} |\n")
+
+                  f.write(f"| **Total** | **{len(passed)}** | **{len(failed)}** | **{len(errored)}** | **{len(skipped)}** | **{overall_status}** |\n\n")
+
+                  # Failed tests details
+                  if failed or errored:
+                      f.write("## Failed Tests\n\n")
+                      for test in failed + errored:
+                          test_name = test.get('nodeid', 'Unknown')
+                          duration = test.get('duration', 0)
+                          outcome = test.get('outcome', 'failed')
+                          f.write(f"### `{test_name}` ({duration:.2f}s) [{outcome}]\n\n")
+
+                          # Extract error details from multiple possible locations
+                          call = test.get('call', {})
+                          setup = test.get('setup', {})
+                          teardown = test.get('teardown', {})
+
+                          # Try longrepr first (main error message)
+                          longrepr = call.get('longrepr', '') or setup.get('longrepr', '') or teardown.get('longrepr', '')
+
+                          # Also check crash info for location details
+                          crash = call.get('crash', {}) or setup.get('crash', {})
+                          crash_msg = ''
+                          if crash:
+                              crash_msg = f"File: {crash.get('path', '')}:{crash.get('lineno', '')}\n{crash.get('message', '')}"
+
+                          # Check traceback for additional context
+                          traceback = call.get('traceback', []) or setup.get('traceback', [])
+                          tb_msg = ''
+                          if traceback and isinstance(traceback, list):
+                              tb_entries = []
+                              for tb in traceback[-5:]:  # Last 5 traceback entries
+                                  if isinstance(tb, dict):
+                                      tb_entries.append(f"  {tb.get('path', '')}:{tb.get('lineno', '')} in {tb.get('name', '')}")
+                                      if tb.get('message'):
+                                          tb_entries.append(f"    {tb.get('message', '')}")
+                              tb_msg = '\n'.join(tb_entries)
+
+                          error_output = longrepr or crash_msg or tb_msg or 'No error details captured'
+
+                          # Show errors prominently (not collapsed)
+                          f.write("**Error:**\n```\n")
+                          lines = error_output.split('\n')
+                          # Show last 40 lines to capture assertion and context
+                          f.write('\n'.join(lines[-40:]))
+                          f.write("\n```\n\n")
+                          f.write("---\n\n")
+
+                  # Passed tests (collapsed)
+                  if passed:
+                      f.write("<details>\n<summary>Passed Tests ({} tests)</summary>\n\n".format(len(passed)))
+                      f.write("| Test | Duration |\n")
+                      f.write("|------|----------|\n")
+                      for test in passed:
+                          test_name = test.get('nodeid', 'Unknown')
+                          duration = test.get('duration', 0)
+                          f.write(f"| `{test_name}` | {duration:.2f}s |\n")
+                      f.write("\n</details>\n\n")
+
+                  # Skipped tests (collapsed)
+                  if skipped:
+                      f.write("<details>\n<summary>Skipped Tests ({} tests)</summary>\n\n".format(len(skipped)))
+                      f.write("| Test | Reason |\n")
+                      f.write("|------|--------|\n")
+                      for test in skipped:
+                          test_name = test.get('nodeid', 'Unknown')
+                          setup = test.get('setup', {})
+                          longrepr = setup.get('longrepr', '')
+                          skip_msg = longrepr.split('\n')[-1][:80] if longrepr else 'Skipped'
+                          f.write(f"| `{test_name}` | {skip_msg} |\n")
+                      f.write("\n</details>\n")
+          PYTHON
+
+          python3 parse_pytest.py
+
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::Pytest tests failed"
+            exit $exit_code
+          fi
+        timeout-minutes: 45
