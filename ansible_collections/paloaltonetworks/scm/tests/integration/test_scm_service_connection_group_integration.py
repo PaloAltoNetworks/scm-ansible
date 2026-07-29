@@ -117,9 +117,10 @@ class TestServiceConnectionGroupsLifecycle:
         result = run_service_connection_group(build_params({
             "state": "present",
             "name": f"an-svcconngrp-{run_id}",
+            "folder": FOLDER,
             "target": [self.sc_name],
             "disable_snat": True,
-        }, has_containers=False))
+        }))
         logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Create failed: {result.get('msg')}"
         assert result["changed"] is True
@@ -129,7 +130,8 @@ class TestServiceConnectionGroupsLifecycle:
         result = run_service_connection_group(build_params({
             "state": "absent",
             "name": f"an-svcconngrp-{run_id}",
-        }, has_containers=False))
+            "folder": FOLDER,
+        }))
         logger.info(f"DELETE: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
         assert result["changed"] is True
@@ -139,7 +141,8 @@ class TestServiceConnectionGroupsLifecycle:
         result = run_service_connection_group(build_params({
             "state": "absent",
             "name": f"an-svcconngrp-{run_id}",
-        }, has_containers=False))
+            "folder": FOLDER,
+        }))
         logger.info(f"IDEMPOTENT: {json.dumps(result, indent=2, default=str)}")
         assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
         assert result["changed"] is False
