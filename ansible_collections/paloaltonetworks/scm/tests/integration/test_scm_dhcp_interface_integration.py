@@ -21,7 +21,7 @@ def _params(**overrides):
     return build_params({**_FIELDS, **overrides})
 
 
-@pytest.mark.skip(reason="requires real device hardware context")
+@pytest.mark.skip(reason="requires pre-existing device ethernet interface")
 class TestDhcpInterfacesLifecycle:
     _created_id = None
 

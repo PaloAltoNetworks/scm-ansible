@@ -173,6 +173,17 @@ def main():
             return
 
 
+    # Singleton resource: use LIST to find the existing object (singletons always exist, one per folder)
+    if existing_obj is None and container:
+        try:
+            items = api.list_device_redistribution_collector_settings(**container)
+            if items and len(items) > 0:
+                existing_obj = items[0]
+                object_id = existing_obj.id if hasattr(existing_obj, 'id') else None
+                module.log('scm: device_redistribution_collector_setting singleton found via list, id={0}'.format(object_id))
+        except Exception as e:
+            module.fail_json(msg='Error listing device_redistribution_collector_setting: {0}'.format(str(e)))
+            return
     module.log('scm: device_redistribution_collector_setting lookup -> {0}'.format('found' if existing_obj else 'not found'))
 
     # Handle gathered state
@@ -190,14 +201,14 @@ def main():
         payload = build_payload(module, PARAM_TO_FIELD)
 
         if existing_obj is None:
-            # Create
+            # Singleton not found via LIST - try to create/initialize it
             if module.check_mode:
                 result['changed'] = True
                 result['msg'] = 'device_redistribution_collector_setting would be created (check mode)'
                 module.exit_json(**result)
                 return
 
-            module.log('scm: creating device_redistribution_collector_setting')
+            module.log('scm: creating device_redistribution_collector_setting singleton')
             try:
                 from scm.device_settings.models.device_redistribution_collector import DeviceRedistributionCollector
                 model = DeviceRedistributionCollector(id='', **payload, **container)
@@ -205,10 +216,6 @@ def main():
                 result['device_redistribution_collector_setting'] = to_result_data(resp)
                 result['changed'] = True
                 result['msg'] = 'device_redistribution_collector_setting created successfully'
-
-            except NameNotUniqueError:
-                module.fail_json(msg='A device_redistribution_collector_setting object with this name already exists')
-                return
             except Exception as e:
                 module.fail_json(msg='Failed to create device_redistribution_collector_setting: {0}'.format(str(e)))
                 return
@@ -264,29 +271,9 @@ def main():
 
     # Handle absent state
     elif state == 'absent':
-        if existing_obj is None:
-            result['msg'] = 'device_redistribution_collector_setting already absent'
-            module.exit_json(**result)
-            return
-
-        if module.check_mode:
-            result['changed'] = True
-            result['msg'] = 'device_redistribution_collector_setting would be deleted (check mode)'
-            module.exit_json(**result)
-            return
-
-        module.log('scm: deleting device_redistribution_collector_setting')
-        try:
-            delete_id = existing_obj.id if hasattr(existing_obj, 'id') else object_id
-            api.delete_device_redistribution_collector_settings_by_id(id=delete_id)
-            result['changed'] = True
-            result['msg'] = 'device_redistribution_collector_setting deleted successfully'
-        except NotFoundError:
-            result['msg'] = 'device_redistribution_collector_setting already absent'
-        except Exception as e:
-            module.fail_json(msg='Failed to delete device_redistribution_collector_setting: {0}'.format(str(e)))
-            return
-
+        # Singleton resources cannot be deleted
+        module.fail_json(msg='device_redistribution_collector_setting is a singleton resource and cannot be deleted. Use state=present to update it.')
+        return
 
     module.exit_json(**result)
 

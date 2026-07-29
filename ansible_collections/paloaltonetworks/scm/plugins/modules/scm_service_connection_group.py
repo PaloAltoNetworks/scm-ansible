@@ -29,6 +29,12 @@ options:
             - Not required for creation (assigned by the server).
         required: False
         type: str
+    folder:
+        description:
+            - The folder in which to look for the resource (required for lookup operations).
+            - Mutually exclusive with C(snippet) and C(device).
+        required: False
+        type: str
     disable_snat:
         description: 'No description available.'
         required: False
@@ -108,6 +114,7 @@ def main():
         client_secret=dict(type='str', no_log=True, required=False),
         tsg_id=dict(type='str', required=False),
         id=dict(type='str', required=False),
+        folder=dict(type='str', required=False),
         disable_snat=dict(type='bool', required=False),
         name=dict(type='str', required=True),
         pbf_only=dict(type='bool', required=False),
