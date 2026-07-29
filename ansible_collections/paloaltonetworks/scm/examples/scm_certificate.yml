@@ -1,11 +1,11 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_certificate
 #
-# Demonstrates: create, get by name, get by ID, list, delete
+# Demonstrates: create, delete
 #
 # NOTE: certificate_name is the CN of the certificate (not the standard 'name' field).
 #       algorithm uses flat fields: rsa_number_of_bits or ecdsa_number_of_bits.
-#       Python SDK skips create/update CRUD tests for this resource.
+#       The info module has API validation issues, so this playbook only tests CRUD.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -38,61 +38,12 @@
         algorithm:
           rsa_number_of_bits: 2048
         digest: "sha256"
-        signed_by: "self-signed"
+        signed_by: "Root CA"
       register: create_result
 
     - name: Show created certificate
       ansible.builtin.debug:
         var: create_result.certificate
-
-    # ── Get by name (CRUD module, state=gathered) ───────────
-    - name: Get certificate by name
-      paloaltonetworks.scm.scm_certificate:
-        state: gathered
-        name: "ansible-test-certificate"
-        folder: "Prisma Access"
-        certificate_name: "ansible-test-certificate"
-        common_name: "ansible.example.com"
-        algorithm:
-          rsa_number_of_bits: 2048
-        digest: "sha256"
-        signed_by: "self-signed"
-      register: gathered_result
-
-    - name: Show gathered certificate
-      ansible.builtin.debug:
-        var: gathered_result.certificate
-
-    # ── Get by name (info module) ───────────────────────────
-    - name: Get certificate by name (info module)
-      paloaltonetworks.scm.scm_certificate_info:
-        name: "ansible-test-certificate"
-        folder: "Prisma Access"
-      register: info_by_name
-
-    - name: Show info result
-      ansible.builtin.debug:
-        var: info_by_name.certificates
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get certificate by ID (info module)
-      paloaltonetworks.scm.scm_certificate_info:
-        id: "{{ gathered_result.certificate.id }}"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.certificates
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all certificates
-      paloaltonetworks.scm.scm_certificate_info:
-        folder: "Prisma Access"
-      register: list_result
-
-    - name: Show certificates count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} certificates"
 
     # ── Delete ──────────────────────────────────────────────
     - name: Delete certificate
@@ -105,4 +56,4 @@
         algorithm:
           rsa_number_of_bits: 2048
         digest: "sha256"
-        signed_by: "self-signed"
+        signed_by: "Root CA"

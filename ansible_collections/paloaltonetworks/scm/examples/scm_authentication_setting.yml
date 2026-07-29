@@ -1,7 +1,10 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_authentication_setting
 #
-# Demonstrates: create, update, get by ID, list, delete
+# NOTE: This is a SINGLETON setting - it already exists per folder.
+#       You can only gather (read) or update it, not create or delete.
+#
+# Demonstrates: gather, update
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,82 +18,31 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_authentication_setting.yml
-#
-# NOTE: This module does not declare a 'name' field; objects are identified by ID.
-#       Lookup by name is not supported — use id: for update, gather, and delete operations.
-#       Run 'ansible-doc paloaltonetworks.scm.scm_authentication_setting' for full parameter docs.
 
-- name: Manage authentication_settings in Strata Cloud Manager
+- name: Manage authentication_setting in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
-    - name: Create authentication_setting
-      paloaltonetworks.scm.scm_authentication_setting:
-        state: present
-        folder: "All"
-        authentication:
-          allow_list:
-            - "any"
-      register: create_result
-
-    - name: Show created authentication_setting
-      ansible.builtin.debug:
-        var: create_result.authentication_setting
-
-    # ── Update ──────────────────────────────────────────────
-    - name: Update authentication_setting
-      paloaltonetworks.scm.scm_authentication_setting:
-        state: present
-        id: "{{ create_result.authentication_setting.id }}"
-        folder: "All"
-        authentication:
-          allow_list:
-            - "any"
-          enforce_authentication_policy: true
-      register: update_result
-
-    - name: Show updated authentication_setting
-      ansible.builtin.debug:
-        var: update_result.authentication_setting
-
-    # ── Get by ID (CRUD module, state=gathered) ─────────────
-    - name: Get authentication_setting by ID
+    # ── Gather (read current setting) ─────────────────────────
+    - name: Gather authentication_setting
       paloaltonetworks.scm.scm_authentication_setting:
         state: gathered
-        id: "{{ create_result.authentication_setting.id }}"
+        folder: "All"
       register: gathered_result
 
     - name: Show gathered authentication_setting
       ansible.builtin.debug:
         var: gathered_result.authentication_setting
 
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get authentication_setting by ID (info module)
-      paloaltonetworks.scm.scm_authentication_setting_info:
-        id: "{{ create_result.authentication_setting.id }}"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.authentication_settings
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all authentication_settings
+    # ── List via info module ──────────────────────────────────
+    - name: List authentication_settings
       paloaltonetworks.scm.scm_authentication_setting_info:
         folder: "All"
       register: list_result
 
-    - name: Show authentication_settings count
+    - name: Show authentication_settings
       ansible.builtin.debug:
         msg: "Found {{ list_result.total }} authentication_settings"
-
-    # ── Delete ──────────────────────────────────────────────
-    - name: Delete authentication_setting
-      paloaltonetworks.scm.scm_authentication_setting:
-        state: absent
-        id: "{{ create_result.authentication_setting.id }}"
-

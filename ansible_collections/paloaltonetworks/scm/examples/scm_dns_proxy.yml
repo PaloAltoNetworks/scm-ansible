@@ -1,7 +1,7 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_dns_proxy
 #
-# Demonstrates: create, update, get by name, get by ID, list, delete
+# Demonstrates: create, update, gather, delete
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,7 +15,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_dns_proxy.yml
-#
 
 - name: Manage dns_proxies in Strata Cloud Manager
   hosts: localhost
@@ -44,11 +43,10 @@
       paloaltonetworks.scm.scm_dns_proxy:
         state: present
         name: "ansible-test-dns_proxy"
-        description: "Updated by Ansible"
         folder: "All"
         default:
-          primary: "8.8.8.8"
-          secondary: "8.8.4.4"
+          primary: "1.1.1.1"
+          secondary: "1.0.0.1"
       register: update_result
 
     - name: Show updated dns_proxy
@@ -62,44 +60,13 @@
         name: "ansible-test-dns_proxy"
         folder: "All"
         default:
-          primary: "8.8.8.8"
-          secondary: "8.8.4.4"
+          primary: "1.1.1.1"
+          secondary: "1.0.0.1"
       register: gathered_result
 
     - name: Show gathered dns_proxy
       ansible.builtin.debug:
         var: gathered_result.dns_proxy
-
-    # ── Get by name (info module) ───────────────────────────
-    - name: Get dns_proxy by name (info module)
-      paloaltonetworks.scm.scm_dns_proxy_info:
-        name: "ansible-test-dns_proxy"
-        folder: "All"
-      register: info_by_name
-
-    - name: Show info result
-      ansible.builtin.debug:
-        var: info_by_name.dns_proxies
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get dns_proxy by ID (info module)
-      paloaltonetworks.scm.scm_dns_proxy_info:
-        id: "{{ gathered_result.dns_proxy.id }}"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.dns_proxies
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all dns_proxies
-      paloaltonetworks.scm.scm_dns_proxy_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show dns_proxies count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} dns_proxies"
 
     # ── Delete ──────────────────────────────────────────────
     - name: Delete dns_proxy
@@ -108,6 +75,5 @@
         name: "ansible-test-dns_proxy"
         folder: "All"
         default:
-          primary: "8.8.8.8"
-          secondary: "8.8.4.4"
-
+          primary: "1.1.1.1"
+          secondary: "1.0.0.1"

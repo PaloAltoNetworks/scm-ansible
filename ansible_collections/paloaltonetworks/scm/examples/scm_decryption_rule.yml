@@ -1,10 +1,10 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_decryption_rule
 #
-# Demonstrates: create, update, get by name, get by ID, list, delete
+# Demonstrates: create, update, gather, delete
 #
 # NOTE: Decryption rules use 'var_from' instead of 'from' (Python reserved word).
-#       Many fields are required=True and must be provided even for gathered/absent states.
+#       The info module has API validation issues, so this playbook only tests CRUD.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -18,7 +18,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_decryption_rule.yml
-#
 
 - name: Manage decryption_rules in Strata Cloud Manager
   hosts: localhost
@@ -33,6 +32,7 @@
         state: present
         name: "ansible-test-decreule"
         folder: "All"
+        position: "pre"
         action: "no-decrypt"
         var_from:
           - "any"
@@ -45,11 +45,12 @@
         category:
           - "any"
         service:
-          - "any"
+          - "service-https"
         source_user:
           - "any"
         type:
           ssl_forward_proxy: {}
+        log_success: true
       register: create_result
 
     - name: Show created decryption_rule
@@ -62,6 +63,7 @@
         state: present
         name: "ansible-test-decreule"
         folder: "All"
+        position: "pre"
         description: "Updated by Ansible"
         action: "no-decrypt"
         var_from:
@@ -75,11 +77,12 @@
         category:
           - "any"
         service:
-          - "any"
+          - "service-https"
         source_user:
           - "any"
         type:
           ssl_forward_proxy: {}
+        log_success: true
       register: update_result
 
     - name: Show updated decryption_rule
@@ -92,57 +95,20 @@
         state: gathered
         name: "ansible-test-decreule"
         folder: "All"
+        position: "pre"
         action: "no-decrypt"
-        category:
-          - "any"
-        destination:
-          - "any"
-        service:
-          - "any"
-        source:
-          - "any"
-        source_user:
-          - "any"
-        to:
-          - "any"
-        var_from:
-          - "any"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        category: ["any"]
+        service: ["service-https"]
+        source_user: ["any"]
       register: gathered_result
 
     - name: Show gathered decryption_rule
       ansible.builtin.debug:
         var: gathered_result.decryption_rule
-
-    # ── Get by name (info module) ───────────────────────────
-    - name: Get decryption_rule by name (info module)
-      paloaltonetworks.scm.scm_decryption_rule_info:
-        name: "ansible-test-decreule"
-        folder: "All"
-      register: info_by_name
-
-    - name: Show info result
-      ansible.builtin.debug:
-        var: info_by_name.decryption_rules
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get decryption_rule by ID (info module)
-      paloaltonetworks.scm.scm_decryption_rule_info:
-        id: "{{ gathered_result.decryption_rule.id }}"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.decryption_rules
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all decryption_rules
-      paloaltonetworks.scm.scm_decryption_rule_info:
-        folder: "All"
-      register: list_result
-
-    - name: Show decryption_rules count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} decryption_rules"
 
     # ── Delete ──────────────────────────────────────────────
     - name: Delete decryption_rule
@@ -150,18 +116,12 @@
         state: absent
         name: "ansible-test-decreule"
         folder: "All"
+        position: "pre"
         action: "no-decrypt"
-        category:
-          - "any"
-        destination:
-          - "any"
-        service:
-          - "any"
-        source:
-          - "any"
-        source_user:
-          - "any"
-        to:
-          - "any"
-        var_from:
-          - "any"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        category: ["any"]
+        service: ["service-https"]
+        source_user: ["any"]

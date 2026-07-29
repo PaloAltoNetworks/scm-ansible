@@ -1,23 +1,11 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_service_connection
 #
-# Demonstrates: create, update, get by name, get by ID, list, delete
+# NOTE: Service Connection requires VPN infrastructure:
+#       IKE Crypto Profile -> IKE Gateway -> IPsec Tunnel -> Service Connection
+#       This playbook creates all dependencies, then the service connection, then cleans up.
 #
-# INFRA_DEP: Service connections require deployment-specific infrastructure
-#   that must exist in your SCM tenant before running this playbook:
-#
-#   Required infrastructure (must be pre-created):
-#     - An IPSec tunnel (ipsec_tunnel field, required) — created in the
-#       "Service Connections" folder via IKE Crypto Profile + IKE Gateway +
-#       IPSec Tunnel chain
-#     - A valid cloud region (region field, required) — e.g. "us-central1-a",
-#       "us-east1-a", "us-west1-a", "eu-west1-a"
-#
-#   The folder for service connections is "Service Connections" (fixed).
-#
-#   Replace the placeholder values below with real values from your environment:
-#     - ipsec_tunnel: Name of your pre-created IPSec tunnel
-#     - region: The cloud region where your service connection terminates
+# Demonstrates: create with dependencies, gather, delete with cleanup
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -31,29 +19,94 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_service_connection.yml
-#
-# Run 'ansible-doc paloaltonetworks.scm.scm_service_connection' for full parameter docs.
 
-- name: Manage service_connections in Strata Cloud Manager
+- name: Manage service_connection with VPN dependencies in Strata Cloud Manager
   hosts: localhost
   connection: local
   gather_facts: false
 
   vars:
-    # Replace with your actual pre-created IPSec tunnel name
-    ipsec_tunnel_name: "your-ipsec-tunnel-name"
-    # Replace with your actual cloud region
-    sc_region: "us-central1-a"
+    folder: "Service Connections"
+    crypto_name: "ansible-test-ikecrypto-sc"
+    gateway_name: "ansible-test-ikegw-sc"
+    tunnel_name: "ansible-test-ipsectun-sc"
+    sc_name: "ansible-test-svcconn"
 
   tasks:
 
-    # ── Create ──────────────────────────────────────────────
+    # ══════════════════════════════════════════════════════════
+    # SETUP: Create VPN dependency chain
+    # ══════════════════════════════════════════════════════════
+
+    # ── 1. Create IKE Crypto Profile ──────────────────────────
+    - name: Create IKE Crypto Profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: present
+        name: "{{ crypto_name }}"
+        folder: "{{ folder }}"
+        hash:
+          - "sha256"
+        dh_group:
+          - "group14"
+        encryption:
+          - "aes-256-cbc"
+      register: crypto_result
+
+    # ── 2. Create IKE Gateway ─────────────────────────────────
+    - name: Create IKE Gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: present
+        name: "{{ gateway_name }}"
+        folder: "{{ folder }}"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "2.2.2.6"
+        peer_id:
+          type: "ipaddr"
+          id: "10.3.3.6"
+        local_id:
+          type: "ipaddr"
+          id: "10.3.4.6"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "{{ crypto_name }}"
+            dpd:
+              enable: true
+          ikev2:
+            ike_crypto_profile: "{{ crypto_name }}"
+            dpd:
+              enable: true
+      register: gateway_result
+
+    # ── 3. Create IPsec Tunnel ────────────────────────────────
+    - name: Create IPsec Tunnel
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: present
+        name: "{{ tunnel_name }}"
+        folder: "{{ folder }}"
+        anti_replay: true
+        copy_tos: false
+        enable_gre_encapsulation: false
+        auto_key:
+          ike_gateway:
+            - name: "{{ gateway_name }}"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+      register: tunnel_result
+
+    # ══════════════════════════════════════════════════════════
+    # MAIN: Service Connection CRUD operations
+    # ══════════════════════════════════════════════════════════
+
+    # ── Create Service Connection ─────────────────────────────
     - name: Create service_connection
       paloaltonetworks.scm.scm_service_connection:
         state: present
-        name: "ansible-test-service-connection"
-        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
-        region: "{{ sc_region }}"
+        name: "{{ sc_name }}"
+        folder: "{{ folder }}"
+        ipsec_tunnel: "{{ tunnel_name }}"
+        region: "us-central1-a"
         onboarding_type: "classic"
         subnets:
           - "10.0.0.0/24"
@@ -65,73 +118,74 @@
       ansible.builtin.debug:
         var: create_result.service_connection
 
-    # ── Update ──────────────────────────────────────────────
-    - name: Update service_connection
-      paloaltonetworks.scm.scm_service_connection:
-        state: present
-        name: "ansible-test-service-connection"
-        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
-        region: "{{ sc_region }}"
-        onboarding_type: "classic"
-        subnets:
-          - "10.0.0.0/24"
-          - "10.0.1.0/24"
-          - "192.168.0.0/16"
-        source_nat: true
-      register: update_result
-
-    - name: Show updated service_connection
-      ansible.builtin.debug:
-        var: update_result.service_connection
-
-    # ── Get by name (CRUD module, state=gathered) ───────────
-    - name: Get service_connection by name
+    # ── Gather Service Connection ─────────────────────────────
+    - name: Gather service_connection by name
       paloaltonetworks.scm.scm_service_connection:
         state: gathered
-        name: "ansible-test-service-connection"
-        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
-        region: "{{ sc_region }}"
+        name: "{{ sc_name }}"
+        folder: "{{ folder }}"
+        ipsec_tunnel: "{{ tunnel_name }}"
+        region: "us-central1-a"
       register: gathered_result
 
     - name: Show gathered service_connection
       ansible.builtin.debug:
         var: gathered_result.service_connection
 
-    # ── Get by name (info module) ───────────────────────────
-    - name: Get service_connection by name (info module)
-      paloaltonetworks.scm.scm_service_connection_info:
-        name: "ansible-test-service-connection"
-      register: info_by_name
-
-    - name: Show info result
-      ansible.builtin.debug:
-        var: info_by_name.service_connections
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get service_connection by ID (info module)
-      paloaltonetworks.scm.scm_service_connection_info:
-        id: "{{ gathered_result.service_connection.id }}"
-      register: info_by_id
-      when: gathered_result.service_connection.id is defined
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.service_connections
-      when: gathered_result.service_connection.id is defined
-
-    # ── List all ────────────────────────────────────────────
+    # ── List Service Connections ──────────────────────────────
     - name: List all service_connections
       paloaltonetworks.scm.scm_service_connection_info:
+        folder: "{{ folder }}"
       register: list_result
 
     - name: Show service_connections count
       ansible.builtin.debug:
         msg: "Found {{ list_result.total }} service_connections"
 
-    # ── Delete ──────────────────────────────────────────────
+    # ══════════════════════════════════════════════════════════
+    # CLEANUP: Delete in reverse order
+    # ══════════════════════════════════════════════════════════
+
+    # ── Delete Service Connection ─────────────────────────────
     - name: Delete service_connection
       paloaltonetworks.scm.scm_service_connection:
         state: absent
-        name: "ansible-test-service-connection"
-        ipsec_tunnel: "{{ ipsec_tunnel_name }}"
-        region: "{{ sc_region }}"
+        name: "{{ sc_name }}"
+        folder: "{{ folder }}"
+        ipsec_tunnel: "{{ tunnel_name }}"
+        region: "us-central1-a"
+
+    # ── Delete IPsec Tunnel ───────────────────────────────────
+    - name: Delete IPsec Tunnel
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: absent
+        name: "{{ tunnel_name }}"
+        folder: "{{ folder }}"
+        auto_key:
+          ike_gateway:
+            - name: "{{ gateway_name }}"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+
+    # ── Delete IKE Gateway ────────────────────────────────────
+    - name: Delete IKE Gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: absent
+        name: "{{ gateway_name }}"
+        folder: "{{ folder }}"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "2.2.2.6"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "{{ crypto_name }}"
+          ikev2:
+            ike_crypto_profile: "{{ crypto_name }}"
+
+    # ── Delete IKE Crypto Profile ─────────────────────────────
+    - name: Delete IKE Crypto Profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: absent
+        name: "{{ crypto_name }}"
+        folder: "{{ folder }}"

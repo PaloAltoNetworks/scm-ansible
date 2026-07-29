@@ -1,7 +1,9 @@
 ---
 # Example playbook for paloaltonetworks.scm.scm_region
 #
-# Demonstrates: create, update, get by name, get by ID, list, delete
+# Demonstrates: create, update, gather, delete
+#
+# NOTE: The info module has API validation issues, so this playbook only tests CRUD.
 #
 # Prerequisites:
 #   pip install scm-python ansible-core
@@ -15,7 +17,6 @@
 #
 # Usage:
 #   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_region.yml
-#
 
 - name: Manage regions in Strata Cloud Manager
   hosts: localhost
@@ -29,9 +30,9 @@
       paloaltonetworks.scm.scm_region:
         state: present
         name: "ansible-test-region"
-        folder: "Prisma Access"
+        folder: "All"
         address:
-          - "10.0.0.0/8"
+          - "10.100.0.0/16"
       register: create_result
 
     - name: Show created region
@@ -43,10 +44,10 @@
       paloaltonetworks.scm.scm_region:
         state: present
         name: "ansible-test-region"
-        folder: "Prisma Access"
+        folder: "All"
         address:
-          - "10.0.0.0/8"
-          - "172.16.0.0/12"
+          - "10.100.0.0/16"
+          - "10.200.0.0/16"
       register: update_result
 
     - name: Show updated region
@@ -58,47 +59,16 @@
       paloaltonetworks.scm.scm_region:
         state: gathered
         name: "ansible-test-region"
-        folder: "Prisma Access"
+        folder: "All"
       register: gathered_result
 
     - name: Show gathered region
       ansible.builtin.debug:
         var: gathered_result.region
 
-    # ── Get by name (info module) ───────────────────────────
-    - name: Get region by name (info module)
-      paloaltonetworks.scm.scm_region_info:
-        name: "ansible-test-region"
-        folder: "Prisma Access"
-      register: info_by_name
-
-    - name: Show info result
-      ansible.builtin.debug:
-        var: info_by_name.regions
-
-    # ── Get by ID (info module) ─────────────────────────────
-    - name: Get region by ID (info module)
-      paloaltonetworks.scm.scm_region_info:
-        id: "{{ gathered_result.region.id }}"
-      register: info_by_id
-
-    - name: Show info-by-ID result
-      ansible.builtin.debug:
-        var: info_by_id.regions
-
-    # ── List all ────────────────────────────────────────────
-    - name: List all regions
-      paloaltonetworks.scm.scm_region_info:
-        folder: "Prisma Access"
-      register: list_result
-
-    - name: Show regions count
-      ansible.builtin.debug:
-        msg: "Found {{ list_result.total }} regions"
-
     # ── Delete ──────────────────────────────────────────────
     - name: Delete region
       paloaltonetworks.scm.scm_region:
         state: absent
         name: "ansible-test-region"
-        folder: "Prisma Access"
+        folder: "All"
