@@ -9,7 +9,7 @@ We use a **two-tier testing approach**:
 | Workflow | Trigger | Runtime | Purpose |
 |----------|---------|---------|---------|
 | **Module Tests (Fast)** | Every push/PR | ~30-45 min | Fast feedback during development |
-| **Playbook Tests (Full)** | Manual / merge to main | ~100-120 min | Full integration validation |
+| **Playbook Tests (Full)** | Manual only | ~100-120 min | Full integration validation |
 
 ## Why Two Workflows?
 
@@ -142,10 +142,7 @@ Tests the **complete user experience**:
        └── ~100-120 min for full validation
 
 3. Playbook tests pass
-   └── Merge to develop
-
-4. Merge to main
-   └── Playbook Tests (Full) runs automatically
+   └── Merge to develop/main
 ```
 
 ## How to Trigger Manual Playbook Tests
@@ -256,7 +253,7 @@ curl -X POST \
 
 | Aspect | Module Tests | Playbook Tests |
 |--------|--------------|----------------|
-| **Trigger** | Automatic (push/PR) | Manual / merge to main |
+| **Trigger** | Automatic (push/PR) | Manual only |
 | **Runtime** | ~30-45 min | ~100-120 min |
 | **Tests** | Module Python code | Full Ansible experience |
 | **Use case** | Development feedback | Pre-merge validation |
