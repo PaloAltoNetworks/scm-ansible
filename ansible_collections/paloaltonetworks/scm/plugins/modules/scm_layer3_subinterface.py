@@ -47,6 +47,10 @@ options:
             - Mutually exclusive with C(folder) and C(snippet).
         required: False
         type: str
+    adjust_tcp_mss:
+        description: 'No description available.'
+        required: False
+        type: dict
     arp:
         description: 'Layer 3 sub Interfaces ARP configuration'
         required: False
@@ -87,6 +91,10 @@ options:
         description: 'Parent interface'
         required: False
         type: str
+    pppoe:
+        description: 'No description available.'
+        required: False
+        type: dict
     tag:
         description: 'VLAN tag'
         required: False
@@ -143,6 +151,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 
 PARAM_TO_FIELD = {
+    'adjust_tcp_mss': 'adjust_tcp_mss',
     'arp': 'arp',
     'comment': 'comment',
     'ddns_config': 'ddns_config',
@@ -153,6 +162,7 @@ PARAM_TO_FIELD = {
     'name': 'name',
     'netflow_profile': 'netflow_profile',
     'parent_interface': 'parent_interface',
+    'pppoe': 'pppoe',
     'tag': 'tag',
 }
 
@@ -167,6 +177,7 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
+        adjust_tcp_mss=dict(type='dict', required=False),
         arp=dict(type='list', required=False),
         comment=dict(type='str', required=False),
         ddns_config=dict(type='dict', required=False),
@@ -177,6 +188,7 @@ def main():
         name=dict(type='str', required=True),
         netflow_profile=dict(type='str', required=False),
         parent_interface=dict(type='str', required=False),
+        pppoe=dict(type='dict', required=False),
         tag=dict(type='int', required=False),
     )
 

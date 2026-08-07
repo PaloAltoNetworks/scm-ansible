@@ -47,6 +47,10 @@ options:
             - Mutually exclusive with C(folder) and C(snippet).
         required: False
         type: str
+    adjust_tcp_mss:
+        description: 'No description available.'
+        required: False
+        type: dict
     comment:
         description: 'Description for loopback interface'
         required: False
@@ -131,6 +135,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 
 PARAM_TO_FIELD = {
+    'adjust_tcp_mss': 'adjust_tcp_mss',
     'comment': 'comment',
     'default_value': 'default_value',
     'interface_management_profile': 'interface_management_profile',
@@ -152,6 +157,7 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
+        adjust_tcp_mss=dict(type='dict', required=False),
         comment=dict(type='str', required=False),
         default_value=dict(type='str', required=False),
         interface_management_profile=dict(type='str', required=False),

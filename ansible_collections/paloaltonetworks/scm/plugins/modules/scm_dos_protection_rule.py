@@ -64,9 +64,9 @@ options:
         required: False
         type: bool
     var_from:
-        description: 'List of source zones'
-        required: False
-        type: list
+        description: 'No description available.'
+        required: True
+        type: dict
     log_setting:
         description: 'Log forwarding profile name'
         required: False
@@ -81,7 +81,7 @@ options:
         type: str
     protection:
         description: 'No description available.'
-        required: False
+        required: True
         type: dict
     schedule:
         description: 'Schedule on which to enforce the rule'
@@ -89,11 +89,11 @@ options:
         type: str
     service:
         description: 'List of services'
-        required: False
+        required: True
         type: list
     source:
         description: 'List of source addresses'
-        required: False
+        required: True
         type: list
     source_user:
         description: 'List of source users and/or groups.  Reserved words include `any`, `pre-login`, `known-user`, and `unknown`.'
@@ -104,9 +104,9 @@ options:
         required: False
         type: list
     to:
-        description: 'List of destination zones'
-        required: False
-        type: list
+        description: 'No description available.'
+        required: True
+        type: dict
 '''
 
 EXAMPLES = r'''
@@ -191,17 +191,17 @@ def main():
         description=dict(type='str', required=False),
         destination=dict(type='list', required=False),
         disabled=dict(type='bool', required=False),
-        var_from=dict(type='list', required=False),
+        var_from=dict(type='dict', required=True),
         log_setting=dict(type='str', required=False),
         name=dict(type='str', required=True),
         position=dict(type='str', required=False),
-        protection=dict(type='dict', required=False),
+        protection=dict(type='dict', required=True),
         schedule=dict(type='str', required=False),
-        service=dict(type='list', required=False),
-        source=dict(type='list', required=False),
+        service=dict(type='list', required=True),
+        source=dict(type='list', required=True),
         source_user=dict(type='list', required=False),
         tag=dict(type='list', required=False),
-        to=dict(type='list', required=False),
+        to=dict(type='dict', required=True),
     )
 
     module = AnsibleModule(

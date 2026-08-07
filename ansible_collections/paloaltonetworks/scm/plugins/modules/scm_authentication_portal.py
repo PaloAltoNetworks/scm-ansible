@@ -65,7 +65,7 @@ options:
         type: int
     redirect_host:
         description: 'The authentication portal IP address or hostname'
-        required: True
+        required: False
         type: str
     timer:
         description: 'No description available.'
@@ -151,7 +151,7 @@ def main():
         certificate_profile=dict(type='str', required=False),
         gp_udp_port=dict(type='int', required=False),
         idle_timer=dict(type='int', required=False),
-        redirect_host=dict(type='str', required=True),
+        redirect_host=dict(type='str', required=False),
         timer=dict(type='int', required=False),
         tls_service_profile=dict(type='str', required=False),
         name=dict(type='str', required=False),

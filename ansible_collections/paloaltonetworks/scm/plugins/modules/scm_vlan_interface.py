@@ -47,6 +47,10 @@ options:
             - Mutually exclusive with C(folder) and C(snippet).
         required: False
         type: str
+    adjust_tcp_mss:
+        description: 'No description available.'
+        required: False
+        type: dict
     arp:
         description: 'ARP configuration'
         required: False
@@ -143,6 +147,7 @@ from ansible_collections.paloaltonetworks.scm.plugins.module_utils.scm import (
 
 
 PARAM_TO_FIELD = {
+    'adjust_tcp_mss': 'adjust_tcp_mss',
     'arp': 'arp',
     'comment': 'comment',
     'ddns_config': 'ddns_config',
@@ -167,6 +172,7 @@ def main():
         folder=dict(type='str', required=False),
         snippet=dict(type='str', required=False),
         device=dict(type='str', required=False),
+        adjust_tcp_mss=dict(type='dict', required=False),
         arp=dict(type='list', required=False),
         comment=dict(type='str', required=False),
         ddns_config=dict(type='dict', required=False),
