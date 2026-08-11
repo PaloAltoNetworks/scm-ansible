@@ -1,0 +1,29 @@
+name: Release Collection to Ansible Galaxy
+
+on:
+  push:
+    tags:
+      - 'test*'
+
+jobs:
+  release:
+    name: Publish to Ansible Galaxy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install ansible-core
+        run: pip install ansible-core
+
+      - name: Build collection
+        run: ansible-galaxy collection build ansible_collections/paloaltonetworks/scm/
+
+      - name: Publish to Ansible Galaxy
+        run: ansible-galaxy collection publish paloaltonetworks-scm-*.tar.gz --token ${{ secrets.GALAXY_TOKEN }}
