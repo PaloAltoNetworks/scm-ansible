@@ -22,8 +22,8 @@ jobs:
       - name: Install ansible-core
         run: pip install ansible-core
 
-      - name: Build collection
-        run: ansible-galaxy collection build ansible_collections/paloaltonetworks/scm/
-
-      - name: Publish to Ansible Galaxy
-        run: ansible-galaxy collection publish paloaltonetworks-scm-*.tar.gz --token ${{ secrets.GALAXY_TOKEN }}
+      - name: Build and publish collection
+        run: |
+          cd ansible_collections/paloaltonetworks/scm
+          ansible-galaxy collection build .
+          ansible-galaxy collection publish *.tar.gz --token ${{ secrets.GALAXY_TOKEN }}
