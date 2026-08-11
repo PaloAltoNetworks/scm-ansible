@@ -1,10 +1,10 @@
-namespace: paloaltonetworks
-name: scm
-version: 1.0.0
+namespace: test-scm
+name: test-ansible-scm
+version: v0.0.1-beta.1
 readme: README.md
 authors:
-  - Palo Alto Networks
-description: Ansible Collection for Strata Cloud Manager
+  - test 
+description: test ansible collection for scm
 license:
   - Apache-2.0
 tags:
