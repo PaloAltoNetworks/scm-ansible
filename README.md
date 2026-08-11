@@ -24,9 +24,14 @@ Create a config file with your SCM service account credentials:
 mkdir -p config
 cat > config/scm-config.json << 'EOF'
 {
+  "auth_url": "auth-url",
   "client_id": "myaccount@1234567890.iam.panserviceaccount.com",
   "client_secret": "your-client-secret-here",
-  "scope": "tsg_id:1234567890"
+  "host": "api.strata.paloaltonetworks.com",
+  "logging": "quiet",
+  "protocol": "https",
+  "scope": "tsg_id:1234567890",
+  "skip_verify_certificate": false
 }
 EOF
 ```
@@ -37,6 +42,8 @@ a temporary directory, so the config file must be referenced by absolute path):
 ```bash
 export SCM_CONFIG_FILE="$(pwd)/config/scm-config.json"
 ```
+
+See [Authentication](#authentication) for alternative credential options (environment variables, inline credentials).
 
 ### 3. Run a playbook
 
@@ -111,8 +118,11 @@ Save this as `address_example.yml`:
 Run it:
 
 ```bash
-ANSIBLE_COLLECTIONS_PATH=. ansible-playbook address_example.yml
+ANSIBLE_COLLECTIONS_PATH=. ansible-playbook examples/scm_address_group.yml
+
 ```
+Make sure the path to the yml file is correct from your root directory. 
+
 
 Expected output:
 
@@ -127,17 +137,11 @@ TASK [Delete address]      changed  {"msg": "address deleted successfully"}
 ## Requirements
 
 - Python 3.8+
-- The `scm-python` Python package (the SCM Python SDK)
+- `scm-python` — the SCM Python SDK
+- `ansible-core` — required for playbooks (modules can also run standalone)
 
 ```bash
-pip install scm-python
-```
-
-Ansible is **not required** for the modules to function (they can run standalone),
-but is needed if you want to use them in playbooks.
-
-```bash
-pip install ansible-core
+pip install scm-python ansible-core
 ```
 
 ## Installation
@@ -180,22 +184,10 @@ Credentials are resolved in priority order: **module parameter > environment var
 
 ### Option 1: Config File with SCM_CONFIG_FILE (recommended)
 
-Create a JSON config file and export its absolute path. This is recommended because
-Ansible modules execute in a temporary directory, so a relative path like
-`config/scm-config.json` won't be found at runtime.
+Create a JSON config file (see [Quick Start](#2-configure-authentication) for the file format) and export its absolute path. This is recommended because Ansible modules execute in a temporary directory, so a relative path like `config/scm-config.json` won't be found at runtime.
 
 ```bash
 export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
-```
-
-The file format (same as scm-go and scm-python):
-
-```json
-{
-  "client_id": "myaccount@1234567890.iam.panserviceaccount.com",
-  "client_secret": "your-client-secret-here",
-  "scope": "tsg_id:1234567890"
-}
 ```
 
 The `scope` field uses the format `tsg_id:<your-tsg-id>`. You can also use a plain
