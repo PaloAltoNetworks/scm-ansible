@@ -1,4 +1,4 @@
-namespace: test_scm
+namespace: vaishnavi_panw
 name: test_ansible_scm
 version: 0.0.1-beta.1
 readme: README.md
