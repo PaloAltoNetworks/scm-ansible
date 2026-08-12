@@ -1,5 +1,5 @@
-namespace: test-scm
-name: test-ansible-scm
+namespace: test_scm
+name: test_ansible_scm
 version: 0.0.1-beta.1
 readme: README.md
 authors:
