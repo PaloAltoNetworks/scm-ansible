@@ -75,7 +75,7 @@ jobs:
 
           # Dynamically discover all playbooks from examples directory
           PLAYBOOKS=()
-          for pb_file in examples/scm_*.yml; do
+          for pb_file in playbooks/scm_*.yml; do
             [ -f "$pb_file" ] || continue
             pb_name=$(basename "$pb_file" .yml)
             PLAYBOOKS+=("$pb_name")
@@ -117,7 +117,7 @@ jobs:
               continue
             fi
 
-            output=$(ansible-playbook "examples/${pb}.yml" 2>&1)
+            output=$(ansible-playbook "playbooks/${pb}.yml" 2>&1)
             exit_code=$?
 
             # PASS if exit code 0 and PLAY RECAP shows no failures

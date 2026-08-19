@@ -71,6 +71,41 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ident_by_icmp6_type:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                code:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                type:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+            ident_by_icmp_type:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                code:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                type:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+            ident_by_ip_protocol:
+                description: 'No description available.'
+                required: False
+                type: str
+            port:
+                description: 'No description available.'
+                required: False
+                type: list
     description:
         description: 'No description available.'
         required: False
@@ -115,6 +150,145 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            and_condition:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                    required: True
+                    type: str
+                or_condition:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                        required: True
+                        type: str
+                    operator:
+                        description: 'No description available.'
+                        required: True
+                        type: dict
+                        suboptions:
+                        equal_to:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            context:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                            mask:
+                                description: '4-byte hex value'
+                                required: False
+                                type: str
+                            position:
+                                description: 'No description available.'
+                                required: False
+                                type: str
+                            value:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                        greater_than:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            context:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                            qualifier:
+                                description: 'No description available.'
+                                required: False
+                                type: list
+                                suboptions:
+                                name:
+                                    description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                                    required: True
+                                    type: str
+                                value:
+                                    description: 'No description available.'
+                                    required: True
+                                    type: str
+                            value:
+                                description: 'No description available.'
+                                required: True
+                                type: int
+                        less_than:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            context:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                            qualifier:
+                                description: 'No description available.'
+                                required: False
+                                type: list
+                                suboptions:
+                                name:
+                                    description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                                    required: True
+                                    type: str
+                                value:
+                                    description: 'No description available.'
+                                    required: True
+                                    type: str
+                            value:
+                                description: 'No description available.'
+                                required: True
+                                type: int
+                        pattern_match:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            context:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                            pattern:
+                                description: 'No description available.'
+                                required: True
+                                type: str
+                            qualifier:
+                                description: 'No description available.'
+                                required: False
+                                type: list
+                                suboptions:
+                                name:
+                                    description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                                    required: True
+                                    type: str
+                                value:
+                                    description: 'No description available.'
+                                    required: True
+                                    type: str
+            comment:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'Alphanumeric string [ 0-9a-zA-Z._-]'
+                required: True
+                type: str
+            order_free:
+                description: 'No description available.'
+                required: False
+                type: bool
+            scope:
+                description: 'No description available.'
+                required: False
+                type: str
     subcategory:
         description: 'No description available.'
         required: False

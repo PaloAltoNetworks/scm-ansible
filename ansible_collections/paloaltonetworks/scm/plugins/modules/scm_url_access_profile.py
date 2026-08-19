@@ -71,6 +71,48 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            alert:
+                description: 'No description available.'
+                required: False
+                type: list
+            allow:
+                description: 'No description available.'
+                required: False
+                type: list
+            block:
+                description: 'No description available.'
+                required: False
+                type: list
+            var_continue:
+                description: 'No description available.'
+                required: False
+                type: list
+            log_severity:
+                description: 'No description available.'
+                required: False
+                type: str
+            mode:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                disabled:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                domain_credentials:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                group_mapping:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                ip_user:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
     description:
         description: 'No description available.'
         required: False

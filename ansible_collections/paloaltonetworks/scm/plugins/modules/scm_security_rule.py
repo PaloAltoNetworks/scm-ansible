@@ -55,10 +55,138 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            additional_action:
+                description: 'No description available.'
+                required: False
+                type: str
+            credential_enforcement:
+                description: 'No description available.'
+                required: False
+                type: str
+            decryption:
+                description: 'No description available.'
+                required: False
+                type: str
+            dlp:
+                description: 'No description available.'
+                required: False
+                type: str
+            file_control:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                download:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                upload:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            isolation_profiles:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
     allow_web_application:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            app_id:
+                description: 'No description available.'
+                required: False
+                type: str
+            application_function:
+                description: 'No description available.'
+                required: False
+                type: list
+            dlp:
+                description: 'No description available.'
+                required: False
+                type: str
+            file_control:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                download:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                upload:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
+            saas_enterprise_control:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                consumer_access:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                enterprise_access:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    tenant_restrictions:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+            saas_tenant_list:
+                description: 'No description available.'
+                required: False
+                type: list
+            saas_user_list:
+                description: 'No description available.'
+                required: False
+                type: list
+            tenant_control:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                allowed_activities:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                blocked_activities:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                parent_application:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                tenants:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+            type:
+                description: 'No description available.'
+                required: False
+                type: str
     application:
         description: 'The application(s) being accessed'
         required: False
@@ -79,6 +207,24 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dlp:
+                description: 'No description available.'
+                required: False
+                type: str
+            file_control:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                download:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                upload:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     description:
         description: 'The description of the security rule'
         required: False
@@ -115,6 +261,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            log_sessions:
+                description: 'No description available.'
+                required: False
+                type: bool
     log_start:
         description: 'Log at session start?'
         required: False
@@ -143,6 +294,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            group:
+                description: 'The security profile group'
+                required: False
+                type: list
     schedule:
         description: 'Schedule in which this rule will be applied'
         required: False
@@ -151,6 +307,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            anti_spyware:
+                description: 'No description available.'
+                required: False
+                type: str
+            virus_and_wildfire_analysis:
+                description: 'No description available.'
+                required: False
+                type: str
+            vulnerability:
+                description: 'No description available.'
+                required: False
+                type: str
     service:
         description: 'The service(s) being accessed'
         required: False

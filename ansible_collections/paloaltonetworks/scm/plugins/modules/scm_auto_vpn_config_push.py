@@ -33,6 +33,15 @@ options:
         description: 'VPN clusters'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'VPN cluster to push to'
+                required: False
+                type: str
+            refresh_psk:
+                description: 'No description available.'
+                required: False
+                type: bool
 '''
 
 EXAMPLES = r'''

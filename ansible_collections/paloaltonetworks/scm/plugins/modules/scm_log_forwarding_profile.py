@@ -55,6 +55,39 @@ options:
         description: 'No description available.'
         required: True
         type: list
+        suboptions:
+            action_desc:
+                description: 'Match profile description'
+                required: False
+                type: str
+            filter:
+                description: 'Filter match criteria'
+                required: True
+                type: str
+            log_type:
+                description: 'Log type'
+                required: True
+                type: str
+            name:
+                description: 'Name of the match profile'
+                required: True
+                type: str
+            send_email:
+                description: 'A list of email server profiles'
+                required: False
+                type: list
+            send_http:
+                description: 'A list of HTTP server profiles'
+                required: False
+                type: list
+            send_snmptrap:
+                description: 'A list of SNMP server profiles'
+                required: False
+                type: list
+            send_syslog:
+                description: 'A list of syslog server profiles'
+                required: False
+                type: list
     name:
         description: 'The name of the log forwarding profile'
         required: True

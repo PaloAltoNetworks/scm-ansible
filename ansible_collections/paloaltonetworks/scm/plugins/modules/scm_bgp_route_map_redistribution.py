@@ -51,10 +51,582 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ospf:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'BGP Root OSPF Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'BGP Root OSPF Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'BGP Root OSPF Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        as_path_access_list:
+                            description: 'BGP Root OSPF Route maps match AS path access list'
+                            required: False
+                            type: str
+                        extended_community:
+                            description: 'EBGP Root OSPF Route maps match xtended community'
+                            required: False
+                            type: str
+                        interface:
+                            description: 'BGP Root OSPF Route maps match Interface'
+                            required: False
+                            type: str
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root OSPF Route maps match ipv4 Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root OSPF Route maps match ipv4 Prefix list'
+                                    required: False
+                                    type: str
+                            next_hop:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root OSPF Route maps ipv4 next_vr hop Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root OSPF Route maps ipv4 next hop Prefix list'
+                                    required: False
+                                    type: str
+                            route_source:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root OSPF Route maps ipv4 route source Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root OSPF Route maps ipv4 route source Prefix list'
+                                    required: False
+                                    type: str
+                        large_community:
+                            description: 'BGP Root OSPF Route maps match Large community'
+                            required: False
+                            type: str
+                        local_preference:
+                            description: 'BGP Root OSPF Route maps match Local preference'
+                            required: False
+                            type: int
+                        metric:
+                            description: 'BGP Root OSPF Route maps match Metric'
+                            required: False
+                            type: int
+                        origin:
+                            description: 'BGP Root OSPF Route maps match Origin'
+                            required: False
+                            type: str
+                        peer:
+                            description: 'BGP Root OSPF Route maps match Peer'
+                            required: False
+                            type: str
+                        regular_community:
+                            description: 'BGP Root OSPF Route maps match Regular community'
+                            required: False
+                            type: str
+                        tag:
+                            description: 'BGP Root OSPF Route maps match Tag'
+                            required: False
+                            type: int
+                    name:
+                        description: 'BGP Root OSPF Route maps Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        metric:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            action:
+                                description: 'BGP Root OSPF Route maps set Metric action'
+                                required: False
+                                type: str
+                            value:
+                                description: 'BGP Root OSPF Route maps set Metric value'
+                                required: False
+                                type: int
+                        metric_type:
+                            description: 'BGP Root OSPF Route maps set Metric type'
+                            required: False
+                            type: str
+                        tag:
+                            description: 'BGP Root OSPF Route maps set Tag'
+                            required: False
+                            type: int
+            rib:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'BGP Root RIB Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'BGP Root RIB Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'BGP Root RIB Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        as_path_access_list:
+                            description: 'BGP Root RIB Route maps match AS path access list'
+                            required: False
+                            type: str
+                        extended_community:
+                            description: 'BGP Root RIB Route maps match Extended community'
+                            required: False
+                            type: str
+                        interface:
+                            description: 'BGP Root RIB Route maps match Interface'
+                            required: False
+                            type: str
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root RIB Route maps match ipv Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root RIB Route maps match ipv Prefix list'
+                                    required: False
+                                    type: str
+                            next_hop:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root RIB Route maps match ipv next hop Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root RIB Route maps match ipv next hop Prefix list'
+                                    required: False
+                                    type: str
+                            route_source:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'BGP Root RIB Route maps match ipv route source Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'BGP Root RIB Route maps match ipv route source Prefix list'
+                                    required: False
+                                    type: str
+                        large_community:
+                            description: 'BGP Root RIB Route maps match Large community'
+                            required: False
+                            type: str
+                        local_preference:
+                            description: 'BGP Root RIB Route maps match Local preference'
+                            required: False
+                            type: int
+                        metric:
+                            description: 'BGP Root RIB Route maps match Metric'
+                            required: False
+                            type: int
+                        origin:
+                            description: 'BGP Root RIB Route maps match Origin'
+                            required: False
+                            type: str
+                        peer:
+                            description: 'BGP Root RIB Route maps match Peer'
+                            required: False
+                            type: str
+                        regular_community:
+                            description: 'BGP Root RIB Route maps match Regular community'
+                            required: False
+                            type: str
+                        tag:
+                            description: 'BGP Root RIB Route maps match Tag'
+                            required: False
+                            type: int
+                    name:
+                        description: 'BGP Root RIB Route maps Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        source_address:
+                            description: 'BGP Root RIB Route maps set Source address'
+                            required: False
+                            type: str
     connected_static:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            bgp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'Connected Static BGP Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Connected Static BGP Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'Connected Static BGP Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        interface:
+                            description: 'Connected Static BGP Route maps match Interface'
+                            required: False
+                            type: str
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP Route maps match ip4 Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP Route maps match ip4  Prefix list'
+                                    required: False
+                                    type: str
+                            next_hop:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP Route maps match ip4 next hop Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP Route maps match ip4 next hop Prefix list'
+                                    required: False
+                                    type: str
+                        metric:
+                            description: 'Connected Static BGP Route maps match Metric'
+                            required: False
+                            type: int
+                    name:
+                        description: 'Connected Static BGP Route maps Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        aggregator:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            var_as:
+                                description: 'Connected Static BGP Route maps set Aggregator AS'
+                                required: False
+                                type: int
+                            router_id:
+                                description: 'Connected Static BGP Route maps set Router ID'
+                                required: False
+                                type: str
+                        aspath_prepend:
+                            description: 'Connected Static BGP Route maps set AS numbers'
+                            required: False
+                            type: list
+                        atomic_aggregate:
+                            description: 'Connected Static BGP Route maps set Enable BGP atomic aggregate?'
+                            required: False
+                            type: bool
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            next_hop:
+                                description: 'Connected Static BGP Route maps set Next ipv4 hop'
+                                required: False
+                                type: str
+                            source_address:
+                                description: 'Connected Static BGP Route maps set ipv4 Source address'
+                                required: False
+                                type: str
+                        large_community:
+                            description: 'Connected Static  BGP Route maps set Large communities'
+                            required: False
+                            type: list
+                        local_preference:
+                            description: 'Connected Static BGP Route maps set Local preference'
+                            required: False
+                            type: int
+                        metric:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            action:
+                                description: 'Connected Static BGP Route maps set Metric action'
+                                required: False
+                                type: str
+                            value:
+                                description: 'Connected Static BGP Route maps set Metric value'
+                                required: False
+                                type: int
+                        origin:
+                            description: 'Connected Static BGP Route maps set Origin'
+                            required: False
+                            type: str
+                        originator_id:
+                            description: 'Connected Static BGP Route maps set Originator ID'
+                            required: False
+                            type: str
+                        regular_community:
+                            description: 'Connected Static  BGP Route maps set Regular communities'
+                            required: False
+                            type: list
+                        tag:
+                            description: 'Connected Static BGP Route maps set Tag'
+                            required: False
+                            type: int
+                        weight:
+                            description: 'Connected Static BGP Route maps set Weight'
+                            required: False
+                            type: int
+            ospf:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'Connected Static  BGP OSPF Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Connected Static BGP OSPF Route map Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'Connected Static BGP OSPF Route map Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        interface:
+                            description: 'Connected Static BGP OSPF Route map Interface'
+                            required: False
+                            type: str
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP OSPF Route map ipv4 Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP OSPF Route map ipv4 Prefix list'
+                                    required: False
+                                    type: str
+                            next_hop:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP OSPF Route map ipv4 next hop Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP OSPF Route map ipv4 next hop Prefix list'
+                                    required: False
+                                    type: str
+                        metric:
+                            description: 'Connected Static BGP OSPF Route map Metric'
+                            required: False
+                            type: int
+                    name:
+                        description: 'Connected Static BGP OSPF Route map Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        metric:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            action:
+                                description: 'Connected Static BGP OSPF Route map set Metric action'
+                                required: False
+                                type: str
+                            value:
+                                description: 'Connected Static BGP OSPF Route map set Metric value'
+                                required: False
+                                type: int
+                        metric_type:
+                            description: 'Connected Static BGP OSPF Route map set Metric type'
+                            required: False
+                            type: str
+                        tag:
+                            description: 'Connected Static BGP OSPF Route map set Tag'
+                            required: False
+                            type: int
+            rib:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'Connected Static BGP Rib Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Connected Static BGP Rib Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'Connected Static BGP Rib Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        interface:
+                            description: 'Connected Static BGP Rib Route maps Interface'
+                            required: False
+                            type: str
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP Rib Route maps ipv4 Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP Rib Route maps ipv4 Prefix list'
+                                    required: False
+                                    type: str
+                            next_hop:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                access_list:
+                                    description: 'Connected Static BGP Rib Route maps ipv4 nect hop Access list'
+                                    required: False
+                                    type: str
+                                prefix_list:
+                                    description: 'Connected Static BGP Rib Route maps ipv4 next hop Prefix list'
+                                    required: False
+                                    type: str
+                        metric:
+                            description: 'Connected Static BGP Rib Route maps Metric'
+                            required: False
+                            type: int
+                    name:
+                        description: 'Connected Static BGP Rib Route maps Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        source_address:
+                            description: 'Connected Static BGP Rib Route Map Distribution Source address'
+                            required: False
+                            type: str
     description:
         description: 'BGP Route Map Redistributions Description'
         required: False
@@ -67,6 +639,226 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            bgp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'OSPF BGP Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'OSPF BGP Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'OSPF BGP Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        address:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            access_list:
+                                description: 'OSPF BGP Route maps match Access list'
+                                required: False
+                                type: str
+                            prefix_list:
+                                description: 'OSPF BGP Route maps match Prefix list'
+                                required: False
+                                type: str
+                        interface:
+                            description: 'OSPF BGP Route maps Interface'
+                            required: False
+                            type: str
+                        metric:
+                            description: 'OSPF BGP Route maps Metric'
+                            required: False
+                            type: int
+                        next_hop:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            access_list:
+                                description: 'OSPF BGP Route maps next_hop Access list'
+                                required: False
+                                type: str
+                            prefix_list:
+                                description: 'OSPF BGP Route maps next_hop Prefix list'
+                                required: False
+                                type: str
+                        tag:
+                            description: 'OSPF BGP Route maps Tag'
+                            required: False
+                            type: int
+                    name:
+                        description: 'OSPF BGP Route maps Sequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        aggregator:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            var_as:
+                                description: 'OSPF BGP Route maps set Aggregator AS'
+                                required: False
+                                type: int
+                            router_id:
+                                description: 'OSPF BGP Route maps set Router ID'
+                                required: False
+                                type: str
+                        aspath_prepend:
+                            description: 'OSPF BGP Route maps set AS numbers'
+                            required: False
+                            type: list
+                        atomic_aggregate:
+                            description: 'OSPF BGP Route maps set Enable BGP atomic aggregate?'
+                            required: False
+                            type: bool
+                        ipv4:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            next_hop:
+                                description: 'OSPF BGP Route maps set ipv4 Next hop'
+                                required: False
+                                type: str
+                            source_address:
+                                description: 'OSPF BGP Route maps set ipv4 Source address'
+                                required: False
+                                type: str
+                        large_community:
+                            description: 'OSPF BGP Route maps set Large communities'
+                            required: False
+                            type: list
+                        local_preference:
+                            description: 'OSPF BGP Route maps set Local preference'
+                            required: False
+                            type: int
+                        metric:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            action:
+                                description: 'OSPF BGP Route maps set Metric action'
+                                required: False
+                                type: str
+                            value:
+                                description: 'OSPF BGP Route maps set Metric value'
+                                required: False
+                                type: int
+                        origin:
+                            description: 'OSPF BGP Route maps set Origin'
+                            required: False
+                            type: str
+                        originator_id:
+                            description: 'OSPF BGP Route maps set Originator ID'
+                            required: False
+                            type: str
+                        regular_community:
+                            description: 'OSPF BGP Route maps set Regular communities'
+                            required: False
+                            type: list
+                        tag:
+                            description: 'OSPF BGP Route maps set Tag'
+                            required: False
+                            type: int
+                        weight:
+                            description: 'OSPF BGP Route maps set Weight'
+                            required: False
+                            type: int
+            rib:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                route_map:
+                    description: 'OSPF RIB Route maps set Route maps'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'OSPF RIB Route maps Action'
+                        required: False
+                        type: str
+                    description:
+                        description: 'OSPF RIB Route maps Description'
+                        required: False
+                        type: str
+                    match:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        address:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            access_list:
+                                description: 'OSPF RIB Route maps address Access list'
+                                required: False
+                                type: str
+                            prefix_list:
+                                description: 'OSPF RIB Route maps address Prefix list'
+                                required: False
+                                type: str
+                        interface:
+                            description: 'OSPF RIB Route maps Interface'
+                            required: False
+                            type: str
+                        metric:
+                            description: 'OSPF RIB Route maps Metric'
+                            required: False
+                            type: int
+                        next_hop:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            access_list:
+                                description: 'OSPF RIB Route maps next_hop Access list'
+                                required: False
+                                type: str
+                            prefix_list:
+                                description: 'OSPF RIB Route maps next_hop Prefix list'
+                                required: False
+                                type: str
+                        tag:
+                            description: 'OSPF RIB Route maps tag'
+                            required: False
+                            type: int
+                    name:
+                        description: 'OSPF RIB Route mapsSequence number'
+                        required: False
+                        type: int
+                    set:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        source_address:
+                            description: 'OSPF RIB Route maps set Source address'
+                            required: False
+                            type: str
 '''
 
 EXAMPLES = r'''

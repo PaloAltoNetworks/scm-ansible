@@ -51,6 +51,59 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            banner_footer:
+                description: 'No description available.'
+                required: False
+                type: str
+            banner_footer_color:
+                description: 'No description available.'
+                required: False
+                type: str
+            banner_footer_text_color:
+                description: 'No description available.'
+                required: False
+                type: str
+            banner_header:
+                description: 'No description available.'
+                required: False
+                type: str
+            banner_header_color:
+                description: 'No description available.'
+                required: False
+                type: str
+            banner_header_footer_match:
+                description: 'No description available.'
+                required: False
+                type: bool
+            banner_header_text_color:
+                description: 'No description available.'
+                required: False
+                type: str
+            message:
+                description: 'No description available.'
+                required: False
+                type: str
+            motd_color:
+                description: 'No description available.'
+                required: False
+                type: str
+            motd_do_not_display_again:
+                description: 'No description available.'
+                required: False
+                type: bool
+            motd_enable:
+                description: 'No description available.'
+                required: False
+                type: bool
+            motd_title:
+                description: 'No description available.'
+                required: False
+                type: str
+            severity:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

@@ -51,6 +51,252 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            anti_virus:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                    hourly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: True
+                            type: int
+                    var_none:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    sync_to_peer:
+                        description: 'No description available.'
+                        required: True
+                        type: bool
+                    threshold:
+                        description: 'No description available.'
+                        required: False
+                        type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+            threats:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                        disable_new_content:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    every_30_mins:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        disable_new_content:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    hourly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: True
+                            type: float
+                        disable_new_content:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    new_app_threshold:
+                        description: 'No description available.'
+                        required: False
+                        type: int
+                    var_none:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    sync_to_peer:
+                        description: 'No description available.'
+                        required: True
+                        type: bool
+                    threshold:
+                        description: 'No description available.'
+                        required: False
+                        type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                        disable_new_content:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+            wildfire:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    every_15_mins:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        sync_to_peer:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    every_30_mins:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        sync_to_peer:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    every_hour:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        at:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        sync_to_peer:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    every_min:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        action:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        sync_to_peer:
+                            description: 'No description available.'
+                            required: False
+                            type: bool
+                    var_none:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    real_time:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
 '''
 
 EXAMPLES = r'''

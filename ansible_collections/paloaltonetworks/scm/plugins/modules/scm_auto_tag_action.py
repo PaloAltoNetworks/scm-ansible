@@ -51,6 +51,37 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'No description available.'
+                required: True
+                type: str
+            type:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                tagging:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    action:
+                        description: 'Add or Remove tag option'
+                        required: True
+                        type: str
+                    tags:
+                        description: 'Tags for address object'
+                        required: False
+                        type: list
+                    target:
+                        description: 'Source or Destination Address, User, X-Forwarded-For Address'
+                        required: True
+                        type: str
+                    timeout:
+                        description: 'No description available.'
+                        required: False
+                        type: int
     description:
         description: 'No description available.'
         required: False

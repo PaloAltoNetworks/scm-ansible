@@ -55,6 +55,58 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            chap:
+                description: 'No description available.'
+                required: False
+                type: dict
+            eap_ttls_with_pap:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                anon_outer_id:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                radius_cert_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            pap:
+                description: 'No description available.'
+                required: False
+                type: dict
+            peap_mschapv2:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                allow_pwd_change:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                anon_outer_id:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                radius_cert_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            peap_with_gtc:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                anon_outer_id:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                radius_cert_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     retries:
         description: 'The number of RADIUS server retries'
         required: False
@@ -63,6 +115,23 @@ options:
         description: 'No description available.'
         required: True
         type: list
+        suboptions:
+            ip_address:
+                description: 'The IP address of the RADIUS server'
+                required: False
+                type: str
+            name:
+                description: 'The name of the RADIUS server'
+                required: False
+                type: str
+            port:
+                description: 'The RADIUS server port'
+                required: False
+                type: int
+            secret:
+                description: 'The RADIUS secret'
+                required: False
+                type: str
     timeout:
         description: 'The RADIUS server authentication timeout (seconds)'
         required: False

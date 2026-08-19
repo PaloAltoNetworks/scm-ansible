@@ -63,6 +63,24 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dns_rewrite:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                direction:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            translated_address:
+                description: 'Translated destination IP address'
+                required: False
+                type: str
+            translated_port:
+                description: 'Translated destination port'
+                required: False
+                type: int
     disabled:
         description: 'Disable NAT rule?'
         required: False
@@ -71,6 +89,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            distribution:
+                description: 'Distribution method'
+                required: False
+                type: str
+            translated_address:
+                description: 'Translated destination IP address'
+                required: False
+                type: str
+            translated_port:
+                description: 'Translated destination port'
+                required: False
+                type: int
     var_from:
         description: 'Source zone(s) of the original packet'
         required: True
@@ -95,6 +126,81 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dynamic_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                fallback:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    interface_address:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        floating_ip:
+                            description: 'Floating IP address'
+                            required: False
+                            type: str
+                        interface:
+                            description: 'Interface name'
+                            required: False
+                            type: str
+                        ip:
+                            description: 'IP address'
+                            required: False
+                            type: str
+                    translated_address:
+                        description: 'Fallback IP addresses'
+                        required: False
+                        type: list
+                translated_address:
+                    description: 'Translated IP addresses'
+                    required: False
+                    type: list
+            dynamic_ip_and_port:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                interface_address:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    floating_ip:
+                        description: 'Floating IP address'
+                        required: False
+                        type: str
+                    interface:
+                        description: 'Interface name'
+                        required: False
+                        type: str
+                    ip:
+                        description: 'Translated source IP address'
+                        required: False
+                        type: str
+                translated_address:
+                    description: 'Translated source IP addresses'
+                    required: False
+                    type: list
+            static_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                bi_directional:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                translated_address:
+                    description: 'Translated IP address'
+                    required: False
+                    type: str
     tag:
         description: 'NAT rule tags'
         required: False

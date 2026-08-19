@@ -51,6 +51,115 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            default_gateway:
+                description: 'Default gateway'
+                required: False
+                type: str
+            ip_address:
+                description: 'IP address'
+                required: False
+                type: str
+            mgmt_type:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dhcp_client:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    accept_dhcp_domain:
+                        description: 'Accept DHCP server provided domain name'
+                        required: False
+                        type: bool
+                    accept_dhcp_hostname:
+                        description: 'Accept DHCP server provided hostname'
+                        required: False
+                        type: bool
+                    send_client_id:
+                        description: 'Send client ID'
+                        required: False
+                        type: bool
+                    send_hostname:
+                        description: 'Send hostname'
+                        required: False
+                        type: bool
+                static:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+            mtu:
+                description: 'MTU'
+                required: False
+                type: int
+            netmask:
+                description: 'Netmask'
+                required: False
+                type: str
+            permitted_ip:
+                description: 'Permitting IP addresses'
+                required: False
+                type: list
+                suboptions:
+                description:
+                    description: 'Description'
+                    required: False
+                    type: str
+                name:
+                    description: 'IP address'
+                    required: False
+                    type: str
+            service:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                disable_http:
+                    description: 'HTTP'
+                    required: False
+                    type: bool
+                disable_http_ocsp:
+                    description: 'HTTP OCSP'
+                    required: False
+                    type: bool
+                disable_https:
+                    description: 'HTTPS'
+                    required: False
+                    type: bool
+                disable_icmp:
+                    description: 'Ping'
+                    required: False
+                    type: bool
+                disable_snmp:
+                    description: 'SNMP'
+                    required: False
+                    type: bool
+                disable_ssh:
+                    description: 'SSH'
+                    required: False
+                    type: bool
+                disable_telnet:
+                    description: 'Telnet'
+                    required: False
+                    type: bool
+                disable_userid_service:
+                    description: 'User-ID'
+                    required: False
+                    type: bool
+                disable_userid_syslog_listener_ssl:
+                    description: 'User-ID syslog listener over SSL'
+                    required: False
+                    type: bool
+                disable_userid_syslog_listener_udp:
+                    description: 'User-ID syslog listener over UDP'
+                    required: False
+                    type: bool
+            speed_duplex:
+                description: 'Speed and duplex'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

@@ -55,18 +55,154 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            auto_include_altname:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_client_cert:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_expired_certificate:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_timeout_cert:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_tls13_downgrade_no_resource:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_unknown_cert:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_unsupported_cipher:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_unsupported_version:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_untrusted_issuer:
+                description: 'No description available.'
+                required: False
+                type: bool
+            restrict_cert_exts:
+                description: 'No description available.'
+                required: False
+                type: bool
+            strip_alpn:
+                description: 'No description available.'
+                required: False
+                type: bool
     ssl_inbound_proxy:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            block_if_hsm_unavailable:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_if_no_resource:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_unsupported_cipher:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_unsupported_version:
+                description: 'No description available.'
+                required: False
+                type: bool
     ssl_no_proxy:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            block_expired_certificate:
+                description: 'No description available.'
+                required: False
+                type: bool
+            block_untrusted_issuer:
+                description: 'No description available.'
+                required: False
+                type: bool
     ssl_protocol_settings:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            auth_algo_md5:
+                description: 'No description available.'
+                required: False
+                type: bool
+            auth_algo_sha1:
+                description: 'No description available.'
+                required: False
+                type: bool
+            auth_algo_sha256:
+                description: 'No description available.'
+                required: False
+                type: bool
+            auth_algo_sha384:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_3des:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_aes_128_cbc:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_aes_128_gcm:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_aes_256_cbc:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_aes_256_gcm:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_chacha20_poly1305:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enc_algo_rc4:
+                description: 'No description available.'
+                required: False
+                type: bool
+            keyxchg_algo_dhe:
+                description: 'No description available.'
+                required: False
+                type: bool
+            keyxchg_algo_ecdhe:
+                description: 'No description available.'
+                required: False
+                type: bool
+            keyxchg_algo_rsa:
+                description: 'No description available.'
+                required: False
+                type: bool
+            max_version:
+                description: 'No description available.'
+                required: False
+                type: str
+            min_version:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

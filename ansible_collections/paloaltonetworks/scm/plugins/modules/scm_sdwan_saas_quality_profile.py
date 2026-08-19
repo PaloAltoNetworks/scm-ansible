@@ -51,6 +51,55 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            adaptive:
+                description: 'No description available.'
+                required: False
+                type: dict
+            http_https:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                monitored_url:
+                    description: 'Monitored URL'
+                    required: True
+                    type: str
+                probe_interval:
+                    description: 'Probe interval (seconds)'
+                    required: True
+                    type: int
+            static_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                fqdn:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    fqdn_name:
+                        description: 'FQDN'
+                        required: True
+                        type: str
+                    probe_interval:
+                        description: 'Probe interval (seconds)'
+                        required: True
+                        type: int
+                ip_address:
+                    description: 'List of IP addresses'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'IP address'
+                        required: True
+                        type: str
+                    probe_interval:
+                        description: 'Probe interval (seconds)'
+                        required: True
+                        type: int
     name:
         description: 'Profile name'
         required: True

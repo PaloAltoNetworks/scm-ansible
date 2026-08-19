@@ -55,6 +55,45 @@ options:
         description: 'A list of HTTP header profile rules'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'The name of the HTTP header insertion rule'
+                required: True
+                type: str
+            type:
+                description: 'A list of HTTP header insertion definitions'
+                required: True
+                type: list
+                suboptions:
+                domains:
+                    description: 'A list of DNS domains'
+                    required: True
+                    type: list
+                headers:
+                    description: 'No description available.'
+                    required: True
+                    type: list
+                    suboptions:
+                    header:
+                        description: 'The HTTP header string'
+                        required: True
+                        type: str
+                    log:
+                        description: 'Log the use of this HTTP header insertion?'
+                        required: False
+                        type: bool
+                    name:
+                        description: 'The name of the HTTP header'
+                        required: True
+                        type: str
+                    value:
+                        description: 'The value associated with the HTTP header'
+                        required: True
+                        type: str
+                name:
+                    description: 'The HTTP header insertion type'
+                    required: True
+                    type: str
     name:
         description: 'The name of the HTTP header profile'
         required: True

@@ -67,6 +67,23 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            id:
+                description: 'UUID of the remote network'
+                required: False
+                type: str
+            mode:
+                description: 'The mode of the remote network'
+                required: True
+                type: str
+            name:
+                description: 'The member name'
+                required: True
+                type: str
+            remote_network:
+                description: 'The remote network name'
+                required: False
+                type: str
     name:
         description: 'The name of the site'
         required: True
@@ -75,6 +92,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            backup_cir:
+                description: 'The backup CIR in Mbps. This is distributed equally for all tunnels in the site.'
+                required: False
+                type: float
+            cir:
+                description: 'The CIR in Mbps. This is distributed equally for all tunnels in the site.'
+                required: False
+                type: float
+            profile:
+                description: 'The name of the site QoS profile'
+                required: False
+                type: str
     type:
         description: 'The site type'
         required: False

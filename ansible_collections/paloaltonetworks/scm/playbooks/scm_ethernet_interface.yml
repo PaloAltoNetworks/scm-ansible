@@ -1,0 +1,114 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ethernet_interface
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_ethernet_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_ethernet_interface' for full parameter docs.
+
+- name: Manage ethernet_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    # NOTE: Ethernet interface names must start with '$' per API validation.
+    # A layer mode (layer2 or layer3) must be specified.
+    - name: Create ethernet_interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-test-ethernet"
+        folder: "All"
+        comment: "Managed by Ansible"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer2: {}
+      register: create_result
+
+    - name: Show created ethernet_interface
+      ansible.builtin.debug:
+        var: create_result.ethernet_interface
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ethernet_interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-test-ethernet"
+        folder: "All"
+        comment: "Updated by Ansible"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer2: {}
+      register: update_result
+
+    - name: Show updated ethernet_interface
+      ansible.builtin.debug:
+        var: update_result.ethernet_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ethernet_interface by name
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: gathered
+        name: "$ansible-test-ethernet"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered ethernet_interface
+      ansible.builtin.debug:
+        var: gathered_result.ethernet_interface
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ethernet_interface by name (info module)
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        name: "$ansible-test-ethernet"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ethernet_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ethernet_interface by ID (info module)
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        id: "{{ gathered_result.ethernet_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ethernet_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ethernet_interfaces
+      paloaltonetworks.scm.scm_ethernet_interface_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show ethernet_interfaces count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} ethernet_interfaces"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ethernet_interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "$ansible-test-ethernet"
+        folder: "All"
+

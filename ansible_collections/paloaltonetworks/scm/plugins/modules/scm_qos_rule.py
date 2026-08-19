@@ -51,6 +51,11 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            var_class:
+                description: 'No description available.'
+                required: False
+                type: str
     description:
         description: 'No description available.'
         required: False
@@ -59,6 +64,70 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            codepoints:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                type:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    af:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        codepoint:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                    cs:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        codepoint:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                    custom:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        codepoint:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            binary_value:
+                                description: 'No description available.'
+                                required: False
+                                type: str
+                            codepoint_name:
+                                description: 'No description available.'
+                                required: False
+                                type: str
+                    ef:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    tos:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        codepoint:
+                            description: 'No description available.'
+                            required: False
+                            type: str
     name:
         description: 'No description available.'
         required: True

@@ -51,6 +51,88 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dns_security_categories:
+                description: 'DNS categories'
+                required: False
+                type: list
+                suboptions:
+                action:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                log_level:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                name:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                packet_capture:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            lists:
+                description: 'Dynamic lists of DNS domains'
+                required: False
+                type: list
+                suboptions:
+                action:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    alert:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    allow:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    sinkhole:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                packet_capture:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            sinkhole:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ipv4_address:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                ipv6_address:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            whitelist:
+                description: 'DNS security overrides'
+                required: False
+                type: list
+                suboptions:
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                name:
+                    description: 'DNS domain or FQDN to be whitelisted'
+                    required: True
+                    type: str
     description:
         description: 'The description of the DNS security profile'
         required: False

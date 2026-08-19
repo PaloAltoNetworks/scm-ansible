@@ -1,6 +1,6 @@
 namespace: paloaltonetworks
 name: scm
-version: 1.0.0
+version: 0.0.1-beta.1
 readme: README.md
 authors:
   - Palo Alto Networks
@@ -15,4 +15,9 @@ repository: http://github.com/paloaltonetworks/scm-ansible
 documentation: http://github.com/paloaltonetworks/scm-ansible
 homepage: http://github.com/paloaltonetworks/scm-ansible
 issues: http://github.com/paloaltonetworks/scm-ansible/issues
-build_ignore: []
+build_ignore:
+  - tests
+  - .github
+  - .gitignore
+  - "*.tar.gz"
+  - docs/CI_CD_STRATEGY.md

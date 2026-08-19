@@ -51,18 +51,303 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+                last_scan_time:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    not_available:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    not_within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        hours:
+                            description: 'specify time in hours'
+                            required: False
+                            type: int
+                    within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        hours:
+                            description: 'specify time in hours'
+                            required: False
+                            type: int
+                product_version:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    greater_equal:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    greater_than:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    less_equal:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    less_than:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    not_within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        versions:
+                            description: 'versions range'
+                            required: True
+                            type: int
+                    within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        versions:
+                            description: 'versions range'
+                            required: True
+                            type: int
+                real_time_protection:
+                    description: 'real time protection'
+                    required: False
+                    type: str
+                virdef_version:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    not_within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        versions:
+                            description: 'specify versions range'
+                            required: False
+                            type: int
+                    within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        versions:
+                            description: 'specify versions range'
+                            required: False
+                            type: int
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'No description available.'
+                    required: False
+                    type: list
     certificate:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                certificate_attributes:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Attribute Name'
+                        required: True
+                        type: str
+                    value:
+                        description: 'Key value'
+                        required: False
+                        type: str
+                certificate_profile:
+                    description: 'Profile for authenticating client certificates'
+                    required: False
+                    type: str
     custom_checks:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                plist:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    key:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                        suboptions:
+                        name:
+                            description: 'Key name'
+                            required: True
+                            type: str
+                        negate:
+                            description: 'Value does not exist or match specified value data'
+                            required: False
+                            type: bool
+                        value:
+                            description: 'Key value'
+                            required: False
+                            type: str
+                    name:
+                        description: 'Preference list'
+                        required: True
+                        type: str
+                    negate:
+                        description: 'Plist does not exist'
+                        required: False
+                        type: bool
+                process_list:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Process Name'
+                        required: True
+                        type: str
+                    running:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                registry_key:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    default_value_data:
+                        description: 'Registry key default value data'
+                        required: False
+                        type: str
+                    name:
+                        description: 'Registry key'
+                        required: True
+                        type: str
+                    negate:
+                        description: 'Key does not exist or match specified value data'
+                        required: False
+                        type: bool
+                    registry_value:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                        suboptions:
+                        name:
+                            description: 'Registry value name'
+                            required: True
+                            type: str
+                        negate:
+                            description: 'Value does not exist or match specified value data'
+                            required: False
+                            type: bool
+                        value_data:
+                            description: 'Registry value data'
+                            required: False
+                            type: str
     data_loss_prevention:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                is_enabled:
+                    description: 'is enabled'
+                    required: False
+                    type: str
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'Product name'
+                    required: False
+                    type: list
     description:
         description: 'No description available.'
         required: False
@@ -71,22 +356,455 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+                last_backup_time:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    not_available:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    not_within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        hours:
+                            description: 'specify time in hours'
+                            required: False
+                            type: int
+                    within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: False
+                            type: int
+                        hours:
+                            description: 'specify time in hours'
+                            required: False
+                            type: int
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'No description available.'
+                    required: False
+                    type: list
     disk_encryption:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                encrypted_locations:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    encryption_state:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        var_is:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        is_not:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                    name:
+                        description: 'Encryption location'
+                        required: True
+                        type: str
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'No description available.'
+                    required: False
+                    type: list
     firewall:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                is_enabled:
+                    description: 'is enabled'
+                    required: False
+                    type: str
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'No description available.'
+                    required: False
+                    type: list
     host_info:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                client_version:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                domain:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                host_id:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                host_name:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                managed:
+                    description: 'If device is managed'
+                    required: False
+                    type: bool
+                os:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        apple:
+                            description: 'Apple vendor'
+                            required: False
+                            type: str
+                        google:
+                            description: 'Google vendor'
+                            required: False
+                            type: str
+                        linux:
+                            description: 'Linux vendor'
+                            required: False
+                            type: str
+                        microsoft:
+                            description: 'Microsoft vendor'
+                            required: False
+                            type: str
+                        other:
+                            description: 'Other vendor'
+                            required: False
+                            type: str
+                serial_number:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
     mobile_device:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                applications:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    has_malware:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        no:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        yes:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            excludes:
+                                description: 'No description available.'
+                                required: False
+                                type: list
+                                suboptions:
+                                hash:
+                                    description: 'application hash'
+                                    required: False
+                                    type: str
+                                name:
+                                    description: 'No description available.'
+                                    required: True
+                                    type: str
+                                package:
+                                    description: 'application package name'
+                                    required: False
+                                    type: str
+                    has_unmanaged_app:
+                        description: 'Has apps that are not managed'
+                        required: False
+                        type: bool
+                    includes:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                        suboptions:
+                        hash:
+                            description: 'application hash'
+                            required: False
+                            type: str
+                        name:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                        package:
+                            description: 'application package name'
+                            required: False
+                            type: str
+                disk_encrypted:
+                    description: 'If device''s disk is encrypted'
+                    required: False
+                    type: bool
+                imei:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                jailbroken:
+                    description: 'If device is by rooted/jailbroken'
+                    required: False
+                    type: bool
+                last_checkin_time:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    not_within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: True
+                            type: int
+                    within:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        days:
+                            description: 'specify time in days'
+                            required: True
+                            type: int
+                model:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                passcode_set:
+                    description: 'If device''s passcode is present'
+                    required: False
+                    type: bool
+                phone_number:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                tag:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    contains:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: str
     name:
         description: 'The name of the HIP object'
         required: True
@@ -95,10 +813,152 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                network:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    var_is:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        mobile:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            carrier:
+                                description: 'No description available.'
+                                required: False
+                                type: str
+                        unknown:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        wifi:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            ssid:
+                                description: 'SSID'
+                                required: False
+                                type: str
+                    is_not:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        ethernet:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        mobile:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            carrier:
+                                description: 'No description available.'
+                                required: False
+                                type: str
+                        unknown:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        wifi:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            ssid:
+                                description: 'SSID'
+                                required: False
+                                type: str
     patch_management:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            criteria:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                is_enabled:
+                    description: 'is enabled'
+                    required: False
+                    type: str
+                is_installed:
+                    description: 'Is Installed'
+                    required: False
+                    type: bool
+                missing_patches:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    check:
+                        description: 'No description available.'
+                        required: True
+                        type: str
+                    patches:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    severity:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        greater_equal:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        greater_than:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        var_is:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        is_not:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        less_equal:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        less_than:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+            exclude_vendor:
+                description: 'No description available.'
+                required: False
+                type: bool
+            vendor:
+                description: 'Vendor name'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                product:
+                    description: 'Product name'
+                    required: False
+                    type: list
 '''
 
 EXAMPLES = r'''

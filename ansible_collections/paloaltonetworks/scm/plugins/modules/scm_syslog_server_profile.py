@@ -51,6 +51,88 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            auth:
+                description: 'No description available.'
+                required: False
+                type: str
+            config:
+                description: 'No description available.'
+                required: False
+                type: str
+            correlation:
+                description: 'No description available.'
+                required: False
+                type: str
+            data:
+                description: 'No description available.'
+                required: False
+                type: str
+            decryption:
+                description: 'No description available.'
+                required: False
+                type: str
+            escaping:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                escape_character:
+                    description: 'Escape sequence delimiter'
+                    required: False
+                    type: str
+                escaped_characters:
+                    description: 'A list of all the characters to be escaped (without spaces).'
+                    required: False
+                    type: str
+            globalprotect:
+                description: 'No description available.'
+                required: False
+                type: str
+            gtp:
+                description: 'No description available.'
+                required: False
+                type: str
+            hip_match:
+                description: 'No description available.'
+                required: False
+                type: str
+            iptag:
+                description: 'No description available.'
+                required: False
+                type: str
+            sctp:
+                description: 'No description available.'
+                required: False
+                type: str
+            system:
+                description: 'No description available.'
+                required: False
+                type: str
+            threat:
+                description: 'No description available.'
+                required: False
+                type: str
+            traffic:
+                description: 'No description available.'
+                required: False
+                type: str
+            tunnel:
+                description: 'No description available.'
+                required: False
+                type: str
+            url:
+                description: 'No description available.'
+                required: False
+                type: str
+            userid:
+                description: 'No description available.'
+                required: False
+                type: str
+            wildfire:
+                description: 'No description available.'
+                required: False
+                type: str
     name:
         description: 'The name of the syslog server profile'
         required: True
@@ -59,6 +141,31 @@ options:
         description: 'A list of syslog server configurations. At least one server is required.'
         required: True
         type: list
+        suboptions:
+            facility:
+                description: 'Syslog facility'
+                required: False
+                type: str
+            format:
+                description: 'Syslog format'
+                required: False
+                type: str
+            name:
+                description: 'Syslog server name'
+                required: False
+                type: str
+            port:
+                description: 'Syslog server port'
+                required: False
+                type: int
+            server:
+                description: 'Syslog server address'
+                required: False
+                type: str
+            transport:
+                description: 'Transport protocol'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

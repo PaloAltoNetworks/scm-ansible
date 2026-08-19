@@ -1,0 +1,118 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_mfa_server
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#   A certificate_profile must exist (e.g. "ansible-test-certprof" in "Shared")
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_mfa_server.yml
+#
+
+- name: Manage mfa_servers in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create mfa_server
+      paloaltonetworks.scm.scm_mfa_server:
+        state: present
+        name: "ansible-test-mfa"
+        folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"
+        mfa_vendor_type:
+          duo_security_v2:
+            duo_api_host: "api-12345678.duosecurity.com"
+            duo_baseuri: "https://api-12345678.duosecurity.com"
+            duo_integration_key: "DIXXXXXXXXXXXXXXXXXX"
+            duo_secret_key: "1234567890abcdef"
+            duo_timeout: 30
+      register: create_result
+
+    - name: Show created mfa_server
+      ansible.builtin.debug:
+        var: create_result.mfa_server
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update mfa_server
+      paloaltonetworks.scm.scm_mfa_server:
+        state: present
+        name: "ansible-test-mfa"
+        folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"
+        mfa_vendor_type:
+          duo_security_v2:
+            duo_api_host: "api-99999999.duosecurity.com"
+            duo_baseuri: "https://api-99999999.duosecurity.com"
+            duo_integration_key: "DIXXXXXXXXXXXXXXXXXX"
+            duo_secret_key: "1234567890abcdef"
+            duo_timeout: 30
+      register: update_result
+
+    - name: Show updated mfa_server
+      ansible.builtin.debug:
+        var: update_result.mfa_server
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get mfa_server by name
+      paloaltonetworks.scm.scm_mfa_server:
+        state: gathered
+        name: "ansible-test-mfa"
+        folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"
+      register: gathered_result
+
+    - name: Show gathered mfa_server
+      ansible.builtin.debug:
+        var: gathered_result.mfa_server
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get mfa_server by name (info module)
+      paloaltonetworks.scm.scm_mfa_server_info:
+        name: "ansible-test-mfa"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.mfa_servers
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get mfa_server by ID (info module)
+      paloaltonetworks.scm.scm_mfa_server_info:
+        id: "{{ gathered_result.mfa_server.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.mfa_servers
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all mfa_servers
+      paloaltonetworks.scm.scm_mfa_server_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show mfa_servers count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} mfa_servers"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete mfa_server
+      paloaltonetworks.scm.scm_mfa_server:
+        state: absent
+        name: "ansible-test-mfa"
+        folder: "All"
+        mfa_cert_profile: "ansible-test-certprof"

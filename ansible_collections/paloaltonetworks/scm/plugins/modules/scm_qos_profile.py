@@ -51,10 +51,82 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            egress_guaranteed:
+                description: 'guaranteed sending bandwidth in mbps'
+                required: False
+                type: int
+            egress_max:
+                description: 'max sending bandwidth in mbps'
+                required: False
+                type: int
     class_bandwidth_type:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            mbps:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                var_class:
+                    description: 'QoS setting for traffic classes'
+                    required: False
+                    type: list
+                    suboptions:
+                    class_bandwidth:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        egress_guaranteed:
+                            description: 'guaranteed sending bandwidth in mbps'
+                            required: False
+                            type: int
+                        egress_max:
+                            description: 'max sending bandwidth in mbps'
+                            required: False
+                            type: int
+                    name:
+                        description: 'Traffic class'
+                        required: False
+                        type: str
+                    priority:
+                        description: 'traffic class priority'
+                        required: False
+                        type: str
+            percentage:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                var_class:
+                    description: 'QoS setting for traffic classes'
+                    required: False
+                    type: list
+                    suboptions:
+                    class_bandwidth:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        egress_guaranteed:
+                            description: 'guaranteed sending bandwidth in percentage'
+                            required: False
+                            type: int
+                        egress_max:
+                            description: 'max sending bandwidth in percentage'
+                            required: False
+                            type: int
+                    name:
+                        description: 'Traffic class'
+                        required: False
+                        type: str
+                    priority:
+                        description: 'traffic class priority'
+                        required: False
+                        type: str
     name:
         description: 'Alphanumeric string begin with letter: [0-9a-zA-Z._-]'
         required: True

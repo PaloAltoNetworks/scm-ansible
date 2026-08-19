@@ -51,14 +51,75 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            cache_edns:
+                description: 'Cache EDNS UDP response'
+                required: False
+                type: bool
+            enabled:
+                description: 'Turn on caching for this DNS object'
+                required: True
+                type: bool
+            max_ttl:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enabled:
+                    description: 'Enable max ttl for this DNS object'
+                    required: True
+                    type: bool
+                time_to_live:
+                    description: 'Time in seconds after which entry is cleared'
+                    required: False
+                    type: int
     default:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            inheritance:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                source:
+                    description: 'Dynamic interface'
+                    required: False
+                    type: str
+            primary:
+                description: 'Primary DNS Name server IP address'
+                required: True
+                type: str
+            secondary:
+                description: 'Secondary DNS Name server IP address'
+                required: False
+                type: str
     domain_servers:
         description: 'DNS proxy rules'
         required: False
         type: list
+        suboptions:
+            cacheable:
+                description: 'Enable caching for this DNS proxy rule?'
+                required: False
+                type: bool
+            domain_name:
+                description: 'Domain names(s) that will be matched'
+                required: False
+                type: list
+            name:
+                description: 'Proxy rule name'
+                required: True
+                type: str
+            primary:
+                description: 'Primary DNS server IP address'
+                required: True
+                type: str
+            secondary:
+                description: 'Secondary DNS server IP address'
+                required: False
+                type: str
     enabled:
         description: 'Enable DNS proxy?'
         required: False
@@ -75,14 +136,50 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            address:
+                description: 'No description available.'
+                required: True
+                type: list
+            domain:
+                description: 'Fully qualified domain name'
+                required: True
+                type: str
+            name:
+                description: 'Static entry name'
+                required: True
+                type: str
     tcp_queries:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enabled:
+                description: 'Turn on forwarding of TCP DNS queries?'
+                required: True
+                type: bool
+            max_pending_requests:
+                description: 'Upper limit on number of concurrent TCP DNS requests'
+                required: False
+                type: int
     udp_queries:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            retries:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                attempts:
+                    description: 'Maximum number of retries before trying next name server'
+                    required: False
+                    type: int
+                interval:
+                    description: 'Time in seconds for another request to be sent'
+                    required: False
+                    type: int
 '''
 
 EXAMPLES = r'''

@@ -51,6 +51,140 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            accelerated_aging_enable:
+                description: 'Enable accelerated aging'
+                required: False
+                type: bool
+            accelerated_aging_scaling_factor:
+                description: 'Accelerated aging scaling factor'
+                required: False
+                type: float
+            accelerated_aging_threshold:
+                description: 'Accelerated aging threshold'
+                required: False
+                type: float
+            config:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                rematch:
+                    description: 'Rematch all sessions on config policy change'
+                    required: False
+                    type: bool
+            dhcp_bcast_session_on:
+                description: 'Enable DHCP broadcast session'
+                required: False
+                type: bool
+            erspan:
+                description: 'Enable ERSPAN support'
+                required: False
+                type: bool
+            icmp_unreachable_rate:
+                description: 'ICMP unreachable packet rate (per second)'
+                required: False
+                type: float
+            icmpv6_rate_limit:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                bucket_size:
+                    description: 'ICMPv6 token bucket size'
+                    required: False
+                    type: int
+                packet_rate:
+                    description: 'ICMPv6 error packet pate (per second)'
+                    required: False
+                    type: int
+            ipv6_firewalling:
+                description: 'Enable IPv6 firewalling'
+                required: False
+                type: bool
+            jumbo_frame:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                mtu:
+                    description: 'Global MTU'
+                    required: False
+                    type: int
+            max_pending_mcast_pkts_per_session:
+                description: 'Multicast route setup buffer size'
+                required: False
+                type: float
+            multicast_route_setup_buffering:
+                description: 'Multicast route setup buffering'
+                required: False
+                type: bool
+            nat:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dipp_oversub:
+                    description: 'NAT oversubscription rate'
+                    required: False
+                    type: str
+            nat64:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ipv6_min_network_mtu:
+                    description: 'NAT64 IPv6 minimum network MTU'
+                    required: False
+                    type: int
+            packet_buffer_protection_activate:
+                description: 'Activate (%)'
+                required: False
+                type: float
+            packet_buffer_protection_alert:
+                description: 'Alert (%)'
+                required: False
+                type: int
+            packet_buffer_protection_block_countdown:
+                description: 'Block countdown threshold (%)'
+                required: False
+                type: float
+            packet_buffer_protection_block_duration_time:
+                description: 'Block duration (seconds)'
+                required: False
+                type: float
+            packet_buffer_protection_block_hold_time:
+                description: 'Block hold time (seconds)'
+                required: False
+                type: float
+            packet_buffer_protection_enable:
+                description: 'Enable packet buffer protection'
+                required: False
+                type: bool
+            packet_buffer_protection_latency_activate:
+                description: 'Latency activate (milliseconds)'
+                required: False
+                type: float
+            packet_buffer_protection_latency_alert:
+                description: 'Latency alert (milliseconds)'
+                required: False
+                type: float
+            packet_buffer_protection_latency_block_countdown:
+                description: 'Block countdown threshold (milliseconds)'
+                required: False
+                type: float
+            packet_buffer_protection_latency_max_tolerate:
+                description: 'Latency max tolerate (milliseconds)'
+                required: False
+                type: float
+            packet_buffer_protection_monitor_only:
+                description: 'Packet buffer protection monitor only'
+                required: False
+                type: bool
+            packet_buffer_protection_use_latency:
+                description: 'Enabled latency-based activation'
+                required: False
+                type: bool
 '''
 
 EXAMPLES = r'''

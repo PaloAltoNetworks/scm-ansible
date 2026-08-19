@@ -63,6 +63,180 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            icmp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against ICMP floods?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'The number of ICMP packets (not matching an existing session) that the zone receives per second before subsequent ICMP packets are dropped.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'The number of ICMP echo requests (pings not matching an existing session) that the zone receives per second that triggers an attack alarm.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'The maximum number of ICMP packets (not matching an existing session) that the zone receives per second before packets exceeding the maximum are dropped.'
+                        required: True
+                        type: int
+            icmpv6:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against ICMPv6 floods?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'The number of ICMPv6 packets (not matching an existing session) that the zone receives per second before subsequent ICMPv6 packets are dropped.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'The number of ICMPv6 echo requests (pings not matching an existing session) that the zone receives per second that triggers an attack alarm.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'The maximum number of ICMPv6 packets (not matching an existing session) that the zone receives per second before packets exceeding the maximum are dropped.'
+                        required: True
+                        type: int
+            other_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against other IP (non-TCP, non-ICMP, non-ICMPv6, non-SCTP, and non-UDP) floods?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'No description available.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'No description available.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'No description available.'
+                        required: True
+                        type: int
+            sctp_init:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against floods of Stream Control Transmission Protocol (SCTP) packets that contain an Initiation (INIT) chunk?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'The number of SCTP INIT packets (not matching an existing session) that the zone receives per second before subsequent SCTP INIT packets are dropped.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'The number of SCTP INIT packets (not matching an existing session) that the zone receives per second that triggers an attack alarm.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'The maximum number of SCTP INIT packets (not matching an existing session) that the zone receives per second before packets exceeding the maximum are dropped.'
+                        required: True
+                        type: int
+            tcp_syn:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against SYN floods?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'When the flow exceeds the `activate_rate`` threshold, the firewall drops individual SYN packets randomly to restrict the flow.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'When the flow exceeds the `alert_rate`` threshold, an alarm is generated.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'When the flow exceeds the `maximal_rate` threshold, 100% of incoming SYN packets are dropped.'
+                        required: True
+                        type: int
+                syn_cookies:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'When the flow exceeds the `activate_rate`` threshold, the firewall drops individual SYN packets randomly to restrict the flow.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'When the flow exceeds the `alert_rate`` threshold, an alarm is generated.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'When the flow exceeds the `maximal_rate` threshold, 100% of incoming SYN packets are dropped.'
+                        required: True
+                        type: int
+            udp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable protection against UDP floods?'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'The number of UDP packets (not matching an existing session) that the zone receives per second that triggers random dropping of UDP packets.'
+                        required: True
+                        type: int
+                    alarm_rate:
+                        description: 'The number of UDP packets (not matching an existing session) that the zone receives per second that triggers an attack alarm.'
+                        required: True
+                        type: int
+                    maximal_rate:
+                        description: 'The maximum number of UDP packets (not matching an existing session) the zone receives per second before packets exceeding the maximum are dropped.'
+                        required: True
+                        type: int
     fragmented_traffic_discard:
         description: 'Discard fragmented IP packets.'
         required: False
@@ -83,10 +257,123 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            anycast_source:
+                description: 'Discard IPv6 packets that contain an anycast source address.'
+                required: False
+                type: bool
+            filter_ext_hdr:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dest_option_hdr:
+                    description: 'Discard IPv6 packets that contain the Destination Options extension, which contains options intended only for the destination of the packet.'
+                    required: False
+                    type: bool
+                hop_by_hop_hdr:
+                    description: 'Discard IPv6 packets that contain the Hop-by-Hop Options extension header.'
+                    required: False
+                    type: bool
+                routing_hdr:
+                    description: 'Discard IPv6 packets that contain the Routing extension header, which directs packets to one or more intermediate nodes on its way to its destination.'
+                    required: False
+                    type: bool
+            icmpv6_too_big_small_mtu_discard:
+                description: 'Discard IPv6 packets that contain a Packet Too Big ICMPv6 message when the maximum transmission unit (MTU) is less than 1,280 bytes.'
+                required: False
+                type: bool
+            ignore_inv_pkt:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dest_unreach:
+                    description: 'Require an explicit Security policy match for Destination Unreachable ICMPv6 messages, even when the message is associated with an existing session.'
+                    required: False
+                    type: bool
+                param_problem:
+                    description: 'Require an explicit Security policy match for Parameter Problem ICMPv6 messages, even when the message is associated with an existing session.'
+                    required: False
+                    type: bool
+                pkt_too_big:
+                    description: 'Require an explicit Security policy match for Packet Too Big ICMPv6 messages, even when the message is associated with an existing session.'
+                    required: False
+                    type: bool
+                redirect:
+                    description: 'Require an explicit Security policy match for Redirect Message ICMPv6 messages, even when the message is associated with an existing session.'
+                    required: False
+                    type: bool
+                time_exceeded:
+                    description: 'Require an explicit Security policy match for Time Exceeded ICMPv6 messages, even when the message is associated with an existing session.'
+                    required: False
+                    type: bool
+            ipv4_compatible_address:
+                description: 'Discard IPv6 packets that are defined as an RFC 4291 IPv4-Compatible IPv6 address.'
+                required: False
+                type: bool
+            needless_fragment_hdr:
+                description: 'Discard IPv6 packets with the last fragment flag (M=0) and offset of zero.'
+                required: False
+                type: bool
+            options_invalid_ipv6_discard:
+                description: 'Discard IPv6 packets that contain invalid IPv6 options in an extension header.'
+                required: False
+                type: bool
+            reserved_field_set_discard:
+                description: 'Discard IPv6 packets that have a header with a reserved field not set to zero.'
+                required: False
+                type: bool
+            routing_header_0:
+                description: 'Drop packets with type 0 routing header.'
+                required: False
+                type: bool
+            routing_header_1:
+                description: 'Drop packets with type 1 routing header.'
+                required: False
+                type: bool
+            routing_header_253:
+                description: 'Drop packets with type 253 routing header.'
+                required: False
+                type: bool
+            routing_header_254:
+                description: 'Drop packets with type 254 routing header.'
+                required: False
+                type: bool
+            routing_header_255:
+                description: 'Drop packets with type 255 routing header.'
+                required: False
+                type: bool
+            routing_header_3:
+                description: 'Drop packets with type 3 routing header.'
+                required: False
+                type: bool
+            routing_header_4_252:
+                description: 'Drop packets with type 4 to type 252 routing header.'
+                required: False
+                type: bool
     l2_sec_group_tag_protection:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            tags:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                enable:
+                    description: 'Enable this exclude list for Ethernet SGT protection.'
+                    required: False
+                    type: bool
+                name:
+                    description: 'Name for the list of Security Group Tags (SGTs).'
+                    required: True
+                    type: str
+                tag:
+                    description: 'The Layer 2 SGTs in headers of packets that you want to exclude (drop) when the SGT matches this list in the Zone Protection profile applied to a zone (range is 0 to 65,535).'
+                    required: True
+                    type: str
     loose_source_routing_discard:
         description: 'Discard packets with the Loose Source Routing IP option set. Loose Source Routing is an option whereby a source of a datagram provides routing information and a gateway or host is allowed to choose any route of a number of intermediate gateways to get the datagram to the next address in the route.'
         required: False
@@ -111,6 +398,28 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            list_type:
+                description: 'Specify the type of list you are creating for protocol protection: * Include List—Only the protocols on the list are allowed—in addition to IPv4 (0x0800), IPv6 (0x86DD), ARP (0x0806), and VLAN tagged frames (0x8100). All other protocols are implicitly denied (blocked). * Exclude List—Only the protocols on the list are denied; all other protocols are implicitly allowed. You cannot exclude IPv4 (0x0800), IPv6 (0x86DD), ARP (0x0806), or VLAN tagged frames (0x8100).'
+                required: False
+                type: str
+            protocol:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                enable:
+                    description: 'Enable the Ethertype code on the list.'
+                    required: False
+                    type: bool
+                ether_type:
+                    description: 'Enter an Ethertype code (protocol) preceded by 0x to indicate hexadecimal (range is 0x0000 to 0xFFFF). A list can have a maximum of 64 Ethertypes. Some sources of Ethertype codes are: * [IEEE hexadecimal Ethertype](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml) * [standards.ieee.org/develop/regauth/ethertype/eth.txt](https://standards-oui.ieee.org/ethertype/eth.txt) * [www.cavebear.com/archive/cavebear/Ethernet/type.html](https://www.cavebear.com/archive/cavebear/Ethernet/type.html)'
+                    required: True
+                    type: str
+                name:
+                    description: 'Enter the protocol name that corresponds to the Ethertype code you are adding to the list. The firewall does not verify that the protocol name matches the Ethertype code but the Ethertype code does determine the protocol filter.'
+                    required: True
+                    type: str
     record_route_discard:
         description: 'Discard packets with the Record Route IP option set. When a datagram has this option, each router that routes the datagram adds its own IP address to the header, thus providing the path to the recipient.'
         required: False
@@ -123,10 +432,66 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                alert:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                allow:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                block:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                block_ip:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    duration:
+                        description: 'No description available.'
+                        required: True
+                        type: int
+                    track_by:
+                        description: 'No description available.'
+                        required: True
+                        type: str
+            interval:
+                description: 'No description available.'
+                required: False
+                type: int
+            name:
+                description: 'The threat ID number.  These can be found in [Palo Alto Networks ThreatVault](https://threatvault.paloaltonetworks.com). * "8001" - TCP Port Scan * "8002" - Host Sweep * "8003" - UDP Port Scan * "8006" - Port Scan'
+                required: True
+                type: str
+            threshold:
+                description: 'No description available.'
+                required: False
+                type: int
     scan_white_list:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            ipv4:
+                description: 'No description available.'
+                required: False
+                type: str
+            ipv6:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'A descriptive name for the address to exclude.'
+                required: True
+                type: str
     security_discard:
         description: 'Discard packets if the security option is defined.'
         required: False

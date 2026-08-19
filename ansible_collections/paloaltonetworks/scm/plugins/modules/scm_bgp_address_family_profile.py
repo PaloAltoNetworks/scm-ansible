@@ -51,6 +51,299 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            multicast:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                add_path:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    tx_all_paths:
+                        description: 'Advertise all paths to peer?'
+                        required: False
+                        type: bool
+                    tx_bestpath_per_as:
+                        description: 'Advertise the bestpath per each neighboring AS?'
+                        required: False
+                        type: bool
+                allowas_in:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    occurrence:
+                        description: 'Number of times the firewalls own AS can be in an AS_PATH'
+                        required: False
+                        type: int
+                    origin:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                as_override:
+                    description: 'Override ASNs in outbound updates if AS-Path equals Remote-AS?'
+                    required: False
+                    type: bool
+                default_originate:
+                    description: 'Originate default route?'
+                    required: False
+                    type: bool
+                default_originate_map:
+                    description: 'Default originate route map'
+                    required: False
+                    type: str
+                enable:
+                    description: 'Enable?'
+                    required: False
+                    type: bool
+                maximum_prefix:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    action:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        restart:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            interval:
+                                description: 'Restart interval'
+                                required: False
+                                type: int
+                        warning_only:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                    num_prefixes:
+                        description: 'Maximum number of prefixes'
+                        required: False
+                        type: int
+                    threshold:
+                        description: 'Threshold percentage of the maximum number of prefixes'
+                        required: False
+                        type: int
+                next_hop:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    var_self:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    self_force:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                orf:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    orf_prefix_list:
+                        description: 'ORF prefix list'
+                        required: False
+                        type: str
+                remove_private_as:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    all:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    replace_as:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                route_reflector_client:
+                    description: 'Route reflector client?'
+                    required: False
+                    type: bool
+                send_community:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    all:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    both:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    extended:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    large:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    standard:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                soft_reconfig_with_stored_info:
+                    description: 'Soft reconfiguration of peer with stored routes?'
+                    required: False
+                    type: bool
+            unicast:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                add_path:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    tx_all_paths:
+                        description: 'Advertise all paths to peer?'
+                        required: False
+                        type: bool
+                    tx_bestpath_per_as:
+                        description: 'Advertise the bestpath per each neighboring AS?'
+                        required: False
+                        type: bool
+                allowas_in:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    occurrence:
+                        description: 'Number of times the firewalls own AS can be in an AS_PATH'
+                        required: False
+                        type: int
+                    origin:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                as_override:
+                    description: 'Override ASNs in outbound updates if AS-Path equals Remote-AS?'
+                    required: False
+                    type: bool
+                default_originate:
+                    description: 'Originate default route?'
+                    required: False
+                    type: bool
+                default_originate_map:
+                    description: 'Default originate route map'
+                    required: False
+                    type: str
+                enable:
+                    description: 'Enable?'
+                    required: False
+                    type: bool
+                maximum_prefix:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    action:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        restart:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            interval:
+                                description: 'Restart interval'
+                                required: False
+                                type: int
+                        warning_only:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                    num_prefixes:
+                        description: 'Maximum number of prefixes'
+                        required: False
+                        type: int
+                    threshold:
+                        description: 'Threshold percentage of the maximum number of prefixes'
+                        required: False
+                        type: int
+                next_hop:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    var_self:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    self_force:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                orf:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    orf_prefix_list:
+                        description: 'ORF prefix list'
+                        required: False
+                        type: str
+                remove_private_as:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    all:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    replace_as:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                route_reflector_client:
+                    description: 'Route reflector client?'
+                    required: False
+                    type: bool
+                send_community:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    all:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    both:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    extended:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    large:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                    standard:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                soft_reconfig_with_stored_info:
+                    description: 'Soft reconfiguration of peer with stored routes?'
+                    required: False
+                    type: bool
     name:
         description: 'Name'
         required: True

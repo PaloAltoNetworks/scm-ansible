@@ -67,6 +67,23 @@ options:
         description: 'An ordered list of CA certificates'
         required: True
         type: list
+        suboptions:
+            default_ocsp_url:
+                description: 'Default OCSP URL'
+                required: False
+                type: str
+            name:
+                description: 'CA certificate name'
+                required: True
+                type: str
+            ocsp_verify_cert:
+                description: 'OCSP verify certificate'
+                required: False
+                type: str
+            template_name:
+                description: 'Template name/OID'
+                required: False
+                type: str
     cert_status_timeout:
         description: 'Certificate status timeout'
         required: False
@@ -99,6 +116,15 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            subject:
+                description: 'Common name'
+                required: False
+                type: str
+            subject_alt:
+                description: 'Email address'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

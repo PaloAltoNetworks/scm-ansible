@@ -51,6 +51,19 @@ options:
         description: 'MD5s'
         required: False
         type: list
+        suboptions:
+            key:
+                description: 'MD5 hash'
+                required: False
+                type: str
+            name:
+                description: 'Key ID'
+                required: False
+                type: int
+            preferred:
+                description: 'Preferred?'
+                required: False
+                type: bool
     name:
         description: 'Profile name'
         required: True

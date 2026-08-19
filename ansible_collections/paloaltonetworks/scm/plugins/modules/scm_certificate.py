@@ -51,6 +51,15 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            ecdsa_number_of_bits:
+                description: 'No description available.'
+                required: False
+                type: float
+            rsa_number_of_bits:
+                description: 'No description available.'
+                required: False
+                type: float
     alternate_email:
         description: 'Alternate email'
         required: False

@@ -51,6 +51,44 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            allow_forward_decrypted_content:
+                description: 'No description available.'
+                required: False
+                type: bool
+            allow_http_range:
+                description: 'No description available.'
+                required: False
+                type: bool
+            application:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                bypass_exceed_queue:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+            extended_capture_segment:
+                description: 'No description available.'
+                required: False
+                type: int
+            strip_x_fwd_for:
+                description: 'No description available.'
+                required: False
+                type: bool
+            tcp_bypass_exceed_queue:
+                description: 'No description available.'
+                required: False
+                type: bool
+            udp_bypass_exceed_queue:
+                description: 'No description available.'
+                required: False
+                type: bool
+            x_forwarded_for:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

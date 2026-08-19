@@ -1,0 +1,103 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_ocsp_responder
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_ocsp_responder.yml
+#
+
+- name: Manage ocsp_responders in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create ocsp_responder
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: present
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp.example.com"
+      register: create_result
+
+    - name: Show created ocsp_responder
+      ansible.builtin.debug:
+        var: create_result.ocsp_responder
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update ocsp_responder
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: present
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"
+      register: update_result
+
+    - name: Show updated ocsp_responder
+      ansible.builtin.debug:
+        var: update_result.ocsp_responder
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get ocsp_responder by name
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: gathered
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"
+      register: gathered_result
+
+    - name: Show gathered ocsp_responder
+      ansible.builtin.debug:
+        var: gathered_result.ocsp_responder
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get ocsp_responder by name (info module)
+      paloaltonetworks.scm.scm_ocsp_responder_info:
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.ocsp_responders
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get ocsp_responder by ID (info module)
+      paloaltonetworks.scm.scm_ocsp_responder_info:
+        id: "{{ gathered_result.ocsp_responder.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.ocsp_responders
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all ocsp_responders
+      paloaltonetworks.scm.scm_ocsp_responder_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show ocsp_responders count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} ocsp_responders"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete ocsp_responder
+      paloaltonetworks.scm.scm_ocsp_responder:
+        state: absent
+        name: "ansible-test-ocsp"
+        folder: "Prisma Access"
+        host_name: "ocsp-updated.example.com"

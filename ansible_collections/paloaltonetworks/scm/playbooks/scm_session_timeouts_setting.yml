@@ -1,0 +1,68 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_session_timeouts_setting
+#
+# Demonstrates: list (singleton), get by ID, update
+#
+# SINGLETON RESOURCE: session_timeouts_setting has no create or delete operations.
+# One instance exists per folder. Use list to discover the ID, then get/update.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_session_timeouts_setting.yml
+
+- name: Manage session_timeouts_setting in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── List (discover singleton ID) ─────────────────────────
+    - name: List all session_timeouts_settings
+      paloaltonetworks.scm.scm_session_timeouts_setting_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show session_timeouts_settings list
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} session_timeouts_setting(s)"
+
+    # ── Get by ID ────────────────────────────────────────────
+    - name: Get session_timeouts_setting by ID
+      paloaltonetworks.scm.scm_session_timeouts_setting_info:
+        id: "{{ list_result.session_timeouts_settings[0].id }}"
+      register: info_by_id
+      when: list_result.session_timeouts_settings | length > 0
+
+    - name: Show session_timeouts_setting detail
+      ansible.builtin.debug:
+        var: info_by_id.session_timeouts_settings
+      when: list_result.session_timeouts_settings | length > 0
+
+    # ── Update by ID ─────────────────────────────────────────
+    # No-op update: re-apply the existing configuration to verify idempotency
+    - name: Update session_timeouts_setting by ID
+      paloaltonetworks.scm.scm_session_timeouts_setting:
+        state: present
+        id: "{{ list_result.session_timeouts_settings[0].id }}"
+        folder: "Prisma Access"
+        # Optionally specify session_timeouts configuration:
+        # session_timeouts:
+        #   tcp: 3600
+        #   udp: 30
+      register: update_result
+      when: list_result.session_timeouts_settings | length > 0
+
+    - name: Show updated session_timeouts_setting
+      ansible.builtin.debug:
+        var: update_result.session_timeouts_setting
+      when: list_result.session_timeouts_settings | length > 0

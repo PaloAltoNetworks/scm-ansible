@@ -55,6 +55,19 @@ options:
         description: 'The Kerberos server configuration'
         required: True
         type: list
+        suboptions:
+            host:
+                description: 'The Kerberos server IP address'
+                required: True
+                type: str
+            name:
+                description: 'The Kerberos server name'
+                required: True
+                type: str
+            port:
+                description: 'The Kerberos server port'
+                required: False
+                type: int
 '''
 
 EXAMPLES = r'''

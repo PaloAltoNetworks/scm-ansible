@@ -59,6 +59,27 @@ options:
         description: 'A list of file blocking rules'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'The action to take when the rule match criteria is met'
+                required: True
+                type: str
+            application:
+                description: 'The application transferring the files (App-ID naming)'
+                required: True
+                type: list
+            direction:
+                description: 'The direction of the file transfer'
+                required: True
+                type: str
+            file_type:
+                description: 'The file type'
+                required: True
+                type: list
+            name:
+                description: 'The name of the file blocking rule'
+                required: True
+                type: str
 '''
 
 EXAMPLES = r'''

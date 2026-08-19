@@ -1,0 +1,101 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_decryption_exclusion
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_decryption_exclusion.yml
+#
+
+- name: Manage decryption_exclusions in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create decryption_exclusion
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: present
+        name: "ansible-test-decexcl"
+        folder: "All"
+        description: "Created by Ansible"
+      register: create_result
+
+    - name: Show created decryption_exclusion
+      ansible.builtin.debug:
+        var: create_result.decryption_exclusion
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update decryption_exclusion
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: present
+        name: "ansible-test-decexcl"
+        folder: "All"
+        description: "Updated by Ansible"
+      register: update_result
+
+    - name: Show updated decryption_exclusion
+      ansible.builtin.debug:
+        var: update_result.decryption_exclusion
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get decryption_exclusion by name
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: gathered
+        name: "ansible-test-decexcl"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered decryption_exclusion
+      ansible.builtin.debug:
+        var: gathered_result.decryption_exclusion
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get decryption_exclusion by name (info module)
+      paloaltonetworks.scm.scm_decryption_exclusion_info:
+        name: "ansible-test-decexcl"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.decryption_exclusions
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get decryption_exclusion by ID (info module)
+      paloaltonetworks.scm.scm_decryption_exclusion_info:
+        id: "{{ gathered_result.decryption_exclusion.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.decryption_exclusions
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all decryption_exclusions
+      paloaltonetworks.scm.scm_decryption_exclusion_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show decryption_exclusions count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} decryption_exclusions"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete decryption_exclusion
+      paloaltonetworks.scm.scm_decryption_exclusion:
+        state: absent
+        name: "ansible-test-decexcl"
+        folder: "All"

@@ -41,6 +41,23 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            customized:
+                description: 'No description available.'
+                required: False
+                type: bool
+            enabled:
+                description: 'No description available.'
+                required: False
+                type: bool
+            guaranteed_ratio:
+                description: 'No description available.'
+                required: False
+                type: float
+            profile:
+                description: 'No description available.'
+                required: False
+                type: str
     spn_name_list:
         description: 'No description available.'
         required: False

@@ -59,6 +59,69 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ipv4:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ipv4_entry:
+                    description: 'IPv4 access lists'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Action'
+                        required: False
+                        type: str
+                    destination_address:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        address:
+                            description: 'Destination IP address'
+                            required: False
+                            type: str
+                        entry:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'Destination IP address'
+                                required: False
+                                type: str
+                            wildcard:
+                                description: 'Destination IP wildcard'
+                                required: False
+                                type: str
+                    name:
+                        description: 'Sequence number'
+                        required: False
+                        type: int
+                    source_address:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        address:
+                            description: 'Source IP address'
+                            required: False
+                            type: str
+                        entry:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            address:
+                                description: 'Source IP address'
+                                required: False
+                                type: str
+                            wildcard:
+                                description: 'Source IP wildcard'
+                                required: False
+                                type: str
 '''
 
 EXAMPLES = r'''

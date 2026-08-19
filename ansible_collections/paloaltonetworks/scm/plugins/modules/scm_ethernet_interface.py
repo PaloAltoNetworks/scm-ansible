@@ -63,10 +63,229 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            lldp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LLDP on Interface'
+                    required: True
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                profile:
+                    description: 'Name of the LLDP profile to assign to the interface'
+                    required: False
+                    type: str
+            netflow_profile:
+                description: 'Name of Netflow Profile to assign to Interface'
+                required: False
+                type: str
+            vlan_tag:
+                description: 'Assign interface to VLAN tag'
+                required: False
+                type: str
     layer3:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            adjust_tcp_mss:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable TCP MSS adjustment on the interface'
+                    required: False
+                    type: bool
+                ipv4_mss_adjustment:
+                    description: 'IPv4 MSS adjustment size in bytes'
+                    required: False
+                    type: int
+                ipv6_mss_adjustment:
+                    description: 'IPv6 MSS adjustment size in bytes'
+                    required: False
+                    type: int
+            arp:
+                description: 'Ethernet Interfaces ARP configuration'
+                required: False
+                type: list
+                suboptions:
+                hw_address:
+                    description: 'MAC address'
+                    required: False
+                    type: str
+                name:
+                    description: 'IP address'
+                    required: False
+                    type: str
+            ddns_config:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ddns_cert_profile:
+                    description: 'Certificate profile'
+                    required: True
+                    type: str
+                ddns_enabled:
+                    description: 'Enable DDNS?'
+                    required: False
+                    type: bool
+                ddns_hostname:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                ddns_ip:
+                    description: 'IP to register (static only)'
+                    required: False
+                    type: str
+                ddns_update_interval:
+                    description: 'Update interval (days)'
+                    required: False
+                    type: int
+                ddns_vendor:
+                    description: 'DDNS vendor'
+                    required: True
+                    type: str
+                ddns_vendor_config:
+                    description: 'DDNS vendor'
+                    required: True
+                    type: str
+            dhcp_client:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                create_default_route:
+                    description: 'Automatically create default route pointing to default gateway provided by server'
+                    required: False
+                    type: bool
+                default_route_metric:
+                    description: 'Metric of the default route created'
+                    required: False
+                    type: int
+                enable:
+                    description: 'Enable DHCP?'
+                    required: False
+                    type: bool
+                send_hostname:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                    hostname:
+                        description: 'Set interface hostname'
+                        required: False
+                        type: str
+            interface_management_profile:
+                description: 'Interface management profile'
+                required: False
+                type: str
+            ip:
+                description: 'Ethernet Interface IP addresses'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'Ethernet Interface IP addresses name'
+                    required: True
+                    type: str
+            lldp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LLDP on Interface'
+                    required: True
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                profile:
+                    description: 'Name of the LLDP profile to assign to the interface'
+                    required: False
+                    type: str
+            mtu:
+                description: 'MTU'
+                required: False
+                type: int
+            netflow_profile:
+                description: 'Name of Netflow Profile to assign to Interface'
+                required: False
+                type: str
+            pppoe:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                access_concentrator:
+                    description: 'Access concentrator'
+                    required: False
+                    type: str
+                authentication:
+                    description: 'Authentication protocol'
+                    required: False
+                    type: str
+                default_route_metric:
+                    description: 'Metric of the default route created'
+                    required: False
+                    type: int
+                enable:
+                    description: 'Enable PPPoE on the interface'
+                    required: False
+                    type: bool
+                passive:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'Passive Mode enabled'
+                        required: True
+                        type: bool
+                password:
+                    description: 'Password'
+                    required: True
+                    type: str
+                service:
+                    description: 'Service'
+                    required: False
+                    type: str
+                static_address:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    ip:
+                        description: 'Static IP address'
+                        required: True
+                        type: str
+                username:
+                    description: 'Username'
+                    required: True
+                    type: str
     link_duplex:
         description: 'Link duplex'
         required: False
@@ -87,10 +306,24 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            poe_enabled:
+                description: 'Enabled PoE?'
+                required: False
+                type: bool
+            poe_rsvd_pwr:
+                description: 'PoE reserved power'
+                required: False
+                type: int
     tap:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            netflow_profile:
+                description: 'Name of Netflow Profile to assign to Interface'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

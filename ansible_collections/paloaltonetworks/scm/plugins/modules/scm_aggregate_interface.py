@@ -59,10 +59,254 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            lacp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LACP?'
+                    required: False
+                    type: bool
+                fast_failover:
+                    description: 'Fast failover'
+                    required: False
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                max_ports:
+                    description: 'Maximum number of physical ports bundled in the LAG'
+                    required: False
+                    type: int
+                mode:
+                    description: 'Mode'
+                    required: False
+                    type: str
+                system_priority:
+                    description: 'LACP system priority in system ID'
+                    required: False
+                    type: int
+                transmission_rate:
+                    description: 'Transmission mode'
+                    required: False
+                    type: str
+            lldp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LLDP on Interface'
+                    required: True
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                profile:
+                    description: 'Name of the LLDP profile to assign to the interface'
+                    required: False
+                    type: str
+            netflow_profile:
+                description: 'Name of Netflow Profile to assign to Interface'
+                required: False
+                type: str
+            vlan_tag:
+                description: 'VLAN tag'
+                required: False
+                type: str
     layer3:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            adjust_tcp_mss:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable TCP MSS adjustment on the interface'
+                    required: False
+                    type: bool
+                ipv4_mss_adjustment:
+                    description: 'IPv4 MSS adjustment size in bytes'
+                    required: False
+                    type: int
+                ipv6_mss_adjustment:
+                    description: 'IPv6 MSS adjustment size in bytes'
+                    required: False
+                    type: int
+            arp:
+                description: 'Aggregate Ethernet ARP configuration'
+                required: False
+                type: list
+                suboptions:
+                hw_address:
+                    description: 'MAC address'
+                    required: False
+                    type: str
+                name:
+                    description: 'IP address'
+                    required: False
+                    type: str
+            ddns_config:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ddns_cert_profile:
+                    description: 'Certificate profile'
+                    required: True
+                    type: str
+                ddns_enabled:
+                    description: 'Enable DDNS?'
+                    required: False
+                    type: bool
+                ddns_hostname:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                ddns_ip:
+                    description: 'IP to register (static only)'
+                    required: False
+                    type: str
+                ddns_update_interval:
+                    description: 'Update interval (days)'
+                    required: False
+                    type: int
+                ddns_vendor:
+                    description: 'DDNS vendor'
+                    required: True
+                    type: str
+                ddns_vendor_config:
+                    description: 'DDNS vendor'
+                    required: True
+                    type: str
+            dhcp_client:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                create_default_route:
+                    description: 'Automatically create default route pointing to default gateway provided by server'
+                    required: False
+                    type: bool
+                default_route_metric:
+                    description: 'Metric of the default route created'
+                    required: False
+                    type: int
+                enable:
+                    description: 'Enable DHCP?'
+                    required: False
+                    type: bool
+                send_hostname:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                    hostname:
+                        description: 'Set interface hostname'
+                        required: False
+                        type: str
+            interface_management_profile:
+                description: 'Interface management profile'
+                required: False
+                type: str
+            ip:
+                description: 'Aggregate Interface IP addresses'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'Aggregate Interface IP addresses name'
+                    required: True
+                    type: str
+            lacp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LACP?'
+                    required: False
+                    type: bool
+                fast_failover:
+                    description: 'Fast failover'
+                    required: False
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                max_ports:
+                    description: 'Maximum number of physical ports bundled in the LAG'
+                    required: False
+                    type: int
+                mode:
+                    description: 'Mode'
+                    required: False
+                    type: str
+                system_priority:
+                    description: 'LACP system priority in system ID'
+                    required: False
+                    type: int
+                transmission_rate:
+                    description: 'Transmission mode'
+                    required: False
+                    type: str
+            lldp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'Enable LLDP on Interface'
+                    required: True
+                    type: bool
+                high_availability:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    passive_pre_negotiation:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                profile:
+                    description: 'Name of the LLDP profile to assign to the interface'
+                    required: False
+                    type: str
+            mtu:
+                description: 'MTU'
+                required: False
+                type: int
+            netflow_profile:
+                description: 'Name of Netflow Profile to assign to Interface'
+                required: False
+                type: str
     name:
         description: 'Aggregate interface name'
         required: True

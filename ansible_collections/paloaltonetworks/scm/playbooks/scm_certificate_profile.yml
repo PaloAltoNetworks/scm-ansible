@@ -1,0 +1,123 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_certificate_profile
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_certificate_profile.yml
+#
+
+- name: Manage certificate_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create certificate_profile
+      paloaltonetworks.scm.scm_certificate_profile:
+        state: present
+        name: "ansible-test-certprof"
+        folder: "Shared"
+        ca_certificates:
+        - name: "Forward-Trust-CA"
+          default_ocsp_url: "http://test.com"
+          ocsp_verify_cert: "Forward-Trust-CA-ECDSA"
+          template_name: "something"
+        username_field:
+          subject: "common-name"
+      register: create_result
+
+    - name: Show created certificate_profile
+      ansible.builtin.debug:
+        var: create_result.certificate_profile
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update certificate_profile
+      paloaltonetworks.scm.scm_certificate_profile:
+        state: present
+        name: "ansible-test-certprof"
+        folder: "Shared"
+        ca_certificates:
+        - name: "Forward-Trust-CA"
+          default_ocsp_url: "http://updated.com"
+          ocsp_verify_cert: "Forward-Trust-CA-ECDSA"
+          template_name: "something"
+        username_field:
+          subject: "common-name"
+      register: update_result
+
+    - name: Show updated certificate_profile
+      ansible.builtin.debug:
+        var: update_result.certificate_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get certificate_profile by name
+      paloaltonetworks.scm.scm_certificate_profile:
+        state: gathered
+        name: "ansible-test-certprof"
+        folder: "Shared"
+        ca_certificates:
+        - name: "Forward-Trust-CA"
+          default_ocsp_url: "http://updated.com"
+          ocsp_verify_cert: "Forward-Trust-CA-ECDSA"
+          template_name: "something"
+      register: gathered_result
+
+    - name: Show gathered certificate_profile
+      ansible.builtin.debug:
+        var: gathered_result.certificate_profile
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get certificate_profile by name (info module)
+      paloaltonetworks.scm.scm_certificate_profile_info:
+        name: "ansible-test-certprof"
+        folder: "Shared"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.certificate_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get certificate_profile by ID (info module)
+      paloaltonetworks.scm.scm_certificate_profile_info:
+        id: "{{ gathered_result.certificate_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.certificate_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all certificate_profiles
+      paloaltonetworks.scm.scm_certificate_profile_info:
+        folder: "Shared"
+      register: list_result
+
+    - name: Show certificate_profiles count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} certificate_profiles"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete certificate_profile
+      paloaltonetworks.scm.scm_certificate_profile:
+        state: absent
+        name: "ansible-test-certprof"
+        folder: "Shared"
+        ca_certificates:
+        - name: "Forward-Trust-CA"
+          default_ocsp_url: "http://updated.com"
+          ocsp_verify_cert: "Forward-Trust-CA-ECDSA"
+          template_name: "something"

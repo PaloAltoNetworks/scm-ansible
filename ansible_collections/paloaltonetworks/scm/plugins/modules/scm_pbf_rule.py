@@ -51,6 +51,54 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            discard:
+                description: 'No description available.'
+                required: False
+                type: dict
+            forward:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                egress_interface:
+                    description: 'Egress interface'
+                    required: False
+                    type: str
+                monitor:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    disable_if_unreachable:
+                        description: 'Disable this rule if nexthop/monitor ip is unreachable?'
+                        required: False
+                        type: bool
+                    ip_address:
+                        description: 'Monitor IP address'
+                        required: False
+                        type: str
+                    profile:
+                        description: 'Monitoring profile'
+                        required: False
+                        type: str
+                nexthop:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    fqdn:
+                        description: 'Next hop FQDN'
+                        required: False
+                        type: str
+                    ip_address:
+                        description: 'Next hop IP address'
+                        required: False
+                        type: str
+            no_pbf:
+                description: 'No description available.'
+                required: False
+                type: dict
     application:
         description: 'Applications'
         required: False
@@ -67,10 +115,33 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enabled:
+                description: 'Enforce symmetric return?'
+                required: False
+                type: bool
+            nexthop_address_list:
+                description: 'Next hop IP addresses'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'Next hop IP address'
+                    required: False
+                    type: str
     var_from:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            interface:
+                description: 'Source interfaces'
+                required: False
+                type: list
+            zone:
+                description: 'Source zones'
+                required: False
+                type: list
     name:
         description: 'PBF rule name'
         required: False

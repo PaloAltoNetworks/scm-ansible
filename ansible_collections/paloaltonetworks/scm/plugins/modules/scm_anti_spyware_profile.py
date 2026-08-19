@@ -67,6 +67,15 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            inline_policy_action:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
     name:
         description: 'The name of the anti-spyware profile'
         required: True
@@ -75,10 +84,141 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                alert:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                allow:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                block_ip:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    duration:
+                        description: 'No description available.'
+                        required: False
+                        type: int
+                    track_by:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                drop:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_both:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_client:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_server:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+            category:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
+            packet_capture:
+                description: 'No description available.'
+                required: False
+                type: str
+            severity:
+                description: 'No description available.'
+                required: False
+                type: list
+            threat_name:
+                description: 'No description available.'
+                required: False
+                type: str
     threat_exception:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                alert:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                allow:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                block_ip:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    duration:
+                        description: 'No description available.'
+                        required: False
+                        type: int
+                    track_by:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                default:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                drop:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_both:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_client:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                reset_server:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+            exempt_ip:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
+            notes:
+                description: 'No description available.'
+                required: False
+                type: str
+            packet_capture:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

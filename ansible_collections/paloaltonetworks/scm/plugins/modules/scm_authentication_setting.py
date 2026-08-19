@@ -51,6 +51,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            accounting_server_profile:
+                description: 'Accounting server profile'
+                required: False
+                type: str
+            authentication_profile:
+                description: 'Authentication profile'
+                required: False
+                type: str
+            certificate_profile:
+                description: 'Certificate profile'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

@@ -55,6 +55,29 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            forward_error_correction:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ratio:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                recovery_duration:
+                    description: 'No description available.'
+                    required: True
+                    type: int
+            packet_duplication:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                recovery_duration_pd:
+                    description: 'No description available.'
+                    required: True
+                    type: int
     name:
         description: 'No description available.'
         required: True

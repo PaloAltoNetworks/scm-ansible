@@ -1,0 +1,102 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_route_access_list
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_route_access_list.yml
+#
+
+- name: Manage route_access_lists in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create route_access_list
+      paloaltonetworks.scm.scm_route_access_list:
+        state: present
+        name: "ansible-test-route_access_list"
+        folder: "All"
+        description: "Created by Ansible"
+      register: create_result
+
+    - name: Show created route_access_list
+      ansible.builtin.debug:
+        var: create_result.route_access_list
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update route_access_list
+      paloaltonetworks.scm.scm_route_access_list:
+        state: present
+        name: "ansible-test-route_access_list"
+        description: "Updated by Ansible"
+        folder: "All"
+      register: update_result
+
+    - name: Show updated route_access_list
+      ansible.builtin.debug:
+        var: update_result.route_access_list
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get route_access_list by name
+      paloaltonetworks.scm.scm_route_access_list:
+        state: gathered
+        name: "ansible-test-route_access_list"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered route_access_list
+      ansible.builtin.debug:
+        var: gathered_result.route_access_list
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get route_access_list by name (info module)
+      paloaltonetworks.scm.scm_route_access_list_info:
+        name: "ansible-test-route_access_list"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.route_access_lists
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get route_access_list by ID (info module)
+      paloaltonetworks.scm.scm_route_access_list_info:
+        id: "{{ gathered_result.route_access_list.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.route_access_lists
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all route_access_lists
+      paloaltonetworks.scm.scm_route_access_list_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show route_access_lists count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} route_access_lists"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete route_access_list
+      paloaltonetworks.scm.scm_route_access_list:
+        state: absent
+        name: "ansible-test-route_access_list"
+        folder: "All"
+

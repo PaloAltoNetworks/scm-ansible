@@ -51,6 +51,24 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ikev2:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                certificate_cache_size:
+                    description: 'Maximum cached certificates'
+                    required: False
+                    type: int
+                cookie_threshold:
+                    description: 'Cookie activation threshold'
+                    required: False
+                    type: int
+                max_half_opened_sa:
+                    description: 'Maximum half-opened SA'
+                    required: False
+                    type: int
 '''
 
 EXAMPLES = r'''

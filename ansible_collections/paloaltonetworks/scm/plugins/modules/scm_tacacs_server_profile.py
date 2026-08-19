@@ -59,6 +59,23 @@ options:
         description: 'The TACACS+ server configuration'
         required: True
         type: list
+        suboptions:
+            address:
+                description: 'The IP address of the TACACS+ server'
+                required: False
+                type: str
+            name:
+                description: 'The name of the TACACS+ server'
+                required: False
+                type: str
+            port:
+                description: 'The TACACS+ server port'
+                required: False
+                type: int
+            secret:
+                description: 'The TACACS+ secret'
+                required: False
+                type: str
     timeout:
         description: 'The TACACS+ timeout (seconds)'
         required: False

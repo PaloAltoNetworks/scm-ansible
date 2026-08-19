@@ -59,6 +59,51 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ipv4:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                ipv4_entry:
+                    description: 'IPv4 prefix lists'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Action'
+                        required: False
+                        type: str
+                    name:
+                        description: 'Sequence number'
+                        required: False
+                        type: int
+                    prefix:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        entry:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            greater_than_or_equal:
+                                description: 'Greater than or equal to'
+                                required: False
+                                type: int
+                            less_than_or_equal:
+                                description: 'Less than or equal to'
+                                required: False
+                                type: int
+                            network:
+                                description: 'Network'
+                                required: False
+                                type: str
+                        network:
+                            description: 'Network'
+                            required: False
+                            type: str
 '''
 
 EXAMPLES = r'''

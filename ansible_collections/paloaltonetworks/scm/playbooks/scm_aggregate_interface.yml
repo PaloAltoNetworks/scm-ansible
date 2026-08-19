@@ -1,0 +1,111 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_aggregate_interface
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_aggregate_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_aggregate_interface' for full parameter docs.
+
+- name: Manage aggregate_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    # NOTE: Aggregate interface names must start with "$" (platform requirement)
+    - name: Create aggregate_interface
+      paloaltonetworks.scm.scm_aggregate_interface:
+        state: present
+        name: "$ansible-agg1"
+        folder: "All"
+        comment: "Created by Ansible"
+        layer3:
+          ip:
+          - name: "192.0.2.1/24"
+      register: create_result
+
+    - name: Show created aggregate_interface
+      ansible.builtin.debug:
+        var: create_result.aggregate_interface
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update aggregate_interface
+      paloaltonetworks.scm.scm_aggregate_interface:
+        state: present
+        name: "$ansible-agg1"
+        folder: "All"
+        comment: "Updated by Ansible"
+        layer3:
+          ip:
+          - name: "192.0.2.1/24"
+      register: update_result
+
+    - name: Show updated aggregate_interface
+      ansible.builtin.debug:
+        var: update_result.aggregate_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get aggregate_interface by name
+      paloaltonetworks.scm.scm_aggregate_interface:
+        state: gathered
+        name: "$ansible-agg1"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered aggregate_interface
+      ansible.builtin.debug:
+        var: gathered_result.aggregate_interface
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get aggregate_interface by name (info module)
+      paloaltonetworks.scm.scm_aggregate_interface_info:
+        name: "$ansible-agg1"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.aggregate_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get aggregate_interface by ID (info module)
+      paloaltonetworks.scm.scm_aggregate_interface_info:
+        id: "{{ gathered_result.aggregate_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.aggregate_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all aggregate_interfaces
+      paloaltonetworks.scm.scm_aggregate_interface_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show aggregate_interfaces count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} aggregate_interfaces"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete aggregate_interface
+      paloaltonetworks.scm.scm_aggregate_interface:
+        state: absent
+        name: "$ansible-agg1"
+        folder: "All"
+

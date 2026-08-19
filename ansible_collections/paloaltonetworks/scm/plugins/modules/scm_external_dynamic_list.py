@@ -55,6 +55,455 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            domain:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auth:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    password:
+                        description: 'Password for Custom Domain authentication'
+                        required: True
+                        type: str
+                    username:
+                        description: 'Username for Custom Domain authentication'
+                        required: True
+                        type: str
+                certificate_profile:
+                    description: 'Profile for authenticating client certificates'
+                    required: False
+                    type: str
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'Domain Exception List for Custom Domain type'
+                    required: False
+                    type: list
+                expand_domain:
+                    description: 'Enable/Disable expand domain'
+                    required: False
+                    type: bool
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Daily Time specification hh (e.g. 20) for Domain'
+                            required: True
+                            type: str
+                    five_minute:
+                        description: 'Five minute settings for Domain recurring'
+                        required: False
+                        type: dict
+                    hourly:
+                        description: 'Hourly settings for Domain recurring'
+                        required: False
+                        type: dict
+                    monthly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Monthly Time specification hh (e.g. 20) for domain'
+                            required: True
+                            type: str
+                        day_of_month:
+                            description: 'Day setting for monthly Domain updates'
+                            required: True
+                            type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Weekly Time specification hh (e.g. 20) for Domain'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                url:
+                    description: 'External URL for Custom Domain type'
+                    required: True
+                    type: str
+            imei:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auth:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    password:
+                        description: 'IMEI Auth Password for Custom IMEI type'
+                        required: True
+                        type: str
+                    username:
+                        description: 'IMEI Auth username for Custom IMEI type'
+                        required: True
+                        type: str
+                certificate_profile:
+                    description: 'IMEI Certificate Profile for Custom IMEI type'
+                    required: False
+                    type: str
+                description:
+                    description: 'IMEI Description for Custom IMEI type'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'IMEI Exception List for Custom IMEI type'
+                    required: False
+                    type: list
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Daily Time specification hh (e.g. 20) for IMEI'
+                            required: True
+                            type: str
+                    five_minute:
+                        description: 'Five-minute interval settings for IMEI updates'
+                        required: False
+                        type: dict
+                    hourly:
+                        description: 'Hourly interval settings for IMEI updates'
+                        required: False
+                        type: dict
+                    monthly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Monthly Time specification hh (e.g. 20) for IMEI'
+                            required: True
+                            type: str
+                        day_of_month:
+                            description: 'Day of month for IMEI updates'
+                            required: True
+                            type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Weekly Time specification hh (e.g. 20) for IMEI'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                url:
+                    description: 'IMEI URL for Custom IMEI type'
+                    required: True
+                    type: str
+            imsi:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auth:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    password:
+                        description: 'IMSI Auth Password for Custom IMSI type'
+                        required: True
+                        type: str
+                    username:
+                        description: 'IMSI Auth Username for Custom IMSI type'
+                        required: True
+                        type: str
+                certificate_profile:
+                    description: 'IMSI Certificate Profile for Custom IMSI type'
+                    required: False
+                    type: str
+                description:
+                    description: 'IMSI Description for Custom IMSI type'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'IMSI Exception List for Custom IMSI type'
+                    required: False
+                    type: list
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Daily Time specification hh (e.g. 20) for IMSI'
+                            required: True
+                            type: str
+                    five_minute:
+                        description: 'Five-minute interval settings for IMSI updates'
+                        required: False
+                        type: dict
+                    hourly:
+                        description: 'Hourly interval settings for IMSI updates'
+                        required: False
+                        type: dict
+                    monthly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Monthly Time specification hh (e.g. 20) for IMSI'
+                            required: True
+                            type: str
+                        day_of_month:
+                            description: 'Day of the month for monthly IMSI updates'
+                            required: True
+                            type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Weekly Time specification hh (e.g. 20) for IMSI'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                url:
+                    description: 'IMSI URL for Custom IMSI type'
+                    required: True
+                    type: str
+            ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auth:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    password:
+                        description: 'Password for Custom IP authentication'
+                        required: True
+                        type: str
+                    username:
+                        description: 'Username for Custom IP authentication'
+                        required: True
+                        type: str
+                certificate_profile:
+                    description: 'Profile for authenticating client certificates'
+                    required: False
+                    type: str
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'IP Exception List for Custom IP type'
+                    required: False
+                    type: list
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Daily Time specification hh (e.g. 20) for IP'
+                            required: True
+                            type: str
+                    five_minute:
+                        description: 'Five minute settings for IP recurring'
+                        required: False
+                        type: dict
+                    hourly:
+                        description: 'Hourly settings for IP recurring'
+                        required: False
+                        type: dict
+                    monthly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Monthly Time specification hh (e.g. 20) for IP'
+                            required: True
+                            type: str
+                        day_of_month:
+                            description: 'Day setting for monthly IP updates'
+                            required: True
+                            type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Weekly Time specification hh (e.g. 20) for IP'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                url:
+                    description: 'External URL for Custom IP type'
+                    required: True
+                    type: str
+            predefined_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'IP Exception List for Predefined IP type'
+                    required: False
+                    type: list
+                url:
+                    description: 'URL source for Predefined IP type'
+                    required: True
+                    type: str
+            predefined_url:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'URL Exception List for Predefined URL type'
+                    required: False
+                    type: list
+                url:
+                    description: 'URL source for Predefined URL type'
+                    required: True
+                    type: str
+            url:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auth:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    password:
+                        description: 'Password for Custom URL authentication'
+                        required: True
+                        type: str
+                    username:
+                        description: 'Username for Custom URL authentication'
+                        required: True
+                        type: str
+                certificate_profile:
+                    description: 'Profile for authenticating client certificates'
+                    required: False
+                    type: str
+                description:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                exception_list:
+                    description: 'URL Exception List for Custom URL type'
+                    required: False
+                    type: list
+                recurring:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    daily:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Daily Time specification hh (e.g. 20) for URL'
+                            required: True
+                            type: str
+                    five_minute:
+                        description: 'Five minute settings for URL recurring'
+                        required: False
+                        type: dict
+                    hourly:
+                        description: 'Hourly settings for URL recurring'
+                        required: False
+                        type: dict
+                    monthly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Monthly Time specification hh (e.g. 20) for URL'
+                            required: True
+                            type: str
+                        day_of_month:
+                            description: 'Day setting for monthly URL updates'
+                            required: True
+                            type: int
+                    weekly:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        at:
+                            description: 'Weekly Time specification hh (e.g. 20) for URL'
+                            required: True
+                            type: str
+                        day_of_week:
+                            description: 'No description available.'
+                            required: True
+                            type: str
+                url:
+                    description: 'External URL for Custom URL type'
+                    required: True
+                    type: str
 '''
 
 EXAMPLES = r'''

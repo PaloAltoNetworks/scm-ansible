@@ -67,6 +67,23 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            days:
+                description: 'specify lifetime in days'
+                required: False
+                type: int
+            hours:
+                description: 'specify lifetime in hours'
+                required: False
+                type: int
+            minutes:
+                description: 'specify lifetime in minutes'
+                required: False
+                type: int
+            seconds:
+                description: 'specify lifetime in seconds'
+                required: False
+                type: int
     name:
         description: 'Alphanumeric string begin with letter: [0-9a-zA-Z._-]'
         required: True

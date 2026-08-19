@@ -55,6 +55,115 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            duo_security_v2:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                duo_api_host:
+                    description: 'Duo Security API hostname'
+                    required: True
+                    type: str
+                duo_baseuri:
+                    description: 'Duo Security API base URI'
+                    required: True
+                    type: str
+                duo_integration_key:
+                    description: 'Duo Security integration key'
+                    required: True
+                    type: str
+                duo_secret_key:
+                    description: 'Duo Security secret key'
+                    required: True
+                    type: str
+                duo_timeout:
+                    description: 'Duo Security timeout (seconds)'
+                    required: True
+                    type: int
+            okta_adaptive_v1:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                okta_api_host:
+                    description: 'Okta API hostname'
+                    required: True
+                    type: str
+                okta_baseuri:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                okta_org:
+                    description: 'Okta organization'
+                    required: True
+                    type: str
+                okta_timeout:
+                    description: 'Okta timeout (seconds)'
+                    required: True
+                    type: str
+                okta_token:
+                    description: 'Okta API token'
+                    required: True
+                    type: str
+            ping_identity_v1:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                ping_api_host:
+                    description: 'Ping Identity API hostname'
+                    required: True
+                    type: str
+                ping_baseuri:
+                    description: 'Ping Identity API base URI'
+                    required: True
+                    type: str
+                ping_org_alias:
+                    description: 'Ping Identity client organization ID'
+                    required: False
+                    type: str
+                ping_timeout:
+                    description: 'Ping Identity timeout (seconds)'
+                    required: True
+                    type: int
+                ping_token:
+                    description: 'Ping Identity API token'
+                    required: True
+                    type: str
+                ping_use_base64_key:
+                    description: 'Ping Identity Base64 key'
+                    required: True
+                    type: str
+            rsa_securid_access_v1:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                rsa_accessid:
+                    description: 'RSA SecurID access ID'
+                    required: False
+                    type: str
+                rsa_accesskey:
+                    description: 'RSA SecurID access key'
+                    required: False
+                    type: str
+                rsa_api_host:
+                    description: 'RSA SecurID hostname'
+                    required: False
+                    type: str
+                rsa_assurancepolicyid:
+                    description: 'RSA SecurID assurance level'
+                    required: False
+                    type: str
+                rsa_baseuri:
+                    description: 'RSA SecurID API base URI'
+                    required: False
+                    type: str
+                rsa_timeout:
+                    description: 'RSA SecurID timeout (seconds)'
+                    required: False
+                    type: int
     name:
         description: 'The name of the MFA server profile'
         required: True

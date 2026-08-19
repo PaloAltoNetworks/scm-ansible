@@ -51,6 +51,738 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            auth:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            config:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            correlation:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            data:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            decryption:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            globalprotect:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            gtp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            hip_match:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            iptag:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            sctp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            system:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            threat:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            traffic:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            tunnel:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            url:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            userid:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
+            wildfire:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                headers:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Header name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Header value'
+                        required: False
+                        type: str
+                name:
+                    description: 'The name of the payload format'
+                    required: False
+                    type: str
+                params:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    name:
+                        description: 'Parameter name'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Parameter value'
+                        required: False
+                        type: str
+                payload:
+                    description: 'The log payload format.  The accepted log field values are as follows. * `receive_time` * `serial` * `seqno` * `actionflags` * `type` * `subtype` * `time_generated` * `high_res_timestamp` * `dg_hier_level_1` * `dg_hier_level_2` * `dg_hier_level_3` * `dg_hier_level_4` * `vsys_name` * `device_name` * `vsys_id` * `host` * `vsys` * `cmd` * `admin` * `client` * `result` * `path` * `dg_id` * `comment` * `tpl_id` * `sender_sw_version` * `cef-formatted-receive_time` * `cef-formatted-time_generated` * `before-change-detail` * `after-change-detail`'
+                    required: False
+                    type: str
+                url_format:
+                    description: 'The URL path of the HTTP server'
+                    required: False
+                    type: str
     name:
         description: 'The name of the profile'
         required: True
@@ -59,6 +791,35 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            address:
+                description: 'HTTP server address'
+                required: False
+                type: str
+            certificate_profile:
+                description: 'HTTP server certificate profile'
+                required: False
+                type: str
+            http_method:
+                description: 'HTTP operation to perform'
+                required: False
+                type: str
+            name:
+                description: 'HTTP server name'
+                required: False
+                type: str
+            port:
+                description: 'HTTP server port'
+                required: False
+                type: int
+            protocol:
+                description: 'HTTP server protocol'
+                required: False
+                type: str
+            tls_version:
+                description: 'HTTP server TLS version'
+                required: False
+                type: str
     tag_registration:
         description: 'Register tags on match'
         required: False

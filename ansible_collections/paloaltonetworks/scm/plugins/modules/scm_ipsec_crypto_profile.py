@@ -51,6 +51,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            authentication:
+                description: 'No description available.'
+                required: True
+                type: list
     dh_group:
         description: 'phase-2 DH group (PFS DH group)'
         required: False
@@ -59,14 +64,57 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            authentication:
+                description: 'Authentication algorithm'
+                required: True
+                type: list
+            encryption:
+                description: 'Encryption algorithm'
+                required: True
+                type: list
     lifesize:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            gb:
+                description: 'specify lifesize in gigabytes(GB)'
+                required: False
+                type: int
+            kb:
+                description: 'specify lifesize in kilobytes(KB)'
+                required: False
+                type: int
+            mb:
+                description: 'specify lifesize in megabytes(MB)'
+                required: False
+                type: int
+            tb:
+                description: 'specify lifesize in terabytes(TB)'
+                required: False
+                type: int
     lifetime:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            days:
+                description: 'specify lifetime in days'
+                required: False
+                type: int
+            hours:
+                description: 'specify lifetime in hours'
+                required: False
+                type: int
+            minutes:
+                description: 'specify lifetime in minutes'
+                required: False
+                type: int
+            seconds:
+                description: 'specify lifetime in seconds'
+                required: False
+                type: int
     name:
         description: 'Alphanumeric string begin with letter: [0-9a-zA-Z._-]'
         required: True

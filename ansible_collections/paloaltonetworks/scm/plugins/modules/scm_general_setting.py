@@ -51,6 +51,74 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ack_login_banner:
+                description: 'Force admins to acknowledge login banner'
+                required: False
+                type: bool
+            domain:
+                description: 'DNS domain'
+                required: False
+                type: str
+            geo_location:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                latitude:
+                    description: 'Latitude'
+                    required: False
+                    type: str
+                longitude:
+                    description: 'Longitude'
+                    required: False
+                    type: str
+            locale:
+                description: 'Locale'
+                required: False
+                type: str
+            login_banner:
+                description: 'Logon banner'
+                required: False
+                type: str
+            setting:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                auto_mac_detect:
+                    description: 'Use hypervisor assigned MAC addresses'
+                    required: False
+                    type: bool
+                fail_open:
+                    description: 'Fail open'
+                    required: False
+                    type: bool
+                management:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    auto_acquire_commit_lock:
+                        description: 'Automatically acquire commit lock'
+                        required: False
+                        type: bool
+                    enable_certificate_expiration_check:
+                        description: 'Certificate expiration check'
+                        required: False
+                        type: bool
+                tunnel_acceleration:
+                    description: 'Tunnel acceleration'
+                    required: False
+                    type: bool
+            ssl_tls_service_profile:
+                description: 'SSL/TLS service profile'
+                required: False
+                type: str
+            timezone:
+                description: 'Timezone'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

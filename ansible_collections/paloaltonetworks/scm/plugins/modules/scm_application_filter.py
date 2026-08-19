@@ -107,6 +107,15 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            no_tag:
+                description: 'No description available.'
+                required: False
+                type: bool
+            tag:
+                description: 'No description available.'
+                required: False
+                type: list
     technology:
         description: 'No description available.'
         required: False

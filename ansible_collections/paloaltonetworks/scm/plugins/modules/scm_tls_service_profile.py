@@ -59,6 +59,55 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            auth_algo_sha1:
+                description: 'Allow SHA1 authentication?'
+                required: False
+                type: bool
+            auth_algo_sha256:
+                description: 'Allow SHA256 authentication?'
+                required: False
+                type: bool
+            auth_algo_sha384:
+                description: 'Allow SHA384 authentication?'
+                required: False
+                type: bool
+            enc_algo_aes_128_cbc:
+                description: 'Allow AES-128-CBC algorithm?'
+                required: False
+                type: bool
+            enc_algo_aes_128_gcm:
+                description: 'Allow AES-128-GCM algorithm?'
+                required: False
+                type: bool
+            enc_algo_aes_256_cbc:
+                description: 'Allow AES-256-CBC algorithm?'
+                required: False
+                type: bool
+            enc_algo_aes_256_gcm:
+                description: 'Allow algorithm AES-256-GCM'
+                required: False
+                type: bool
+            keyxchg_algo_dhe:
+                description: 'Allow DHE algorithm?'
+                required: False
+                type: bool
+            keyxchg_algo_ecdhe:
+                description: 'Allow ECDHE algorithm?'
+                required: False
+                type: bool
+            keyxchg_algo_rsa:
+                description: 'Allow RSA algorithm?'
+                required: False
+                type: bool
+            max_version:
+                description: 'Maximum TLS version'
+                required: False
+                type: str
+            min_version:
+                description: 'Minimum TLS version'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

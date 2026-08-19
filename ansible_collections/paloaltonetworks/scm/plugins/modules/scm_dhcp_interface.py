@@ -55,10 +55,182 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ip:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                enabled:
+                    description: 'Enabled?'
+                    required: True
+                    type: bool
+                server:
+                    description: 'No description available.'
+                    required: True
+                    type: list
     server:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ip_pool:
+                description: 'List of IP address pools'
+                required: False
+                type: list
+            mode:
+                description: 'DHCP server mode'
+                required: False
+                type: str
+            option:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dns:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    primary:
+                        description: 'Primary DNS server'
+                        required: False
+                        type: str
+                    secondary:
+                        description: 'Secondary DNS server'
+                        required: False
+                        type: str
+                dns_suffix:
+                    description: 'DNS suffix'
+                    required: False
+                    type: str
+                gateway:
+                    description: 'Default gateway'
+                    required: False
+                    type: str
+                inheritance:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    source:
+                        description: 'Interface from which to inherit lease options'
+                        required: False
+                        type: str
+                lease:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    timeout:
+                        description: 'DHCP lease timeout (minutes)'
+                        required: False
+                        type: int
+                    unlimited:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                nis:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    primary:
+                        description: 'Primary NIS server'
+                        required: False
+                        type: str
+                    secondary:
+                        description: 'Secondary NIS server'
+                        required: False
+                        type: str
+                ntp:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    primary:
+                        description: 'Primary NTP server'
+                        required: False
+                        type: str
+                    secondary:
+                        description: 'Secondary NTP server'
+                        required: False
+                        type: str
+                pop3_server:
+                    description: 'POP3 server'
+                    required: False
+                    type: str
+                smtp_server:
+                    description: 'SMTP server'
+                    required: False
+                    type: str
+                subnet_mask:
+                    description: 'Subnet mask'
+                    required: False
+                    type: str
+                user_defined:
+                    description: 'Custom DHCP options'
+                    required: False
+                    type: list
+                    suboptions:
+                    ascii:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    code:
+                        description: 'Option code'
+                        required: False
+                        type: int
+                    hex:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    inherited:
+                        description: 'Inherited from DHCP server inheritance source?'
+                        required: True
+                        type: bool
+                    ip:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    name:
+                        description: 'Option name'
+                        required: True
+                        type: str
+                wins:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    primary:
+                        description: 'Primary WINS server'
+                        required: False
+                        type: str
+                    secondary:
+                        description: 'Secondary WINS server'
+                        required: False
+                        type: str
+            probe_ip:
+                description: 'Ping IP before allocating?'
+                required: False
+                type: bool
+            reserved:
+                description: 'List of IP reservations'
+                required: False
+                type: list
+                suboptions:
+                description:
+                    description: 'Reservation description'
+                    required: False
+                    type: str
+                mac:
+                    description: 'Reserved MAC address'
+                    required: False
+                    type: str
+                name:
+                    description: 'Reserved IP address'
+                    required: False
+                    type: str
 '''
 
 EXAMPLES = r'''

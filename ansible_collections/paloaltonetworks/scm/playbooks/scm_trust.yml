@@ -1,0 +1,65 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_trust
+#
+# Demonstrates: create, delete
+#
+# INFRA_DEP: This resource establishes a trust relationship between two tenants.
+#            It requires real tenant names and TSG IDs from your SCM environment.
+#            The psk (pre-shared key) is optional and used for mutual authentication.
+#
+# NOTE: trust has no name field. It is identified by ID (returned after creation).
+#       The resource links a donor_tenant_name to a recipient_tenant_name.
+#       Delete uses the record ID, not a name.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_trust.yml
+
+- name: Manage trusts in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    # Replace with actual tenant names from your SCM environment
+    donor_tenant: "donor-tenant-name"
+    recipient_tenant: "recipient-tenant-name"
+    donor_tsg_id: "1234567890"
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    # Establishes a trust relationship between two tenants.
+    # psk is optional; trust_id is a numeric identifier.
+    - name: Create trust relationship
+      paloaltonetworks.scm.scm_trust:
+        state: present
+        donor_tenant_name: "{{ donor_tenant }}"
+        recipient_tenant_name: "{{ recipient_tenant }}"
+        tsg: "{{ donor_tsg_id }}"
+      register: create_result
+      ignore_errors: true
+
+    - name: Show created trust
+      ansible.builtin.debug:
+        var: create_result.trust
+
+    # ── Delete ──────────────────────────────────────────────
+    # Delete the trust by its ID returned from the create step.
+    - name: Delete trust by ID
+      paloaltonetworks.scm.scm_trust:
+        state: absent
+        id: "{{ create_result.trust.id }}"
+      when:
+        - create_result is not failed
+        - create_result.trust.id is defined
+      ignore_errors: true

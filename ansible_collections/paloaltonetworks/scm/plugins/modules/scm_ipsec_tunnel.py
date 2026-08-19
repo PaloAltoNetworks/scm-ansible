@@ -55,6 +55,124 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            ike_gateway:
+                description: 'No description available.'
+                required: True
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            ipsec_crypto_profile:
+                description: 'No description available.'
+                required: True
+                type: str
+            proxy_id:
+                description: 'IPv4 type of proxy_id values'
+                required: False
+                type: list
+                suboptions:
+                local:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                protocol:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    number:
+                        description: 'IP protocol number'
+                        required: False
+                        type: int
+                    tcp:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        local_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        remote_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    udp:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        local_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        remote_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                remote:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            proxy_id_v6:
+                description: 'IPv6 type of proxy_id values'
+                required: False
+                type: list
+                suboptions:
+                local:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                name:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                protocol:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    number:
+                        description: 'IP protocol number'
+                        required: False
+                        type: int
+                    tcp:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        local_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        remote_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    udp:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        local_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                        remote_port:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                remote:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     copy_tos:
         description: 'Copy IP TOS bits from inner packet to IPSec packet (not recommended)'
         required: False
@@ -75,6 +193,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            destination_ip:
+                description: 'Destination IP to send ICMP probe'
+                required: True
+                type: str
+            enable:
+                description: 'Enable tunnel monitoring on this tunnel'
+                required: False
+                type: bool
+            proxy_id:
+                description: 'Which proxy-id (or proxy-id-v6) the monitoring traffic will use'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

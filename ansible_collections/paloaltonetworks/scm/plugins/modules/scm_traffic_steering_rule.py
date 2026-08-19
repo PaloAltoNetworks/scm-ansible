@@ -39,6 +39,25 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            forward:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                forward:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    target:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                no_pbf:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
     category:
         description: 'No description available.'
         required: False

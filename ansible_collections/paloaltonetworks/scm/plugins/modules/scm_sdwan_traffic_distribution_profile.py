@@ -51,6 +51,15 @@ options:
         description: 'Link-Tags for interfaces identified by defined tags'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'Link-Tag used for identifying a set of interfaces'
+                required: True
+                type: str
+            weight:
+                description: 'Weight (percentage) (only used when `traffic-distribution` is `Weighted Session Distribution`)'
+                required: False
+                type: int
     name:
         description: 'Profile name'
         required: True

@@ -1,0 +1,106 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_vlan_interface
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_vlan_interface.yml
+#
+# NOTE: You may need to add required fields to the create/update tasks below.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_vlan_interface' for full parameter docs.
+
+- name: Manage vlan_interfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create vlan_interface
+      paloaltonetworks.scm.scm_vlan_interface:
+        state: present
+        name: "$ansible-test-vlan"
+        folder: "All"
+        mtu: 1500
+        comment: "ansible test vlan interface"
+      register: create_result
+
+    - name: Show created vlan_interface
+      ansible.builtin.debug:
+        var: create_result.vlan_interface
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update vlan_interface
+      paloaltonetworks.scm.scm_vlan_interface:
+        state: present
+        name: "$ansible-test-vlan"
+        folder: "All"
+        mtu: 1500
+        comment: "ansible test vlan interface updated"
+      register: update_result
+
+    - name: Show updated vlan_interface
+      ansible.builtin.debug:
+        var: update_result.vlan_interface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get vlan_interface by name
+      paloaltonetworks.scm.scm_vlan_interface:
+        state: gathered
+        name: "$ansible-test-vlan"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered vlan_interface
+      ansible.builtin.debug:
+        var: gathered_result.vlan_interface
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get vlan_interface by name (info module)
+      paloaltonetworks.scm.scm_vlan_interface_info:
+        name: "$ansible-test-vlan"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.vlan_interfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get vlan_interface by ID (info module)
+      paloaltonetworks.scm.scm_vlan_interface_info:
+        id: "{{ gathered_result.vlan_interface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.vlan_interfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all vlan_interfaces
+      paloaltonetworks.scm.scm_vlan_interface_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show vlan_interfaces count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} vlan_interfaces"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete vlan_interface
+      paloaltonetworks.scm.scm_vlan_interface:
+        state: absent
+        name: "$ansible-test-vlan"
+        folder: "All"
+

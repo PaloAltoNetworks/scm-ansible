@@ -59,6 +59,73 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            extended:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                extended_entry:
+                    description: 'Extended community lists'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Action'
+                        required: False
+                        type: str
+                    lc_regex:
+                        description: 'Extended community regular expression'
+                        required: False
+                        type: list
+                    name:
+                        description: 'Sequence number'
+                        required: False
+                        type: int
+            large:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                large_entry:
+                    description: 'Large community lists'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Action'
+                        required: False
+                        type: str
+                    lc_regex:
+                        description: 'Large community regular expression'
+                        required: False
+                        type: list
+                    name:
+                        description: 'Sequence number'
+                        required: False
+                        type: int
+            regular:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                regular_entry:
+                    description: 'Regular community lists'
+                    required: False
+                    type: list
+                    suboptions:
+                    action:
+                        description: 'Action'
+                        required: False
+                        type: str
+                    community:
+                        description: 'Communities'
+                        required: False
+                        type: list
+                    name:
+                        description: 'Sequence number'
+                        required: False
+                        type: int
 '''
 
 EXAMPLES = r'''

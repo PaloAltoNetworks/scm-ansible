@@ -51,6 +51,63 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            timeout_captive_portal:
+                description: 'Captive Portal (seconds)'
+                required: False
+                type: int
+            timeout_default:
+                description: 'Default timeout (seconds)'
+                required: False
+                type: int
+            timeout_discard_default:
+                description: 'Discard default (seconds)'
+                required: False
+                type: int
+            timeout_discard_tcp:
+                description: 'Discard TCP (seconds)'
+                required: False
+                type: int
+            timeout_discard_udp:
+                description: 'Discard UDP (seconds)'
+                required: False
+                type: int
+            timeout_icmp:
+                description: 'ICMP (seconds)'
+                required: False
+                type: int
+            timeout_scan:
+                description: 'Scan (seconds)'
+                required: False
+                type: int
+            timeout_tcp:
+                description: 'TCP (seconds)'
+                required: False
+                type: int
+            timeout_tcp_half_closed:
+                description: 'TCP Half Closed (seconds)'
+                required: False
+                type: int
+            timeout_tcp_time_wait:
+                description: 'TCP Time Wait (seconds)'
+                required: False
+                type: int
+            timeout_tcp_unverified_rst:
+                description: 'Unverified RST (seconds)'
+                required: False
+                type: int
+            timeout_tcphandshake:
+                description: 'TCP handshake (seconds)'
+                required: False
+                type: int
+            timeout_tcpinit:
+                description: 'TCP init (seconds)'
+                required: False
+                type: int
+            timeout_udp:
+                description: 'UDP (seconds)'
+                required: False
+                type: int
 '''
 
 EXAMPLES = r'''

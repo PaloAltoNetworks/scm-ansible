@@ -55,6 +55,19 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            description:
+                description: 'No description available.'
+                required: False
+                type: str
+            filename:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
     name:
         description: 'No description available.'
         required: True
@@ -67,10 +80,40 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            analysis:
+                description: 'No description available.'
+                required: False
+                type: str
+            application:
+                description: 'No description available.'
+                required: False
+                type: list
+            direction:
+                description: 'No description available.'
+                required: False
+                type: str
+            file_type:
+                description: 'No description available.'
+                required: False
+                type: list
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
     threat_exception:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
+            notes:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

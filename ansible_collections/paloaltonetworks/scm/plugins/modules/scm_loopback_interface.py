@@ -51,6 +51,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enable:
+                description: 'Enable TCP MSS adjustment on the interface'
+                required: False
+                type: bool
+            ipv4_mss_adjustment:
+                description: 'IPv4 MSS adjustment size in bytes'
+                required: False
+                type: int
+            ipv6_mss_adjustment:
+                description: 'IPv6 MSS adjustment size in bytes'
+                required: False
+                type: int
     comment:
         description: 'Description for loopback interface'
         required: False
@@ -67,10 +80,45 @@ options:
         description: 'Loopback IP Parent'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'Loopback IP address(es)'
+                required: True
+                type: str
     ipv6:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            address:
+                description: 'IPv6 Address Parent for loopback interface'
+                required: False
+                type: list
+                suboptions:
+                anycast:
+                    description: 'Anycast for loopback interface'
+                    required: False
+                    type: dict
+                enable_on_interface:
+                    description: 'Enable Address on Interface for loopback interface'
+                    required: False
+                    type: bool
+                name:
+                    description: 'IPv6 Address for loopback interface'
+                    required: False
+                    type: str
+                prefix:
+                    description: 'Use interface ID as host portion for loopback interface'
+                    required: False
+                    type: dict
+            enabled:
+                description: 'Enable IPv6 for loopback interface'
+                required: False
+                type: bool
+            interface_id:
+                description: 'Interface ID for loopback interface'
+                required: False
+                type: str
     mtu:
         description: 'MTU for loopback interface'
         required: False

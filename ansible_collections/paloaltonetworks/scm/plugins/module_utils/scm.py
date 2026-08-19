@@ -1,6 +1,13 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
+"""
+Shared utility functions for Palo Alto Networks SCM Ansible modules.
+
+Provides payload construction, container parameter extraction, SDK response
+normalization, and field diffing used across all SCM modules.
+"""
+
 META_FIELDS = frozenset([
     'state', 'client_id', 'client_secret', 'tsg_id',
     'id', 'folder', 'snippet', 'device', 'position',

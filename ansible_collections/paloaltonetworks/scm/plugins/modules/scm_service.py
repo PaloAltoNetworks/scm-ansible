@@ -59,6 +59,59 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            tcp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                override:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    halfclose_timeout:
+                        description: 'tcp session half-close timeout value (in second)'
+                        required: False
+                        type: int
+                    timeout:
+                        description: 'tcp session timeout value (in second)'
+                        required: False
+                        type: int
+                    timewait_timeout:
+                        description: 'tcp session time-wait timeout value (in second)'
+                        required: False
+                        type: int
+                port:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                source_port:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            udp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                override:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    timeout:
+                        description: 'udp session timeout value (in second)'
+                        required: False
+                        type: int
+                port:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                source_port:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     tag:
         description: 'Tags for service object'
         required: False

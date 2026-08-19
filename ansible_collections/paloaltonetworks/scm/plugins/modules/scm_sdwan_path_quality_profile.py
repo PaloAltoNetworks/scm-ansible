@@ -51,6 +51,46 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            jitter:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                sensitivity:
+                    description: 'Jitter sensitivity'
+                    required: True
+                    type: str
+                threshold:
+                    description: 'Jitter threshold (ms)'
+                    required: True
+                    type: int
+            latency:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                sensitivity:
+                    description: 'Latency sensitivity'
+                    required: True
+                    type: str
+                threshold:
+                    description: 'Latency threshold (ms)'
+                    required: True
+                    type: int
+            pkt_loss:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                sensitivity:
+                    description: 'Packet loss sensitivity'
+                    required: True
+                    type: str
+                threshold:
+                    description: 'Packet loss threshold (percentage)'
+                    required: True
+                    type: int
     name:
         description: 'Profile name'
         required: True

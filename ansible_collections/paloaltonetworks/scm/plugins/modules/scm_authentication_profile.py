@@ -55,14 +55,131 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            failed_attempts:
+                description: 'Lockout object - failed_attempts of authentication profile'
+                required: False
+                type: int
+            lockout_time:
+                description: 'Lockout object - lockout-time of authentication profile'
+                required: False
+                type: int
     method:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            cloud:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                profile_name:
+                    description: 'The tenant profile name'
+                    required: False
+                    type: str
+            kerberos:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                realm:
+                    description: 'method kerberos object realm of authentication profile'
+                    required: False
+                    type: str
+                server_profile:
+                    description: 'method kerberos object server profile of authentication profile'
+                    required: False
+                    type: str
+            ldap:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                login_attribute:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                passwd_exp_days:
+                    description: 'No description available.'
+                    required: False
+                    type: int
+                server_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            local_database:
+                description: 'No description available.'
+                required: False
+                type: dict
+            radius:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                checkgroup:
+                    description: 'method radius object check group of authentication profile'
+                    required: False
+                    type: bool
+                server_profile:
+                    description: 'method radius object server profile of authentication profile'
+                    required: False
+                    type: str
+            saml_idp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                attribute_name_usergroup:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                attribute_name_username:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                certificate_profile:
+                    description: 'method object saml idp certificate profile of authentication profile'
+                    required: False
+                    type: str
+                enable_single_logout:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                request_signing_certificate:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                server_profile:
+                    description: 'method object saml idp server profile of authentication profile'
+                    required: False
+                    type: str
+            tacplus:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                checkgroup:
+                    description: 'method tacplus object check group of authentication profile'
+                    required: False
+                    type: bool
+                server_profile:
+                    description: 'method tacplus object check group of authentication profile'
+                    required: False
+                    type: str
     multi_factor_auth:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            factors:
+                description: 'No description available.'
+                required: False
+                type: list
+            mfa_enable:
+                description: 'No description available.'
+                required: False
+                type: bool
     name:
         description: 'The name of the authentication profile'
         required: True
@@ -71,6 +188,15 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            kerberos_keytab:
+                description: 'No description available.'
+                required: False
+                type: str
+            realm:
+                description: 'No description available.'
+                required: False
+                type: str
     user_domain:
         description: 'No description available.'
         required: False

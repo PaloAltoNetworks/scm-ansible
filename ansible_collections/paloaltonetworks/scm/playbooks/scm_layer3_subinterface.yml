@@ -1,0 +1,140 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_layer3_subinterface
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_layer3_subinterface.yml
+#
+# NOTE: Layer 3 subinterfaces require a parent ethernet interface with layer3 mode.
+#       Subinterface names follow the convention: <parent_name>.<tag>
+#       Both parent interface names and subinterface names must start with '$'.
+#       Run 'ansible-doc paloaltonetworks.scm.scm_layer3_subinterface' for full parameter docs.
+
+- name: Manage layer3_subinterfaces in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create parent ethernet interface (Layer 3 mode) ──────
+    - name: Create parent L3 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: present
+        name: "$ansible-l3-parent"
+        folder: "All"
+        comment: "Parent interface for L3 subinterface test"
+        link_duplex: "full"
+        link_speed: "auto"
+        link_state: "up"
+        layer3: {}
+      register: parent_result
+
+    - name: Show created parent interface
+      ansible.builtin.debug:
+        var: parent_result.ethernet_interface
+
+    # ── Create ──────────────────────────────────────────────
+    # NOTE: Subinterface name must be <parent_interface_name>.<tag>
+    #       tag is an integer VLAN tag (e.g. 200)
+    - name: Create layer3_subinterface
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: present
+        name: "$ansible-l3-parent.200"
+        folder: "All"
+        parent_interface: "$ansible-l3-parent"
+        tag: 200
+        comment: "Managed by Ansible"
+        mtu: 1500
+        ip:
+          - name: "192.168.10.1/24"
+      register: create_result
+
+    - name: Show created layer3_subinterface
+      ansible.builtin.debug:
+        var: create_result.layer3_subinterface
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update layer3_subinterface
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: present
+        name: "$ansible-l3-parent.200"
+        folder: "All"
+        parent_interface: "$ansible-l3-parent"
+        tag: 200
+        comment: "Updated by Ansible"
+        mtu: 1400
+        ip:
+          - name: "192.168.10.1/24"
+      register: update_result
+
+    - name: Show updated layer3_subinterface
+      ansible.builtin.debug:
+        var: update_result.layer3_subinterface
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get layer3_subinterface by name
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: gathered
+        name: "$ansible-l3-parent.200"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered layer3_subinterface
+      ansible.builtin.debug:
+        var: gathered_result.layer3_subinterface
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get layer3_subinterface by name (info module)
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        name: "$ansible-l3-parent.200"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.layer3_subinterfaces
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get layer3_subinterface by ID (info module)
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        id: "{{ gathered_result.layer3_subinterface.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.layer3_subinterfaces
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all layer3_subinterfaces
+      paloaltonetworks.scm.scm_layer3_subinterface_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show layer3_subinterfaces count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} layer3_subinterfaces"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete layer3_subinterface
+      paloaltonetworks.scm.scm_layer3_subinterface:
+        state: absent
+        name: "$ansible-l3-parent.200"
+        folder: "All"
+
+    - name: Delete parent L3 ethernet interface
+      paloaltonetworks.scm.scm_ethernet_interface:
+        state: absent
+        name: "$ansible-l3-parent"
+        folder: "All"

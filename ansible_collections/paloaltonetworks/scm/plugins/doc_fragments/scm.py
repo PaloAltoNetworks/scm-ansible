@@ -5,6 +5,13 @@ __metaclass__ = type
 class ModuleDocFragment(object):
 
     DOCUMENTATION = r'''
+short_description: Common authentication options for SCM modules
+description:
+    - This doc fragment provides common authentication parameters shared by all
+      Palo Alto Networks Strata Cloud Manager (SCM) modules.
+    - Credentials can be supplied as module parameters, environment variables,
+      or via a JSON configuration file.
+    - 'Resolution order: module parameter > environment variable > configuration file.'
 options:
     client_id:
         description:

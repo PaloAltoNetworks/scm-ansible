@@ -51,6 +51,16 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            rsa:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                rsa_nbits:
+                    description: 'No description available.'
+                    required: True
+                    type: str
     ca_identity_name:
         description: 'Certificate Authority Identity'
         required: True
@@ -59,6 +69,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dnsname:
+                description: 'No description available.'
+                required: False
+                type: str
+            rfc822name:
+                description: 'No description available.'
+                required: False
+                type: str
+            uniform_resource_identifier:
+                description: 'No description available.'
+                required: False
+                type: str
     digest:
         description: 'Digest for CSR'
         required: True
@@ -79,6 +102,32 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            dynamic:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                otp_server_url:
+                    description: 'OTP server URL'
+                    required: False
+                    type: str
+                password:
+                    description: 'OTP password'
+                    required: False
+                    type: str
+                username:
+                    description: 'OTP username'
+                    required: False
+                    type: str
+            fixed:
+                description: 'Challenge to use for SCEP server on mobile clients'
+                required: False
+                type: str
+            var_none:
+                description: 'No OTP'
+                required: False
+                type: dict
     scep_client_cert:
         description: 'SCEP Client Certificate'
         required: False

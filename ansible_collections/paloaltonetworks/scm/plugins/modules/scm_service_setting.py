@@ -51,6 +51,182 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            dns_setting:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dns_proxy_object:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                servers:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    primary:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    secondary:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+            fqdn_refresh_time:
+                description: 'No description available.'
+                required: False
+                type: float
+            fqdn_stale_entry_timeout:
+                description: 'No description available.'
+                required: False
+                type: float
+            inline_cloud_proxy:
+                description: 'No description available.'
+                required: False
+                type: bool
+            lcaas_use_proxy:
+                description: 'No description available.'
+                required: False
+                type: bool
+            ntp_servers:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                primary_ntp_server:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    authentication_type:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        autokey:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        var_none:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        symmetric_key:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            algorithm:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                md5:
+                                    description: 'No description available.'
+                                    required: False
+                                    type: dict
+                                    suboptions:
+                                    authentication_key:
+                                        description: 'No description available.'
+                                        required: False
+                                        type: str
+                                sha1:
+                                    description: 'No description available.'
+                                    required: False
+                                    type: dict
+                                    suboptions:
+                                    authentication_key:
+                                        description: 'No description available.'
+                                        required: False
+                                        type: str
+                            key_id:
+                                description: 'No description available.'
+                                required: False
+                                type: float
+                    ntp_server_address:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                secondary_ntp_server:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    authentication_type:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        autokey:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        var_none:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                        symmetric_key:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            algorithm:
+                                description: 'No description available.'
+                                required: False
+                                type: dict
+                                suboptions:
+                                md5:
+                                    description: 'No description available.'
+                                    required: False
+                                    type: dict
+                                    suboptions:
+                                    authentication_key:
+                                        description: 'No description available.'
+                                        required: False
+                                        type: str
+                                sha1:
+                                    description: 'No description available.'
+                                    required: False
+                                    type: dict
+                                    suboptions:
+                                    authentication_key:
+                                        description: 'No description available.'
+                                        required: False
+                                        type: str
+                            key_id:
+                                description: 'No description available.'
+                                required: False
+                                type: float
+                    ntp_server_address:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+            secure_proxy_password:
+                description: 'No description available.'
+                required: False
+                type: str
+            secure_proxy_port:
+                description: 'No description available.'
+                required: False
+                type: float
+            secure_proxy_server:
+                description: 'No description available.'
+                required: False
+                type: str
+            secure_proxy_user:
+                description: 'No description available.'
+                required: False
+                type: str
+            server_verification:
+                description: 'No description available.'
+                required: False
+                type: bool
+            update_server:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

@@ -33,6 +33,31 @@ options:
         description: 'Branches'
         required: False
         type: list
+        suboptions:
+            bgp_redistribution_profile:
+                description: 'BGP redistribution profile'
+                required: False
+                type: str
+            interfaces:
+                description: 'Interfaces'
+                required: False
+                type: list
+            logical_router:
+                description: 'Router'
+                required: False
+                type: str
+            name:
+                description: 'Branch firewall serial number'
+                required: False
+                type: str
+            private_interfaces:
+                description: 'Private interfaces'
+                required: False
+                type: list
+            site:
+                description: 'Site name'
+                required: False
+                type: str
     enable_mesh_between_hubs:
         description: 'Enable mesh between hubs?'
         required: False
@@ -49,6 +74,123 @@ options:
         description: 'Hubs'
         required: False
         type: list
+        suboptions:
+            allow_dia_vpn_failover:
+                description: 'Allow DIA to VPN failover on branch device for the hub?'
+                required: False
+                type: bool
+            bgp_redistribution_profile:
+                description: 'BGP redistribution file'
+                required: False
+                type: str
+            interfaces:
+                description: 'Interfaces'
+                required: False
+                type: list
+                suboptions:
+                dhcp_ip:
+                    description: 'DHCP IP'
+                    required: False
+                    type: str
+                name:
+                    description: 'Ethernet interface'
+                    required: False
+                    type: str
+                sdwan_link_settings:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    sdwan_gateway:
+                        description: 'Next hop gateway'
+                        required: False
+                        type: str
+                    sdwan_interface_profile:
+                        description: 'SD-WAN interface profile'
+                        required: False
+                        type: str
+                    upstream_nat:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        enable:
+                            description: 'Upstream NAT?'
+                            required: False
+                            type: bool
+                        static_ip:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            fqdn:
+                                description: 'FQDN'
+                                required: False
+                                type: str
+                            ip_address:
+                                description: 'IP address'
+                                required: False
+                                type: str
+            logical_router:
+                description: 'Router'
+                required: False
+                type: str
+            name:
+                description: 'Hub firewall serial number'
+                required: False
+                type: str
+            priority:
+                description: 'Priority'
+                required: False
+                type: str
+            private_interfaces:
+                description: 'Private interfaces'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'Ethernet interface'
+                    required: False
+                    type: str
+                sdwan_link_settings:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    sdwan_gateway:
+                        description: 'Next hop gateway'
+                        required: False
+                        type: str
+                    sdwan_interface_profile:
+                        description: 'SD-WAN interface profile'
+                        required: False
+                        type: str
+                    upstream_nat:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        enable:
+                            description: 'Upstream NAT?'
+                            required: False
+                            type: bool
+                        static_ip:
+                            description: 'No description available.'
+                            required: False
+                            type: dict
+                            suboptions:
+                            fqdn:
+                                description: 'FQDN'
+                                required: False
+                                type: str
+                            ip_address:
+                                description: 'IP address'
+                                required: False
+                                type: str
+            site:
+                description: 'Site name'
+                required: False
+                type: str
     name:
         description: 'VPN cluster name'
         required: False

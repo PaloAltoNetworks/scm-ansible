@@ -51,6 +51,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            interface:
+                description: 'User-ID collector interface'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

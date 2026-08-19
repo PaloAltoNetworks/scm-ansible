@@ -51,6 +51,19 @@ options:
         description: 'AS paths'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'Action'
+                required: False
+                type: str
+            aspath_regex:
+                description: 'AS path regular expression'
+                required: False
+                type: str
+            name:
+                description: 'Sequence number'
+                required: False
+                type: int
     description:
         description: 'Description'
         required: False

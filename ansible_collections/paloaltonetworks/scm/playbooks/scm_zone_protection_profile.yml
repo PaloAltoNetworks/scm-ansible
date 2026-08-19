@@ -1,0 +1,105 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_zone_protection_profile
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_zone_protection_profile.yml
+#
+
+- name: Manage zone_protection_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create zone_protection_profile
+      paloaltonetworks.scm.scm_zone_protection_profile:
+        state: present
+        name: "ansible-test-zoneprot"
+        folder: "All"
+        description: "Created by Ansible"
+        discard_icmp_embedded_error: true
+        icmp_frag_discard: true
+      register: create_result
+
+    - name: Show created zone_protection_profile
+      ansible.builtin.debug:
+        var: create_result.zone_protection_profile
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update zone_protection_profile
+      paloaltonetworks.scm.scm_zone_protection_profile:
+        state: present
+        name: "ansible-test-zoneprot"
+        folder: "All"
+        description: "Updated by Ansible"
+        discard_icmp_embedded_error: true
+        icmp_frag_discard: false
+      register: update_result
+
+    - name: Show updated zone_protection_profile
+      ansible.builtin.debug:
+        var: update_result.zone_protection_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get zone_protection_profile by name
+      paloaltonetworks.scm.scm_zone_protection_profile:
+        state: gathered
+        name: "ansible-test-zoneprot"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered zone_protection_profile
+      ansible.builtin.debug:
+        var: gathered_result.zone_protection_profile
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get zone_protection_profile by name (info module)
+      paloaltonetworks.scm.scm_zone_protection_profile_info:
+        name: "ansible-test-zoneprot"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.zone_protection_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get zone_protection_profile by ID (info module)
+      paloaltonetworks.scm.scm_zone_protection_profile_info:
+        id: "{{ gathered_result.zone_protection_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.zone_protection_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all zone_protection_profiles
+      paloaltonetworks.scm.scm_zone_protection_profile_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show zone_protection_profiles count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} zone_protection_profiles"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete zone_protection_profile
+      paloaltonetworks.scm.scm_zone_protection_profile:
+        state: absent
+        name: "ansible-test-zoneprot"
+        folder: "All"

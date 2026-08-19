@@ -59,6 +59,208 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            action:
+                description: 'Action'
+                required: False
+                type: str
+            description:
+                description: 'Description'
+                required: False
+                type: str
+            match:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                as_path_access_list:
+                    description: 'AS path access list'
+                    required: False
+                    type: str
+                extended_community:
+                    description: 'Extended community'
+                    required: False
+                    type: str
+                interface:
+                    description: 'Interface'
+                    required: False
+                    type: str
+                ipv4:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    address:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        access_list:
+                            description: 'Access list'
+                            required: False
+                            type: str
+                        prefix_list:
+                            description: 'Prefix list'
+                            required: False
+                            type: str
+                    next_hop:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        access_list:
+                            description: 'Access list'
+                            required: False
+                            type: str
+                        prefix_list:
+                            description: 'Prefix list'
+                            required: False
+                            type: str
+                    route_source:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        access_list:
+                            description: 'Access list'
+                            required: False
+                            type: str
+                        prefix_list:
+                            description: 'Prefix list'
+                            required: False
+                            type: str
+                large_community:
+                    description: 'Large community'
+                    required: False
+                    type: str
+                local_preference:
+                    description: 'No description available.'
+                    required: False
+                    type: int
+                metric:
+                    description: 'Metric'
+                    required: False
+                    type: int
+                origin:
+                    description: 'Origin'
+                    required: False
+                    type: str
+                peer:
+                    description: 'Peer'
+                    required: False
+                    type: str
+                regular_community:
+                    description: 'Regular community'
+                    required: False
+                    type: str
+                tag:
+                    description: 'Tag'
+                    required: False
+                    type: int
+            name:
+                description: 'Sequence number'
+                required: False
+                type: int
+            set:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                aggregator:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    var_as:
+                        description: 'Aggregator AS'
+                        required: False
+                        type: int
+                    router_id:
+                        description: 'Router ID'
+                        required: False
+                        type: str
+                aspath_exclude:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                aspath_prepend:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                atomic_aggregate:
+                    description: 'Enable BGP atomic aggregate?'
+                    required: False
+                    type: bool
+                ipv4:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    next_hop:
+                        description: 'Next hop'
+                        required: False
+                        type: str
+                    source_address:
+                        description: 'Source address'
+                        required: False
+                        type: str
+                large_community:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                local_preference:
+                    description: 'Local preference'
+                    required: False
+                    type: int
+                metric:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    action:
+                        description: 'Metric action'
+                        required: False
+                        type: str
+                    value:
+                        description: 'Metric value'
+                        required: False
+                        type: int
+                origin:
+                    description: 'Origin'
+                    required: False
+                    type: str
+                originator_id:
+                    description: 'Originator ID'
+                    required: False
+                    type: str
+                overwrite_large_community:
+                    description: 'Overwrite large community?'
+                    required: False
+                    type: bool
+                overwrite_regular_community:
+                    description: 'Overwrite regular community?'
+                    required: False
+                    type: bool
+                regular_community:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                remove_large_community:
+                    description: 'Remove large community name'
+                    required: False
+                    type: str
+                remove_regular_community:
+                    description: 'Remove regular community name'
+                    required: False
+                    type: str
+                tag:
+                    description: 'Tag'
+                    required: False
+                    type: int
+                weight:
+                    description: 'Weight'
+                    required: False
+                    type: int
 '''
 
 EXAMPLES = r'''

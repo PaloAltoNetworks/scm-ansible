@@ -55,6 +55,208 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            icmp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to start RED'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximal connection rate (cps) allowed'
+                        required: False
+                        type: int
+            icmpv6:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to start RED'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximal connection rate (cps) allowed'
+                        required: False
+                        type: int
+            other_ip:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to start RED'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximal connection rate (cps) allowed'
+                        required: False
+                        type: int
+            tcp_syn:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: True
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to start RED'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximal connection rate (cps) allowed'
+                        required: False
+                        type: int
+                syn_cookies:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to activate SYN cookies proxy'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximum connection rate (cps) allowed'
+                        required: False
+                        type: int
+            udp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                red:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    activate_rate:
+                        description: 'Connection rate (cps) to start RED'
+                        required: False
+                        type: int
+                    alarm_rate:
+                        description: 'Connection rate (cps) to generate alarm'
+                        required: False
+                        type: int
+                    block:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        duration:
+                            description: 'No description available.'
+                            required: False
+                            type: int
+                    maximal_rate:
+                        description: 'Maximal connection rate (cps) allowed'
+                        required: False
+                        type: int
     name:
         description: 'Profile name'
         required: True
@@ -63,6 +265,20 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            sessions:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enabled:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                max_concurrent_limit:
+                    description: 'No description available.'
+                    required: False
+                    type: int
     type:
         description: 'Type'
         required: True

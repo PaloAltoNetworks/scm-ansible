@@ -1,0 +1,119 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_authentication_rule
+#
+# Demonstrates: create, update, gather, delete
+#
+# NOTE: The info module has API validation issues, so this playbook only tests CRUD.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#   An authentication_profile must exist (e.g. "ansible-test-auth-prof")
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_authentication_rule.yml
+
+- name: Manage authentication_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Dependency: Authentication Profile ──────────────────
+    - name: Create dep authentication_profile
+      paloaltonetworks.scm.scm_authentication_profile:
+        state: present
+        name: "ansible-dep-auth-prof"
+        folder: "All"
+        allow_list: ["all"]
+        method:
+          local_database: {}
+      register: dep_profile
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create authentication_rule
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: present
+        name: "ansible-test-authrule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        service: ["any"]
+        authentication_enforcement: "ansible-dep-auth-prof"
+        description: "Test auth rule"
+      register: create_result
+
+    - name: Show created authentication_rule
+      ansible.builtin.debug:
+        var: create_result.authentication_rule
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update authentication_rule
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: present
+        name: "ansible-test-authrule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        service: ["any"]
+        authentication_enforcement: "ansible-dep-auth-prof"
+        description: "Updated auth rule"
+        log_authentication_timeout: true
+      register: update_result
+
+    - name: Show updated authentication_rule
+      ansible.builtin.debug:
+        var: update_result.authentication_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get authentication_rule by name
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: gathered
+        name: "ansible-test-authrule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        service: ["any"]
+      register: gathered_result
+
+    - name: Show gathered authentication_rule
+      ansible.builtin.debug:
+        var: gathered_result.authentication_rule
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete authentication_rule
+      paloaltonetworks.scm.scm_authentication_rule:
+        state: absent
+        name: "ansible-test-authrule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["any"]
+        source: ["any"]
+        destination: ["any"]
+        service: ["any"]
+
+    # ── Cleanup dep ──────────────────────────────────────────
+    # Note: May fail if rule delete hasn't fully propagated
+    - name: Delete dep authentication_profile
+      paloaltonetworks.scm.scm_authentication_profile:
+        state: absent
+        name: "ansible-dep-auth-prof"
+        folder: "All"
+      ignore_errors: true

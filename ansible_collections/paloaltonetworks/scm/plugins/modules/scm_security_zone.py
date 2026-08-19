@@ -51,6 +51,15 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            exclude_list:
+                description: 'No description available.'
+                required: False
+                type: list
+            include_list:
+                description: 'No description available.'
+                required: False
+                type: list
     dos_log_setting:
         description: 'No description available.'
         required: False
@@ -75,10 +84,56 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enable_packet_buffer_protection:
+                description: 'No description available.'
+                required: False
+                type: bool
+            external:
+                description: 'No description available.'
+                required: False
+                type: list
+            layer2:
+                description: 'No description available.'
+                required: False
+                type: list
+            layer3:
+                description: 'No description available.'
+                required: False
+                type: list
+            log_setting:
+                description: 'No description available.'
+                required: False
+                type: str
+            tap:
+                description: 'No description available.'
+                required: False
+                type: list
+            tunnel:
+                description: 'No description available.'
+                required: False
+                type: dict
+            virtual_wire:
+                description: 'No description available.'
+                required: False
+                type: list
+            zone_protection_profile:
+                description: 'No description available.'
+                required: False
+                type: str
     user_acl:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            exclude_list:
+                description: 'No description available.'
+                required: False
+                type: list
+            include_list:
+                description: 'No description available.'
+                required: False
+                type: list
 '''
 
 EXAMPLES = r'''

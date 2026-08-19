@@ -55,6 +55,15 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            latitude:
+                description: 'The latitudinal position of the region'
+                required: True
+                type: float
+            longitude:
+                description: 'The longitudinal postition of the region'
+                required: True
+                type: float
     name:
         description: 'The name of the region'
         required: True

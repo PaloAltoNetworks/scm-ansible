@@ -55,6 +55,53 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            non_recurring:
+                description: 'No description available.'
+                required: False
+                type: list
+            recurring:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                daily:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                weekly:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    friday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    monday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    saturday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    sunday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    thursday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    tuesday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    wednesday:
+                        description: 'No description available.'
+                        required: False
+                        type: list
 '''
 
 EXAMPLES = r'''

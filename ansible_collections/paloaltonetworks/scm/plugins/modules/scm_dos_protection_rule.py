@@ -51,6 +51,19 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            allow:
+                description: 'No description available.'
+                required: False
+                type: dict
+            deny:
+                description: 'No description available.'
+                required: False
+                type: dict
+            protect:
+                description: 'No description available.'
+                required: False
+                type: dict
     description:
         description: 'Description'
         required: False
@@ -67,6 +80,15 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            interface:
+                description: 'No description available.'
+                required: False
+                type: list
+            zone:
+                description: 'No description available.'
+                required: False
+                type: list
     log_setting:
         description: 'Log forwarding profile name'
         required: False
@@ -83,6 +105,34 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            aggregate:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                profile:
+                    description: 'Aggregate DoS protection profile'
+                    required: True
+                    type: str
+            classified:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                classification_criteria:
+                    description: 'No description available.'
+                    required: True
+                    type: dict
+                    suboptions:
+                    address:
+                        description: 'Classification method'
+                        required: True
+                        type: str
+                profile:
+                    description: 'Classified DoS protection profile'
+                    required: True
+                    type: str
     schedule:
         description: 'Schedule on which to enforce the rule'
         required: False
@@ -107,6 +157,15 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            interface:
+                description: 'No description available.'
+                required: False
+                type: list
+            zone:
+                description: 'No description available.'
+                required: False
+                type: list
 '''
 
 EXAMPLES = r'''

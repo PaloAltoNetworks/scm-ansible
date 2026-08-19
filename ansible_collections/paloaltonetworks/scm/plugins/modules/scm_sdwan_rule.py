@@ -51,6 +51,11 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            traffic_distribution_profile:
+                description: 'Traffic dstribution profile'
+                required: True
+                type: str
     application:
         description: 'List of applications'
         required: True

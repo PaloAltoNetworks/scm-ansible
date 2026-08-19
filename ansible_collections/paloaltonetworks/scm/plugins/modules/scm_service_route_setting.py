@@ -51,6 +51,64 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            destination:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                source:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    address:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    interface:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+            service:
+                description: 'No description available.'
+                required: False
+                type: list
+                suboptions:
+                name:
+                    description: 'The follow list details the accepted `name` values and their corresponding service description. - `autofocus` = AutoFocus Cloud - `crl-status` = CRL servers - `data-services` = Data Services - `ddns` = DDNS server(s) - `deployments` = Panorama pushed updates - `dns` = DNS server(s) - `edl-updates` = External Dynamic List update server - `email` = SMTP gateway(s) - `hsm` = Hardware Security Module server(s) - `http` = HTTP Forwarding server(s) - `iot` = IOT service-route - `kerberos` = Kerberos server - `ldap` = LDAP server - `mdm` = MDM servers - `mfa` = Multi-Factor Authentication - `netflow` = Netflow server(s) - `ntp` = NTP server(s) - `paloalto-networks-services` = Palo Alto Networks Services - `panorama` = Panorama server - `panorama-log-forwarding` = Panorama Log Forwarding - `proxy` = Proxy server - `radius` = RADIUS server - `scep` = SCEP - `snmp` = SNMP server(s) - `syslog` = Syslog server(s) - `tacplus` = TACACS+ server - `uid-`agent = UID agent(s) - `url-`updates = URL update server - `vmmonitor` = VM monitor - `wildfire-`private = WildFire Appliance - `ztp` = ZTP and Auto-VPN DDNS'
+                    required: False
+                    type: str
+                source:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    address:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    interface:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                source_v6:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    address:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    interface:
+                        description: 'No description available.'
+                        required: False
+                        type: str
 '''
 
 EXAMPLES = r'''

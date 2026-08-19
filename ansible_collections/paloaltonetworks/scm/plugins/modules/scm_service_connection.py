@@ -63,10 +63,86 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            bgp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                do_not_export_routes:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                fast_failover:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                local_ip_address:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                originate_default_route:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                peer_as:
+                    description: 'No description available.'
+                    required: True
+                    type: str
+                peer_ip_address:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                secret:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                summarize_mobile_user_routes:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+            bgp_peer:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                local_ip_address:
+                    description: 'Local peer IP address (secondary WAN)'
+                    required: False
+                    type: str
+                local_ipv6_address:
+                    description: 'Local peer IPv6 address (secondary WAN)'
+                    required: False
+                    type: str
+                peer_ip_address:
+                    description: 'Remote peer IP address (secondary WAN)'
+                    required: False
+                    type: str
+                peer_ipv6_address:
+                    description: 'Remote peer IPv6 address (secondary WAN)'
+                    required: False
+                    type: str
+                secret:
+                    description: 'BGP peering secret (secondary WAN)'
+                    required: False
+                    type: str
     qos:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enable:
+                description: 'No description available.'
+                required: False
+                type: bool
+            qos_profile:
+                description: 'No description available.'
+                required: False
+                type: str
     region:
         description: 'No description available.'
         required: True

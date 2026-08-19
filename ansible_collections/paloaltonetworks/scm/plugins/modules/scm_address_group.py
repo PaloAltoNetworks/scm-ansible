@@ -55,6 +55,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            filter:
+                description: 'Tag based filter defining group membership'
+                required: True
+                type: str
     name:
         description: 'The name of the address group'
         required: True

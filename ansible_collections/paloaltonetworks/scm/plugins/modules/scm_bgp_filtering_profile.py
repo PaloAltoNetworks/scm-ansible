@@ -55,6 +55,195 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            multicast:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                conditional_advertisement:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    exist:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        advertise_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        exist_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                    non_exist:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        advertise_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        non_exist_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                filter_list:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    inbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    outbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                inbound_network_filters:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    distribute_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    prefix_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                inherit:
+                    description: 'Inherit from unicast'
+                    required: False
+                    type: bool
+                outbound_network_filters:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    distribute_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    prefix_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                route_maps:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    inbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    outbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                unsuppress_map:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            unicast:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                conditional_advertisement:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    exist:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        advertise_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        exist_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                    non_exist:
+                        description: 'No description available.'
+                        required: False
+                        type: dict
+                        suboptions:
+                        advertise_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                        non_exist_map:
+                            description: 'No description available.'
+                            required: False
+                            type: str
+                filter_list:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    inbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    outbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                inbound_network_filters:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    distribute_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    prefix_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                outbound_network_filters:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    distribute_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    prefix_list:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                route_maps:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    inbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    outbound:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                unsuppress_map:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     name:
         description: 'No description available.'
         required: True

@@ -51,6 +51,63 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            unicast:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                connected:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'Enable connected route redistribution?'
+                        required: False
+                        type: bool
+                    metric:
+                        description: 'Route metric'
+                        required: False
+                        type: int
+                    route_map:
+                        description: 'Route map'
+                        required: False
+                        type: str
+                ospf:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'Enable OSPF route redistribution?'
+                        required: False
+                        type: bool
+                    metric:
+                        description: 'Route metric'
+                        required: False
+                        type: int
+                    route_map:
+                        description: 'Route map'
+                        required: False
+                        type: str
+                static:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'Enable static route redistribution?'
+                        required: False
+                        type: bool
+                    metric:
+                        description: 'Route metric'
+                        required: False
+                        type: int
+                    route_map:
+                        description: 'Route map'
+                        required: False
+                        type: str
     name:
         description: 'Name'
         required: True

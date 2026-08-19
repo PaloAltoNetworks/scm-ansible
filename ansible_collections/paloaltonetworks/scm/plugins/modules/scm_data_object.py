@@ -63,6 +63,73 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            file_properties:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                pattern:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    file_property:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    file_type:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    name:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    property_value:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+            predefined:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                pattern:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    file_type:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    name:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+            regex:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                pattern:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    file_type:
+                        description: 'No description available.'
+                        required: False
+                        type: list
+                    name:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                    regex:
+                        description: 'No description available.'
+                        required: False
+                        type: str
 '''
 
 EXAMPLES = r'''

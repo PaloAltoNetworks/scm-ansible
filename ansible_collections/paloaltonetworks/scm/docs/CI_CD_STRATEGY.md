@@ -187,12 +187,12 @@ curl -X POST \
 ### Playbook Tests Failing
 
 1. Check if Module Tests pass (if not, fix module first)
-2. Check example playbook syntax in `examples/<resource>.yml`
+2. Check example playbook syntax in `playbooks/<resource>.yml`
 3. Run locally:
    ```bash
    export SCM_CONFIG_FILE=/path/to/config.json
    export ANSIBLE_COLLECTIONS_PATH=$(pwd)
-   ansible-playbook examples/scm_address.yml
+   ansible-playbook playbooks/scm_address.yml
    ```
 
 ### Common Errors
@@ -246,7 +246,7 @@ curl -X POST \
    pytest tests/integration/ -v
 
    # Single playbook
-   ANSIBLE_COLLECTIONS_PATH=$(pwd)/.. ansible-playbook examples/scm_address.yml
+   ANSIBLE_COLLECTIONS_PATH=$(pwd)/.. ansible-playbook playbooks/scm_address.yml
    ```
 
 ## Summary

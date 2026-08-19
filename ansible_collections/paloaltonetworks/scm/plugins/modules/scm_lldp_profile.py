@@ -59,6 +59,53 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            management_address:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enabled:
+                    description: 'Management address enabled'
+                    required: False
+                    type: bool
+                iplist:
+                    description: 'No description available.'
+                    required: False
+                    type: list
+                    suboptions:
+                    interface:
+                        description: 'Interface'
+                        required: False
+                        type: str
+                    ipv4:
+                        description: 'IPv4 Address'
+                        required: False
+                        type: str
+                    ipv6:
+                        description: 'IPv6 Address'
+                        required: False
+                        type: str
+                    name:
+                        description: 'Name'
+                        required: False
+                        type: str
+            port_description:
+                description: 'Option TLV Port Description'
+                required: False
+                type: bool
+            system_capabilities:
+                description: 'Option TLV System Capabilities'
+                required: False
+                type: bool
+            system_description:
+                description: 'Option TLV System Description'
+                required: False
+                type: bool
+            system_name:
+                description: 'Option TLV System Name'
+                required: False
+                type: bool
     snmp_syslog_notification:
         description: 'SNMP syslog notification'
         required: False

@@ -51,14 +51,72 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            certificate:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                allow_id_payload_mismatch:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                certificate_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+                local_certificate:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    local_certificate_name:
+                        description: 'No description available.'
+                        required: False
+                        type: str
+                strict_validation_revocation:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                use_management_as_source:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+            pre_shared_key:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                key:
+                    description: 'No description available.'
+                    required: False
+                    type: str
     local_address:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            interface:
+                description: 'Interface variable or hardcoded vlan/loopback. vlan will be passed as default value'
+                required: False
+                type: str
+            ip:
+                description: 'IP Prefix of the assigned interface'
+                required: False
+                type: str
     local_id:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            id:
+                description: 'Local ID string'
+                required: False
+                type: str
+            type:
+                description: 'No description available.'
+                required: False
+                type: str
     name:
         description: 'Alphanumeric string begin with letter: [0-9a-zA-Z._-]'
         required: True
@@ -67,18 +125,104 @@ options:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            dynamic:
+                description: 'No description available.'
+                required: False
+                type: dict
+            fqdn:
+                description: 'peer gateway FQDN name'
+                required: False
+                type: str
+            ip:
+                description: 'peer gateway has static IP address'
+                required: False
+                type: str
     peer_id:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            id:
+                description: 'Peer ID string'
+                required: False
+                type: str
+            type:
+                description: 'No description available.'
+                required: False
+                type: str
     protocol:
         description: 'No description available.'
         required: True
         type: dict
+        suboptions:
+            ikev1:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dpd:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                ike_crypto_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            ikev2:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                dpd:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    enable:
+                        description: 'No description available.'
+                        required: False
+                        type: bool
+                ike_crypto_profile:
+                    description: 'No description available.'
+                    required: False
+                    type: str
+            version:
+                description: 'No description available.'
+                required: False
+                type: str
     protocol_common:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            fragmentation:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+            nat_traversal:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+            passive_mode:
+                description: 'No description available.'
+                required: False
+                type: bool
 '''
 
 EXAMPLES = r'''

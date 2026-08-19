@@ -51,6 +51,43 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            allow_challenge_ack:
+                description: 'Allow arbitrary ACK in response to SYN?'
+                required: False
+                type: bool
+            asymmetric_path:
+                description: 'Asymmetric path action'
+                required: False
+                type: str
+            bypass_exceed_oo_queue:
+                description: 'Forward segments exceeding TCP out-of-order queue?'
+                required: False
+                type: bool
+            check_timestamp_option:
+                description: 'Drop segments with null timestamp option?'
+                required: False
+                type: bool
+            drop_zero_flag:
+                description: 'Drop segments without flag?'
+                required: False
+                type: bool
+            siptcp_cleartext_proxy:
+                description: 'SIP TCP cleartext action (`''0''` = Always Off, `''1''` = Always Enabled, `''2''` = Automatically enable proxy when needed)'
+                required: False
+                type: str
+            strip_mptcp_option:
+                description: 'Strip MPTCP option?'
+                required: False
+                type: bool
+            tcp_retransmit_scan:
+                description: 'TCP retransmit scan?'
+                required: False
+                type: bool
+            urgent_data:
+                description: 'Urgent data flag action'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

@@ -79,6 +79,19 @@ options:
         description: 'The LDAP server configuration'
         required: True
         type: list
+        suboptions:
+            address:
+                description: 'The LDAP server IP address'
+                required: False
+                type: str
+            name:
+                description: 'The LDAP server name'
+                required: False
+                type: str
+            port:
+                description: 'The LDAP server port'
+                required: False
+                type: int
     ssl:
         description: 'Require SSL/TLS secured connection?'
         required: False

@@ -51,10 +51,36 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            enable:
+                description: 'Enable TCP MSS adjustment on the interface'
+                required: False
+                type: bool
+            ipv4_mss_adjustment:
+                description: 'IPv4 MSS adjustment size in bytes'
+                required: False
+                type: int
+            ipv6_mss_adjustment:
+                description: 'IPv6 MSS adjustment size in bytes'
+                required: False
+                type: int
     arp:
         description: 'ARP configuration'
         required: False
         type: list
+        suboptions:
+            hw_address:
+                description: 'MAC address'
+                required: False
+                type: str
+            interface:
+                description: 'ARP interface'
+                required: False
+                type: str
+            name:
+                description: 'IP address'
+                required: False
+                type: str
     comment:
         description: 'Description'
         required: False
@@ -63,6 +89,35 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ddns_cert_profile:
+                description: 'Certificate profile'
+                required: True
+                type: str
+            ddns_enabled:
+                description: 'Enable DDNS?'
+                required: False
+                type: bool
+            ddns_hostname:
+                description: 'No description available.'
+                required: True
+                type: str
+            ddns_ip:
+                description: 'IP to register (static only)'
+                required: False
+                type: str
+            ddns_update_interval:
+                description: 'Update interval (days)'
+                required: False
+                type: int
+            ddns_vendor:
+                description: 'DDNS vendor'
+                required: True
+                type: str
+            ddns_vendor_config:
+                description: 'DDNS vendor'
+                required: True
+                type: str
     default_value:
         description: 'Default interface assignment'
         required: False
@@ -71,6 +126,32 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            create_default_route:
+                description: 'Automatically create default route pointing to default gateway provided by server'
+                required: False
+                type: bool
+            default_route_metric:
+                description: 'Metric of the default route created'
+                required: False
+                type: int
+            enable:
+                description: 'Enable DHCP?'
+                required: False
+                type: bool
+            send_hostname:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                enable:
+                    description: 'No description available.'
+                    required: False
+                    type: bool
+                hostname:
+                    description: 'Set interface hostname'
+                    required: False
+                    type: str
     interface_management_profile:
         description: 'Interface management profile'
         required: False
@@ -79,6 +160,11 @@ options:
         description: 'VLAN Interface IP Parent'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'VLAN Interface IP address(es)'
+                required: True
+                type: str
     mtu:
         description: 'MTU'
         required: False

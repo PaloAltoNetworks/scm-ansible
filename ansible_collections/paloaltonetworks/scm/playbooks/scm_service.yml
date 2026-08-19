@@ -1,0 +1,108 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_service
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_service.yml
+#
+
+- name: Manage services in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create service
+      paloaltonetworks.scm.scm_service:
+        state: present
+        name: "ansible-test-service"
+        folder: "Prisma Access"
+        description: "Created by Ansible"
+        protocol:
+          udp:
+            port: "53, 55"
+      register: create_result
+
+    - name: Show created service
+      ansible.builtin.debug:
+        var: create_result.service
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update service
+      paloaltonetworks.scm.scm_service:
+        state: present
+        name: "ansible-test-service"
+        folder: "Prisma Access"
+        description: "Updated by Ansible"
+        protocol:
+          tcp:
+            port: "1024-1026"
+            source_port: "1024"
+      register: update_result
+
+    - name: Show updated service
+      ansible.builtin.debug:
+        var: update_result.service
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get service by name
+      paloaltonetworks.scm.scm_service:
+        state: gathered
+        name: "ansible-test-service"
+        folder: "Prisma Access"
+      register: gathered_result
+
+    - name: Show gathered service
+      ansible.builtin.debug:
+        var: gathered_result.service
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get service by name (info module)
+      paloaltonetworks.scm.scm_service_info:
+        name: "ansible-test-service"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.services
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get service by ID (info module)
+      paloaltonetworks.scm.scm_service_info:
+        id: "{{ gathered_result.service.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.services
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all services
+      paloaltonetworks.scm.scm_service_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show services count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} services"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete service
+      paloaltonetworks.scm.scm_service:
+        state: absent
+        name: "ansible-test-service"
+        folder: "Prisma Access"

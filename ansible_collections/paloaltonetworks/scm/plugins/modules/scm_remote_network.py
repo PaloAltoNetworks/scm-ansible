@@ -43,6 +43,61 @@ options:
         description: 'ecmp_tunnels is required when ecmp_load_balancing is enable'
         required: False
         type: list
+        suboptions:
+            ipsec_tunnel:
+                description: 'No description available.'
+                required: True
+                type: str
+            name:
+                description: 'No description available.'
+                required: True
+                type: str
+            protocol:
+                description: 'No description available.'
+                required: True
+                type: dict
+                suboptions:
+                bgp:
+                    description: 'No description available.'
+                    required: False
+                    type: dict
+                    suboptions:
+                    do_not_export_routes:
+                        description: 'Do not export routes?'
+                        required: False
+                        type: bool
+                    enable:
+                        description: 'Enable BGP peering?'
+                        required: False
+                        type: bool
+                    local_ip_address:
+                        description: 'Local peer IP address'
+                        required: False
+                        type: str
+                    originate_default_route:
+                        description: 'Originate default route?'
+                        required: False
+                        type: bool
+                    peer_as:
+                        description: 'BGP peer ASN'
+                        required: False
+                        type: str
+                    peer_ip_address:
+                        description: 'Remote peer IP address'
+                        required: False
+                        type: str
+                    peering_type:
+                        description: 'Route exchange types'
+                        required: False
+                        type: str
+                    secret:
+                        description: 'BGP peering secret'
+                        required: False
+                        type: str
+                    summarize_mobile_user_routes:
+                        description: 'Summarize mobile user routes?'
+                        required: False
+                        type: bool
     ipsec_tunnel:
         description: 'ipsec_tunnel is required when ecmp_load_balancing is disable'
         required: False
@@ -59,6 +114,69 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            bgp:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                do_not_export_routes:
+                    description: 'Do not export routes?'
+                    required: False
+                    type: bool
+                enable:
+                    description: 'Enable BGP peering?'
+                    required: False
+                    type: bool
+                local_ip_address:
+                    description: 'Local peer IP address'
+                    required: False
+                    type: str
+                originate_default_route:
+                    description: 'Originate default route?'
+                    required: False
+                    type: bool
+                peer_as:
+                    description: 'BGP peer ASN'
+                    required: False
+                    type: str
+                peer_ip_address:
+                    description: 'Remote peer IP address'
+                    required: False
+                    type: str
+                peering_type:
+                    description: 'Route exchange types'
+                    required: False
+                    type: str
+                secret:
+                    description: 'BGP peering secret'
+                    required: False
+                    type: str
+                summarize_mobile_user_routes:
+                    description: 'Summarize mobile user routes?'
+                    required: False
+                    type: bool
+            bgp_peer:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                local_ip_address:
+                    description: 'Local peer IP address (secondary WAN)'
+                    required: False
+                    type: str
+                peer_ip_address:
+                    description: 'Remote peer IP address (secondary WAN)'
+                    required: False
+                    type: str
+                same_as_primary:
+                    description: 'Same peer IP address as primary WAN'
+                    required: False
+                    type: bool
+                secret:
+                    description: 'BGP peering secret (secondary WAN)'
+                    required: False
+                    type: str
     region:
         description: 'No description available.'
         required: True

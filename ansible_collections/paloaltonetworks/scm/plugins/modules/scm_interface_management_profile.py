@@ -67,6 +67,11 @@ options:
         description: 'Allowed IP address(es)'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'The allowed IP address or CIDR block.'
+                required: True
+                type: str
     ping:
         description: 'Allow ping?'
         required: False

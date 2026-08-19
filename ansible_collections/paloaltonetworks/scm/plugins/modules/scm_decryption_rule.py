@@ -131,6 +131,20 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            ssl_forward_proxy:
+                description: 'No description available.'
+                required: False
+                type: dict
+            ssl_inbound_inspection:
+                description: 'No description available.'
+                required: False
+                type: dict
+                suboptions:
+                certificates:
+                    description: 'List of certificate names for SSL inbound inspection'
+                    required: False
+                    type: list
 '''
 
 EXAMPLES = r'''

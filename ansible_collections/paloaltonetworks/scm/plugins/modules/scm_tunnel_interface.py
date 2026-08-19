@@ -63,10 +63,45 @@ options:
         description: 'Tunnel Interface IP Parent'
         required: False
         type: list
+        suboptions:
+            name:
+                description: 'Tunnel Interface IP address(es)'
+                required: True
+                type: str
     ipv6:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            address:
+                description: 'IPv6 Address Parent for tunnel interface'
+                required: False
+                type: list
+                suboptions:
+                anycast:
+                    description: 'Anycast for tunnel interface'
+                    required: False
+                    type: dict
+                enable_on_interface:
+                    description: 'Enable Address on Interface for tunnel interface'
+                    required: False
+                    type: bool
+                name:
+                    description: 'IPv6 Address for tunnel interface'
+                    required: False
+                    type: str
+                prefix:
+                    description: 'Use interface ID as host portion for tunnel interface'
+                    required: False
+                    type: dict
+            enabled:
+                description: 'Enable IPv6 for tunnel interface'
+                required: False
+                type: bool
+            interface_id:
+                description: 'Interface ID for tunnel interface'
+                required: False
+                type: str
     mtu:
         description: 'MTU for tunnel interface'
         required: False

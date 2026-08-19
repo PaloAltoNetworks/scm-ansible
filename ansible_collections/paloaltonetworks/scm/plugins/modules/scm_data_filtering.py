@@ -67,6 +67,39 @@ options:
         description: 'No description available.'
         required: False
         type: list
+        suboptions:
+            alert_threshold:
+                description: 'No description available.'
+                required: False
+                type: int
+            application:
+                description: 'No description available.'
+                required: False
+                type: list
+            block_threshold:
+                description: 'No description available.'
+                required: False
+                type: int
+            data_object:
+                description: 'No description available.'
+                required: False
+                type: str
+            direction:
+                description: 'No description available.'
+                required: False
+                type: str
+            file_type:
+                description: 'No description available.'
+                required: False
+                type: list
+            log_severity:
+                description: 'No description available.'
+                required: False
+                type: str
+            name:
+                description: 'No description available.'
+                required: False
+                type: str
 '''
 
 EXAMPLES = r'''

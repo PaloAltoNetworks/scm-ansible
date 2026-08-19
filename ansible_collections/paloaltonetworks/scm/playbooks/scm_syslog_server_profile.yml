@@ -1,0 +1,115 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_syslog_server_profile
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_syslog_server_profile.yml
+#
+
+- name: Manage syslog_server_profiles in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create syslog_server_profile
+      paloaltonetworks.scm.scm_syslog_server_profile:
+        state: present
+        name: "ansible-test-syslog"
+        folder: "Prisma Access"
+        server:
+          - name: "Server-A"
+            server: "192.0.2.1"
+            transport: "UDP"
+            port: 514
+            format: "BSD"
+            facility: "LOG_LOCAL7"
+      register: create_result
+
+    - name: Show created syslog_server_profile
+      ansible.builtin.debug:
+        var: create_result.syslog_server_profile
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update syslog_server_profile
+      paloaltonetworks.scm.scm_syslog_server_profile:
+        state: present
+        name: "ansible-test-syslog"
+        folder: "Prisma Access"
+        server:
+          - name: "Server-A"
+            server: "192.0.2.1"
+            transport: "TCP"
+            port: 6514
+            format: "IETF"
+            facility: "LOG_LOCAL3"
+      register: update_result
+
+    - name: Show updated syslog_server_profile
+      ansible.builtin.debug:
+        var: update_result.syslog_server_profile
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get syslog_server_profile by name
+      paloaltonetworks.scm.scm_syslog_server_profile:
+        state: gathered
+        name: "ansible-test-syslog"
+        folder: "Prisma Access"
+        server: []
+      register: gathered_result
+
+    - name: Show gathered syslog_server_profile
+      ansible.builtin.debug:
+        var: gathered_result.syslog_server_profile
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get syslog_server_profile by name (info module)
+      paloaltonetworks.scm.scm_syslog_server_profile_info:
+        name: "ansible-test-syslog"
+        folder: "Prisma Access"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.syslog_server_profiles
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get syslog_server_profile by ID (info module)
+      paloaltonetworks.scm.scm_syslog_server_profile_info:
+        id: "{{ gathered_result.syslog_server_profile.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.syslog_server_profiles
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all syslog_server_profiles
+      paloaltonetworks.scm.scm_syslog_server_profile_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show syslog_server_profiles count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} syslog_server_profiles"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete syslog_server_profile
+      paloaltonetworks.scm.scm_syslog_server_profile:
+        state: absent
+        name: "ansible-test-syslog"
+        folder: "Prisma Access"
+        server: []
