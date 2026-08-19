@@ -16,7 +16,7 @@ description:
 version_added: "1.0.0"
 author: "Palo Alto Networks"
 extends_documentation_fragment:
-    - vaishnavi_panw.test_ansible_scm.scm
+    - paloaltonetworks.scm.scm
 options:
     state:
         description: The desired state of the resource.
@@ -55,6 +55,11 @@ options:
         description: 'No description available.'
         required: False
         type: dict
+        suboptions:
+            filter:
+                description: 'Tag based filter defining group membership'
+                required: True
+                type: str
     name:
         description: 'The name of the address group'
         required: True
