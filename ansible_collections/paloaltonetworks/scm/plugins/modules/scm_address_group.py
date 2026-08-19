@@ -16,7 +16,7 @@ description:
 version_added: "1.0.0"
 author: "Palo Alto Networks"
 extends_documentation_fragment:
-    - paloaltonetworks.scm.scm
+    - vaishnavi_panw.test_ansible_scm.scm
 options:
     state:
         description: The desired state of the resource.
