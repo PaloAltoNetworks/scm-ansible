@@ -11,6 +11,9 @@ on:
         description: 'Reason for running full playbook tests'
         required: false
         default: 'Pre-merge validation'
+  push:
+    branches:
+      - main  # Run on merge to main
 
 jobs:
   test:
