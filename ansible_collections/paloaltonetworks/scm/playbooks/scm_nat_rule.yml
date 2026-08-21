@@ -1,0 +1,111 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_nat_rule
+#
+# Demonstrates: create, update, gather, delete
+#
+# NOTE: The info module has API validation issues, so this playbook only tests CRUD.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_nat_rule.yml
+
+- name: Manage nat_rules in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create nat_rule
+      paloaltonetworks.scm.scm_nat_rule:
+        state: present
+        name: "ansible-test-nat-rule"
+        folder: "All"
+        position: "pre"
+        description: "Test NAT rule for CRUD"
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"
+        nat_type: "ipv4"
+        destination_translation:
+          translated_address: "10.1.1.10"
+          translated_port: 443
+          dns_rewrite:
+            direction: "reverse"
+        source_translation:
+          dynamic_ip_and_port:
+            translated_address:
+            - "10.1.1.20"
+            - "10.2.2.23"
+      register: create_result
+
+    - name: Show created nat_rule
+      ansible.builtin.debug:
+        var: create_result.nat_rule
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update nat_rule
+      paloaltonetworks.scm.scm_nat_rule:
+        state: present
+        name: "ansible-test-nat-rule"
+        folder: "All"
+        position: "pre"
+        description: "Updated NAT rule"
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"
+        nat_type: "ipv4"
+        source_translation:
+          dynamic_ip_and_port:
+            translated_address:
+            - "10.1.1.20"
+      register: update_result
+
+    - name: Show updated nat_rule
+      ansible.builtin.debug:
+        var: update_result.nat_rule
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get nat_rule by name
+      paloaltonetworks.scm.scm_nat_rule:
+        state: gathered
+        name: "ansible-test-nat-rule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"
+      register: gathered_result
+
+    - name: Show gathered nat_rule
+      ansible.builtin.debug:
+        var: gathered_result.nat_rule
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete nat_rule
+      paloaltonetworks.scm.scm_nat_rule:
+        state: absent
+        name: "ansible-test-nat-rule"
+        folder: "All"
+        position: "pre"
+        var_from: ["any"]
+        to: ["untrust"]
+        source: ["any"]
+        destination: ["any"]
+        service: "service-https"

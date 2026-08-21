@@ -1,0 +1,110 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_service_connection_group
+#
+# Demonstrates: create (by ID), get by ID, list, delete
+#
+# INFRA_DEP: This resource requires existing service connections.
+#   The 'target' field must contain a list of service connection names that
+#   already exist in your SCM environment (folder: "Service Connections").
+#   Replace "my-service-connection" below with actual service connection names.
+#
+# MODULE_NOTE: The lookup-by-name flow requires folder to be set in the module.
+#   Since the module has no folder parameter, always use id-based operations
+#   after initial creation. Use the info module with gather_all to discover IDs.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_service_connection_group.yml
+
+- name: Manage service_connection_groups in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    # Replace with actual service connection names that exist in your environment
+    service_connection_targets:
+      - "my-service-connection"
+
+  tasks:
+
+    # ── List all (info module with gather_all) ───────────────
+    # NOTE: The info module list requires no folder for this global resource.
+    - name: List all service_connection_groups
+      paloaltonetworks.scm.scm_service_connection_group_info:
+        gather_all: true
+      register: list_result
+      ignore_errors: true
+
+    - name: Show service_connection_groups count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total | default(0) }} service_connection_groups"
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create service_connection_group
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: present
+        name: "ansible-test-service_connection_group"
+        target: "{{ service_connection_targets }}"
+      register: create_result
+      ignore_errors: true
+
+    - name: Show created service_connection_group
+      ansible.builtin.debug:
+        var: create_result
+      when: not create_result.failed | default(false)
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get service_connection_group by ID (info module)
+      paloaltonetworks.scm.scm_service_connection_group_info:
+        id: "{{ create_result.service_connection_group.id }}"
+      register: info_by_id
+      when:
+        - not create_result.failed | default(false)
+        - create_result.service_connection_group.id is defined
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.service_connection_groups
+      when:
+        - info_by_id is not skipped
+        - not info_by_id.failed | default(false)
+
+    # ── Update ──────────────────────────────────────────────
+    - name: Update service_connection_group by ID (disable SNAT)
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: present
+        id: "{{ create_result.service_connection_group.id }}"
+        name: "ansible-test-service_connection_group"
+        target: "{{ service_connection_targets }}"
+        disable_snat: false
+      register: update_result
+      when:
+        - not create_result.failed | default(false)
+        - create_result.service_connection_group.id is defined
+
+    - name: Show updated service_connection_group
+      ansible.builtin.debug:
+        var: update_result.service_connection_group
+      when:
+        - update_result is not skipped
+        - not update_result.failed | default(false)
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete service_connection_group by ID
+      paloaltonetworks.scm.scm_service_connection_group:
+        state: absent
+        id: "{{ create_result.service_connection_group.id }}"
+        name: "ansible-test-service_connection_group"
+      when:
+        - not create_result.failed | default(false)
+        - create_result.service_connection_group.id is defined

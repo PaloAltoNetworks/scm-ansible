@@ -1,0 +1,71 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_general_setting
+#
+# Demonstrates: get by ID, update, list
+#
+# NOTE: scm_general_setting is a SINGLETON resource — it cannot be created or
+#       deleted via API. There is exactly one general settings object per folder.
+#       Manage it by fetching its ID first, then updating in place.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_general_setting.yml
+#
+# Run 'ansible-doc paloaltonetworks.scm.scm_general_setting' for full parameter docs.
+
+- name: Manage general_setting in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── List to discover the existing singleton object ───────────
+    - name: List all general_settings (singleton per folder)
+      paloaltonetworks.scm.scm_general_setting_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show general_settings list
+      ansible.builtin.debug:
+        var: list_result.general_settings
+
+    # ── Get by ID (info module) ─────────────────────────────────
+    - name: Get general_setting by ID (info module)
+      paloaltonetworks.scm.scm_general_setting_info:
+        id: "{{ list_result.general_settings[0].id }}"
+      register: info_by_id
+      when: list_result.general_settings | length > 0
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.general_settings
+      when: list_result.general_settings | length > 0
+
+    # ── Update (state=present with id) ──────────────────────────
+    # Update the singleton object using its server-assigned ID.
+    # The 'general' field contains nested settings sub-objects.
+    - name: Update general_setting by ID
+      paloaltonetworks.scm.scm_general_setting:
+        state: present
+        id: "{{ list_result.general_settings[0].id }}"
+        folder: "Prisma Access"
+        # general:
+        #   setting:
+        #     name: "example-setting"
+      register: update_result
+      when: list_result.general_settings | length > 0
+
+    - name: Show updated general_setting
+      ansible.builtin.debug:
+        var: update_result.general_setting
+      when: list_result.general_settings | length > 0

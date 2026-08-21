@@ -1,0 +1,96 @@
+"""Integration tests for scm_decryption_rule — full CRUD lifecycle."""
+
+import json
+import logging
+
+import pytest
+
+from helpers import TARGET_FOLDER, build_params, make_runner
+
+from ansible_collections.paloaltonetworks.scm.plugins.modules import scm_decryption_rule
+
+logger = logging.getLogger(__name__)
+run_module = make_runner(scm_decryption_rule, "scm_decryption_rule")
+
+_FIELDS = dict(
+    action=None, category=None, description=None, destination=None,
+    destination_hip=None, disabled=None, var_from=None, log_fail=None,
+    log_setting=None, log_success=None, name=None,
+    negate_destination=None, negate_source=None, position=None, profile=None,
+    service=None, source=None, source_hip=None, source_user=None,
+    tag=None, to=None, type=None,
+)
+
+
+def _params(**overrides):
+    return build_params({**_FIELDS, **overrides})
+
+
+class TestDecryptionRulesLifecycle:
+    _created_id = None
+
+    def test_01_create(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-decrule-{run_id}",
+            position="pre",
+            action="no-decrypt",
+            category=["any"],
+            destination=["any"],
+            var_from=["any"],
+            service=["service-https"],
+            source=["any"],
+            source_user=["any"],
+            to=["any"],
+            type={"ssl_forward_proxy": {}},
+            log_success=True,
+            folder=TARGET_FOLDER,
+        ))
+        logger.info(f"CREATE: {json.dumps(result, indent=2, default=str)}")
+        assert not result.get("failed"), f"Create failed: {result.get('msg')}"
+        assert result["changed"] is True
+        TestDecryptionRulesLifecycle._created_id = result["decryption_rule"]["id"]
+
+    def test_02_create_idempotent(self, run_id):
+        result = run_module(_params(
+            state="present", name=f"an-decrule-{run_id}",
+            position="pre",
+            action="no-decrypt",
+            category=["any"],
+            destination=["any"],
+            var_from=["any"],
+            service=["service-https"],
+            source=["any"],
+            source_user=["any"],
+            to=["any"],
+            type={"ssl_forward_proxy": {}},
+            log_success=True,
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+
+    def test_03_gather(self, run_id):
+        result = run_module(_params(
+            state="gathered", name=f"an-decrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Gather failed: {result.get('msg')}"
+        assert "found" in result["msg"]
+
+    def test_04_delete(self, run_id):
+        result = run_module(_params(
+            state="absent", name=f"an-decrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Delete failed: {result.get('msg')}"
+        assert result["changed"] is True
+
+    def test_05_delete_idempotent(self, run_id):
+        result = run_module(_params(
+            state="absent", name=f"an-decrule-{run_id}",
+            position="pre",
+            folder=TARGET_FOLDER,
+        ))
+        assert not result.get("failed"), f"Idempotent failed: {result.get('msg')}"
+        assert result["changed"] is False

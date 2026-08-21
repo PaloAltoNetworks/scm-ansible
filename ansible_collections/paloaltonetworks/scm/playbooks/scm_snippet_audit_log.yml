@@ -1,0 +1,64 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_snippet_audit_log
+#
+# Demonstrates: create, get by ID
+#
+# NOTE: snippet_audit_log is a write-once log/audit record. There is no
+#       name field — the resource is identified by UUID after creation.
+#       This module does NOT support update or delete operations.
+#       Lookup requires an ID obtained from the create response.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_snippet_audit_log.yml
+
+- name: Manage snippet_audit_logs in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    # snippet_audit_log has no name field. All fields are optional log metadata.
+    # The ID is returned in the create response and used for subsequent lookups.
+    - name: Create snippet_audit_log entry
+      paloaltonetworks.scm.scm_snippet_audit_log:
+        state: present
+        action: "subscribe"
+        snippet_uuid: "00000000-0000-0000-0000-000000000000"
+        donor_tenant_name: "donor-tenant"
+        donor_tsg: "1234567890"
+        recipient_tenant_name: "recipient-tenant"
+        recipient_tsg: "0987654321"
+        version: "1"
+      register: create_result
+      ignore_errors: true
+
+    - name: Show created snippet_audit_log
+      ansible.builtin.debug:
+        var: create_result.snippet_audit_log
+
+    # ── Get by ID (info module) ─────────────────────────────
+    # Use the ID returned from the create step above.
+    - name: Get snippet_audit_log by ID
+      paloaltonetworks.scm.scm_snippet_audit_log_info:
+        id: "{{ create_result.snippet_audit_log.id }}"
+      register: info_by_id
+      when:
+        - create_result is not failed
+        - create_result.snippet_audit_log.id is defined
+      ignore_errors: true
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.snippet_audit_logs

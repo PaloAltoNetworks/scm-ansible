@@ -1,0 +1,57 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_auto_vpn_config_push
+#
+# Demonstrates: create (trigger a config push)
+#
+# INFRA_DEP: This is a one-shot action resource that triggers a VPN configuration
+#            push to one or more Auto VPN clusters. It requires real Auto VPN cluster
+#            names from your SCM environment. Use with caution — this triggers
+#            actual infrastructure changes.
+#
+# NOTE: auto_vpn_config_push has no name field. It is an action endpoint that
+#       accepts a list of auto_vpn_devices (VPN clusters) to push configuration to.
+#       Each device entry has a name (cluster name) and refresh_psk (boolean).
+#       There is no list/update/delete — it is a trigger-only operation.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_auto_vpn_config_push.yml
+
+- name: Manage auto_vpn_config_push in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    # Replace with actual Auto VPN cluster names from your SCM environment.
+    # These clusters must exist before triggering a config push.
+    vpn_clusters:
+      - name: "your-auto-vpn-cluster"
+        refresh_psk: false
+
+  tasks:
+
+    # ── Create (trigger push) ────────────────────────────────
+    # Triggers a VPN configuration push to the specified Auto VPN clusters.
+    # auto_vpn_devices is a list of cluster objects, each with:
+    #   name: the Auto VPN cluster name (required)
+    #   refresh_psk: whether to refresh the pre-shared key (default: true)
+    - name: Trigger Auto VPN config push
+      paloaltonetworks.scm.scm_auto_vpn_config_push:
+        state: present
+        auto_vpn_devices: "{{ vpn_clusters }}"
+      register: push_result
+      ignore_errors: true
+
+    - name: Show auto_vpn_config_push result
+      ansible.builtin.debug:
+        var: push_result.auto_vpn_config_push

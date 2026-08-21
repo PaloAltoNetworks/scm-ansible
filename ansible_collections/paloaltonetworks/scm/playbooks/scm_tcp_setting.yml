@@ -1,0 +1,76 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_tcp_setting
+#
+# Demonstrates: list, get by ID, update
+#
+# SINGLETON: tcp_setting is a singleton resource per folder/container — there
+#            is exactly one TCP settings record per folder. It is NOT created or
+#            deleted by name. Instead, you list to find the existing ID, then
+#            get/update by that ID.
+#
+#            The module's state: present with an ID performs an update.
+#            The module does NOT support name-based lookup.
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_tcp_setting.yml
+
+- name: Manage tcp_settings in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── List all ────────────────────────────────────────────
+    # Returns the singleton TCP settings record for the folder.
+    - name: List tcp_settings (singleton per folder)
+      paloaltonetworks.scm.scm_tcp_setting_info:
+        folder: "Prisma Access"
+      register: list_result
+
+    - name: Show tcp_settings list
+      ansible.builtin.debug:
+        var: list_result.tcp_settings
+
+    # ── Get by ID ───────────────────────────────────────────
+    - name: Get tcp_setting by ID
+      paloaltonetworks.scm.scm_tcp_setting_info:
+        id: "{{ list_result.tcp_settings[0].id }}"
+      register: info_by_id
+      when: list_result.tcp_settings | length > 0
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.tcp_settings
+      when: list_result.tcp_settings | length > 0
+
+    # ── Update ──────────────────────────────────────────────
+    # Update the singleton TCP settings by ID. The tcp field contains all
+    # the TCP configuration options (allow_challenge_ack, asymmetric_path,
+    # bypass_exceed_oo_queue, check_timestamp_option, drop_zero_flag,
+    # strip_mptcp_option, tcp_retransmit_scan, urgent_data, siptcp_cleartext_proxy).
+    - name: Update tcp_setting by ID
+      paloaltonetworks.scm.scm_tcp_setting:
+        state: present
+        id: "{{ list_result.tcp_settings[0].id }}"
+        folder: "Prisma Access"
+        tcp:
+          drop_zero_flag: true
+          bypass_exceed_oo_queue: false
+      register: update_result
+      when: list_result.tcp_settings | length > 0
+
+    - name: Show updated tcp_setting
+      ansible.builtin.debug:
+        var: update_result.tcp_setting
+      when: list_result.tcp_settings | length > 0

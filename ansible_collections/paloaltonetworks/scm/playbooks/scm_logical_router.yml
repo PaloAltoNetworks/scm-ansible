@@ -1,0 +1,121 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_logical_router
+#
+# Demonstrates: create, update, get by name, get by ID, list, delete
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_logical_router.yml
+#
+
+- name: Manage logical_routers in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    # ── Create ──────────────────────────────────────────────
+    - name: Create logical_router
+      paloaltonetworks.scm.scm_logical_router:
+        state: present
+        name: "ansible-test-logical_router"
+        folder: "All"
+        vrf:
+        - name: "default"
+          routing_table:
+            ip:
+              static_route:
+              - name: "default-route"
+                destination: "0.0.0.0/0"
+                admin_dist: 10
+                nexthop:
+                  ip_address: "198.18.1.1"
+      register: create_result
+
+    - name: Show created logical_router
+      ansible.builtin.debug:
+        var: create_result.logical_router
+
+    # ── Update ──────────────────────────────────────────────
+    # NOTE: logical_router module has no 'description' field; update routing_stack or vrf instead
+    - name: Update logical_router
+      paloaltonetworks.scm.scm_logical_router:
+        state: present
+        name: "ansible-test-logical_router"
+        folder: "All"
+        vrf:
+        - name: "default"
+          routing_table:
+            ip:
+              static_route:
+              - name: "default-route"
+                destination: "0.0.0.0/0"
+                admin_dist: 20
+                nexthop:
+                  ip_address: "198.18.1.254"
+      register: update_result
+
+    - name: Show updated logical_router
+      ansible.builtin.debug:
+        var: update_result.logical_router
+
+    # ── Get by name (CRUD module, state=gathered) ───────────
+    - name: Get logical_router by name
+      paloaltonetworks.scm.scm_logical_router:
+        state: gathered
+        name: "ansible-test-logical_router"
+        folder: "All"
+      register: gathered_result
+
+    - name: Show gathered logical_router
+      ansible.builtin.debug:
+        var: gathered_result.logical_router
+
+    # ── Get by name (info module) ───────────────────────────
+    - name: Get logical_router by name (info module)
+      paloaltonetworks.scm.scm_logical_router_info:
+        name: "ansible-test-logical_router"
+        folder: "All"
+      register: info_by_name
+
+    - name: Show info result
+      ansible.builtin.debug:
+        var: info_by_name.logical_routers
+
+    # ── Get by ID (info module) ─────────────────────────────
+    - name: Get logical_router by ID (info module)
+      paloaltonetworks.scm.scm_logical_router_info:
+        id: "{{ gathered_result.logical_router.id }}"
+      register: info_by_id
+
+    - name: Show info-by-ID result
+      ansible.builtin.debug:
+        var: info_by_id.logical_routers
+
+    # ── List all ────────────────────────────────────────────
+    - name: List all logical_routers
+      paloaltonetworks.scm.scm_logical_router_info:
+        folder: "All"
+      register: list_result
+
+    - name: Show logical_routers count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} logical_routers"
+
+    # ── Delete ──────────────────────────────────────────────
+    - name: Delete logical_router
+      paloaltonetworks.scm.scm_logical_router:
+        state: absent
+        name: "ansible-test-logical_router"
+        folder: "All"
+

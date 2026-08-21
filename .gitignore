@@ -1,3 +1,6 @@
+# SCM configuration with credentials
+config/scm-config.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

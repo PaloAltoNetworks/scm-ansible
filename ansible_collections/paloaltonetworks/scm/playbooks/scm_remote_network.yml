@@ -1,0 +1,196 @@
+---
+# Example playbook for paloaltonetworks.scm.scm_remote_network
+#
+# NOTE: Remote Network requires VPN infrastructure:
+#       IKE Crypto Profile -> IKE Gateway -> IPsec Tunnel -> Remote Network
+#       This playbook creates all dependencies, then the remote network, then cleans up.
+#
+# Demonstrates: create with dependencies, gather, delete with cleanup
+#
+# Prerequisites:
+#   pip install scm-python ansible-core
+#
+# Authentication (pick one):
+#   export SCM_CONFIG_FILE="/path/to/config/scm-config.json"
+#   -- or --
+#   export SCM_CLIENT_ID="your-client-id"
+#   export SCM_CLIENT_SECRET="your-client-secret"
+#   export SCM_TSG_ID="your-tsg-id"
+#
+# Usage:
+#   ANSIBLE_COLLECTIONS_PATH=. ansible-playbook playbooks/scm_remote_network.yml
+
+- name: Manage remote_network with VPN dependencies in Strata Cloud Manager
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    folder: "Remote Networks"
+    crypto_name: "ansible-test-ikecrypto-rn"
+    gateway_name: "ansible-test-ikegw-rn"
+    tunnel_name: "ansible-test-ipsectun-rn"
+    rn_name: "ansible-test-remotenet"
+
+  tasks:
+
+    # ══════════════════════════════════════════════════════════
+    # SETUP: Create VPN dependency chain
+    # ══════════════════════════════════════════════════════════
+
+    # ── 1. Create IKE Crypto Profile ──────────────────────────
+    - name: Create IKE Crypto Profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: present
+        name: "{{ crypto_name }}"
+        folder: "{{ folder }}"
+        hash:
+          - "sha256"
+        dh_group:
+          - "group14"
+        encryption:
+          - "aes-256-cbc"
+      register: crypto_result
+
+    # ── 2. Create IKE Gateway ─────────────────────────────────
+    - name: Create IKE Gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: present
+        name: "{{ gateway_name }}"
+        folder: "{{ folder }}"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "2.2.2.9"
+        peer_id:
+          type: "ipaddr"
+          id: "10.4.3.9"
+        local_id:
+          type: "ipaddr"
+          id: "10.4.4.9"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "{{ crypto_name }}"
+            dpd:
+              enable: true
+          ikev2:
+            ike_crypto_profile: "{{ crypto_name }}"
+            dpd:
+              enable: true
+      register: gateway_result
+
+    # ── 3. Create IPsec Tunnel ────────────────────────────────
+    - name: Create IPsec Tunnel
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: present
+        name: "{{ tunnel_name }}"
+        folder: "{{ folder }}"
+        anti_replay: true
+        copy_tos: false
+        enable_gre_encapsulation: false
+        auto_key:
+          ike_gateway:
+            - name: "{{ gateway_name }}"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+      register: tunnel_result
+
+    # ══════════════════════════════════════════════════════════
+    # MAIN: Remote Network CRUD operations
+    # ══════════════════════════════════════════════════════════
+
+    # ── Create Remote Network ─────────────────────────────────
+    - name: Create remote_network
+      paloaltonetworks.scm.scm_remote_network:
+        state: present
+        name: "{{ rn_name }}"
+        folder: "{{ folder }}"
+        region: "us-west-2"
+        spn_name: "us-west-dakota"
+        license_type: "FWAAS-AGGREGATE"
+        ipsec_tunnel: "{{ tunnel_name }}"
+        subnets:
+          - "192.168.1.0/24"
+      register: create_result
+
+    - name: Show created remote_network
+      ansible.builtin.debug:
+        var: create_result.remote_network
+
+    # ── Gather Remote Network ─────────────────────────────────
+    - name: Gather remote_network by name
+      paloaltonetworks.scm.scm_remote_network:
+        state: gathered
+        name: "{{ rn_name }}"
+        folder: "{{ folder }}"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"
+      register: gathered_result
+
+    - name: Show gathered remote_network
+      ansible.builtin.debug:
+        var: gathered_result.remote_network
+
+    # ── List Remote Networks ──────────────────────────────────
+    - name: List all remote_networks
+      paloaltonetworks.scm.scm_remote_network_info:
+        folder: "{{ folder }}"
+      register: list_result
+
+    - name: Show remote_networks count
+      ansible.builtin.debug:
+        msg: "Found {{ list_result.total }} remote_networks"
+
+    # ══════════════════════════════════════════════════════════
+    # CLEANUP: Delete in reverse order
+    # ══════════════════════════════════════════════════════════
+
+    # ── Delete Remote Network ─────────────────────────────────
+    - name: Delete remote_network
+      paloaltonetworks.scm.scm_remote_network:
+        state: absent
+        name: "{{ rn_name }}"
+        folder: "{{ folder }}"
+        region: "us-west-2"
+        license_type: "FWAAS-AGGREGATE"
+
+    # ── Delete IPsec Tunnel ───────────────────────────────────
+    - name: Delete IPsec Tunnel
+      paloaltonetworks.scm.scm_ipsec_tunnel:
+        state: absent
+        name: "{{ tunnel_name }}"
+        folder: "{{ folder }}"
+        auto_key:
+          ike_gateway:
+            - name: "{{ gateway_name }}"
+          ipsec_crypto_profile: "PaloAlto-Networks-IPSec-Crypto"
+
+    # ── Delete IKE Gateway ────────────────────────────────────
+    - name: Delete IKE Gateway
+      paloaltonetworks.scm.scm_ike_gateway:
+        state: absent
+        name: "{{ gateway_name }}"
+        folder: "{{ folder }}"
+        authentication:
+          pre_shared_key:
+            key: "secret123"
+        peer_address:
+          ip: "2.2.2.9"
+        protocol:
+          ikev1:
+            ike_crypto_profile: "{{ crypto_name }}"
+          ikev2:
+            ike_crypto_profile: "{{ crypto_name }}"
+
+    # ── Delete IKE Crypto Profile ─────────────────────────────
+    - name: Delete IKE Crypto Profile
+      paloaltonetworks.scm.scm_ike_crypto_profile:
+        state: absent
+        name: "{{ crypto_name }}"
+        folder: "{{ folder }}"
+        hash:
+          - "sha256"
+        dh_group:
+          - "group14"
+        encryption:
+          - "aes-256-cbc"
