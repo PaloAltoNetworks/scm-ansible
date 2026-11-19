@@ -1,0 +1,19 @@
+.github/workflows/test.yml
+  s_b9ede404895335::t_ace0fc42c9c810 11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "0de321583aa55626882f1dc590ab5dc7783f2554",
+  "prompts": {},
+  "sessions": {
+    "s_b9ede404895335": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "923ba837-fd81-474b-b3de-339454339596",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prateek Garg <pragarg@paloaltonetworks.com>"
+    }
+  }
+}
